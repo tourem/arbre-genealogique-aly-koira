@@ -3,270 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Généalogie ALY KOÏRA</title>
+    <title>Généalogie ALY KOÏRA - 190 Membres</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        /* LIGHT THEME */
         :root, [data-theme="light"] {
-            --bg-primary: #f8fafc;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #f1f5f9;
-            --bg-hover: #e2e8f0;
-            --bg-active: #f0fdf4;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #94a3b8;
-            --text-inverse: #ffffff;
-            --border: #e2e8f0;
-            --border-light: #f1f5f9;
-            --accent: #22c55e;
-            --accent-light: #dcfce7;
-            --accent-dark: #16a34a;
+            --bg-primary: #f8fafc; --bg-secondary: #ffffff; --bg-tertiary: #f1f5f9;
+            --bg-hover: #e2e8f0; --bg-active: #f0fdf4;
+            --text-primary: #0f172a; --text-secondary: #475569; --text-muted: #94a3b8; --text-inverse: #ffffff;
+            --border: #e2e8f0; --border-light: #f1f5f9;
+            --accent: #22c55e; --accent-light: #dcfce7; --accent-dark: #16a34a;
             --accent-gradient: linear-gradient(135deg, #22c55e, #16a34a);
-            --male: #3b82f6;
-            --male-bg: rgba(59, 130, 246, 0.1);
-            --female: #ec4899;
-            --female-bg: rgba(236, 72, 153, 0.1);
-            --warning: #f59e0b;
-            --warning-gradient: linear-gradient(135deg, #f59e0b, #ea580c);
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-            --tree-line: #cbd5e1;
-            --modal-overlay: rgba(15, 23, 42, 0.5);
+            --male: #3b82f6; --male-bg: rgba(59, 130, 246, 0.1);
+            --female: #ec4899; --female-bg: rgba(236, 72, 153, 0.1);
+            --warning: #f59e0b; --warning-gradient: linear-gradient(135deg, #f59e0b, #ea580c);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05); --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1); --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --tree-line: #cbd5e1; --modal-overlay: rgba(15, 23, 42, 0.5);
         }
-
-        /* DARK THEME */
         [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --bg-hover: #475569;
-            --bg-active: #1a3a2a;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #64748b;
-            --text-inverse: #0f172a;
-            --border: #334155;
-            --border-light: #1e293b;
-            --accent: #4ade80;
-            --accent-light: #1a3a2a;
-            --accent-dark: #22c55e;
+            --bg-primary: #0f172a; --bg-secondary: #1e293b; --bg-tertiary: #334155;
+            --bg-hover: #475569; --bg-active: #1a3a2a;
+            --text-primary: #f1f5f9; --text-secondary: #cbd5e1; --text-muted: #64748b; --text-inverse: #0f172a;
+            --border: #334155; --border-light: #1e293b;
+            --accent: #4ade80; --accent-light: #1a3a2a; --accent-dark: #22c55e;
             --accent-gradient: linear-gradient(135deg, #4ade80, #22c55e);
-            --male: #60a5fa;
-            --male-bg: rgba(96, 165, 250, 0.2);
-            --female: #f472b6;
-            --female-bg: rgba(244, 114, 182, 0.2);
-            --warning: #fbbf24;
-            --warning-gradient: linear-gradient(135deg, #fbbf24, #f59e0b);
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5);
-            --tree-line: #475569;
-            --modal-overlay: rgba(0, 0, 0, 0.7);
+            --male: #60a5fa; --male-bg: rgba(96, 165, 250, 0.2);
+            --female: #f472b6; --female-bg: rgba(244, 114, 182, 0.2);
+            --warning: #fbbf24; --warning-gradient: linear-gradient(135deg, #fbbf24, #f59e0b);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3); --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4); --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+            --tree-line: #475569; --modal-overlay: rgba(0, 0, 0, 0.7);
         }
-
-        body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .app-container { display: flex; min-height: 100vh; }
-
-        /* SIDEBAR */
-        .sidebar {
-            width: 260px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            z-index: 100;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; transition: all 0.3s ease; }
+        .app { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--bg-secondary); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100; transition: all 0.3s ease; }
         .logo { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-light); }
         .logo-main { display: flex; align-items: center; gap: 0.75rem; }
-        .logo-icon {
-            width: 42px; height: 42px;
-            background: var(--accent-gradient);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.25rem;
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-        }
+        .logo-icon { width: 42px; height: 42px; background: var(--accent-gradient); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3); }
         .logo-text { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
-        .logo-subtitle { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
-
-        .nav-menu { padding: 1rem 0.75rem; flex: 1; overflow-y: auto; }
-        .nav-section-title { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; padding: 0.75rem 0.75rem 0.5rem; }
-
-        .nav-item {
-            display: flex; align-items: center; gap: 0.75rem;
-            padding: 0.7rem 0.75rem; border-radius: 10px;
-            color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;
-            cursor: pointer; transition: all 0.2s ease;
-            margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left;
-        }
+        .logo-sub { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+        .nav { padding: 1rem 0.75rem; flex: 1; overflow-y: auto; }
+        .nav-title { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; padding: 0.75rem 0.75rem 0.5rem; }
+        .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 0.75rem; border-radius: 10px; color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; }
         .nav-item:hover { background: var(--bg-tertiary); color: var(--text-primary); }
         .nav-item.active { background: var(--bg-active); color: var(--accent); }
-        .nav-icon { width: 20px; height: 20px; opacity: 0.7; }
-        .nav-item.active .nav-icon { opacity: 1; }
-
-        /* THEME TOGGLE */
-        .theme-toggle {
-            margin: 0.5rem 0.75rem;
-            padding: 0.5rem;
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            display: flex;
-            gap: 0.25rem;
-        }
-        .theme-btn {
-            flex: 1;
-            padding: 0.5rem;
-            border: none;
-            background: transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            transition: all 0.2s ease;
-        }
-        .theme-btn.active {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            box-shadow: var(--shadow-sm);
-        }
-        .theme-btn:hover:not(.active) { color: var(--text-primary); }
-
+        .theme-toggle { margin: 0.5rem 0.75rem; padding: 0.5rem; background: var(--bg-tertiary); border-radius: 10px; display: flex; gap: 0.25rem; }
+        .theme-btn { flex: 1; padding: 0.5rem; border: none; background: transparent; border-radius: 8px; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 0.4rem; transition: all 0.2s ease; }
+        .theme-btn.active { background: var(--bg-secondary); color: var(--text-primary); box-shadow: var(--shadow-sm); }
         .sidebar-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--border-light); }
-        .family-badge {
-            display: flex; align-items: center; gap: 0.75rem;
-            padding: 0.75rem; background: var(--bg-tertiary); border-radius: 10px;
-        }
-        .family-avatar {
-            width: 36px; height: 36px;
-            background: var(--warning-gradient);
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.9rem;
-        }
-        .family-name { font-weight: 600; font-size: 0.8rem; color: var(--text-primary); }
-        .family-count { font-size: 0.7rem; color: var(--text-muted); }
-
-        /* MAIN */
-        .main-content { flex: 1; margin-left: 260px; display: flex; flex-direction: column; }
-
-        .topbar {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
-            display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top: 0; z-index: 50;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
+        .family-badge { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 10px; }
+        .family-avatar { width: 36px; height: 36px; background: var(--warning-gradient); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+        .main { flex: 1; margin-left: 260px; display: flex; flex-direction: column; }
+        .topbar { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
         .page-title { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
-        .page-subtitle { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-
-        .content-area { padding: 1.5rem 2rem; flex: 1; }
+        .page-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+        .content { padding: 1.5rem 2rem; flex: 1; }
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* BUTTONS */
-        .btn {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            padding: 0.6rem 1rem; font-family: inherit; font-size: 0.85rem; font-weight: 500;
-            border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
-            border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary);
-        }
-        .btn:hover { background: var(--bg-tertiary); border-color: var(--border); }
-        .btn-primary {
-            background: var(--accent-gradient); color: var(--text-inverse); border: none;
-            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
-        }
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; font-family: inherit; font-size: 0.85rem; font-weight: 500; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary); }
+        .btn:hover { background: var(--bg-tertiary); }
+        .btn-primary { background: var(--accent-gradient); color: var(--text-inverse); border: none; box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3); }
         .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4); }
         .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
         .btn-icon { width: 36px; height: 36px; padding: 0; justify-content: center; }
-
-        /* CARDS */
-        .card {
-            background: var(--bg-secondary); border-radius: 16px;
-            box-shadow: var(--shadow); overflow: hidden;
-            transition: background-color 0.3s ease;
-        }
-        .card-header {
-            padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-light);
-            display: flex; align-items: center; justify-content: space-between;
-        }
+        .card { background: var(--bg-secondary); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+        .card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
         .card-title { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); }
         .card-body { padding: 1.5rem; }
-
-        /* TREE */
         .tree-toolbar { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
-        .select-modern {
-            appearance: none;
-            padding: 0.6rem 2.5rem 0.6rem 1rem;
-            font-family: inherit; font-size: 0.85rem;
-            border: 1px solid var(--border); border-radius: 8px;
-            background: var(--bg-secondary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
-            cursor: pointer; min-width: 200px; color: var(--text-primary);
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
+        .select-modern { appearance: none; padding: 0.6rem 2.5rem 0.6rem 1rem; font-family: inherit; font-size: 0.85rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-secondary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E") no-repeat right 0.75rem center; cursor: pointer; min-width: 200px; color: var(--text-primary); }
         .select-modern:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
-
-        .tree-canvas {
-            background: var(--bg-tertiary);
-            border-radius: 12px; margin-top: 1rem;
-            min-height: 500px; max-height: 65vh;
-            overflow: auto; border: 1px solid var(--border);
-            position: relative;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .tree-container {
-            padding: 2rem;
-            display: flex; flex-direction: column; align-items: center;
-            position: relative; z-index: 1;
-            transform-origin: top center; transition: transform 0.2s ease;
-        }
-
-        /* TREE NODES */
+        .tree-canvas { background: var(--bg-tertiary); border-radius: 12px; margin-top: 1rem; min-height: 500px; max-height: 65vh; overflow: auto; border: 1px solid var(--border); position: relative; }
+        .tree-container { padding: 2rem; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; transform-origin: top center; transition: transform 0.2s ease; }
         .tree-node { display: flex; flex-direction: column; align-items: center; position: relative; }
-        .node-card {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border); border-radius: 14px;
-            padding: 0.875rem 1rem; text-align: center;
-            cursor: pointer; transition: all 0.25s ease;
-            min-width: 130px; max-width: 160px;
-            position: relative; z-index: 2; box-shadow: var(--shadow);
-        }
+        .node-card { background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 14px; padding: 0.875rem 1rem; text-align: center; cursor: pointer; transition: all 0.25s ease; min-width: 130px; max-width: 160px; position: relative; z-index: 2; box-shadow: var(--shadow); }
         .node-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
         .node-card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light), var(--shadow-lg); }
-        .node-card.root {
-            background: var(--accent-gradient); border: none; color: var(--text-inverse);
-            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
-        }
-        .node-avatar {
-            width: 44px; height: 44px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 0.5rem; font-size: 1.25rem;
-        }
+        .node-card.root { background: var(--accent-gradient); border: none; color: var(--text-inverse); box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35); }
+        .node-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-size: 1.25rem; }
         .node-card.male .node-avatar { background: var(--male-bg); }
         .node-card.female .node-avatar { background: var(--female-bg); }
         .node-card.root .node-avatar { background: rgba(255, 255, 255, 0.2); }
@@ -274,132 +90,48 @@
         .node-card.root .node-name { color: var(--text-inverse); }
         .node-alias { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
         .node-card.root .node-alias { color: rgba(255,255,255,0.8); }
-        .node-badge {
-            position: absolute; top: -6px; right: -6px;
-            width: 20px; height: 20px;
-            background: var(--accent); color: white;
-            border-radius: 50%; font-size: 0.65rem; font-weight: 600;
-            display: flex; align-items: center; justify-content: center;
-            border: 2px solid var(--bg-secondary);
-        }
-        .node-toggle {
-            position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
-            width: 24px; height: 24px;
-            background: var(--bg-secondary); border: 2px solid var(--border);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 0.8rem; color: var(--text-muted);
-            z-index: 3; transition: all 0.2s ease; box-shadow: var(--shadow-sm);
-        }
+        .node-badge { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; background: var(--accent); color: white; border-radius: 50%; font-size: 0.65rem; font-weight: 600; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-secondary); }
+        .node-toggle { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 24px; height: 24px; background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); z-index: 3; transition: all 0.2s ease; box-shadow: var(--shadow-sm); }
         .node-toggle:hover { background: var(--accent); border-color: var(--accent); color: white; transform: translateX(-50%) scale(1.1); }
-
-        .tree-children {
-            display: flex; justify-content: center; gap: 12px;
-            position: relative; padding-top: 35px; margin-top: 8px;
-        }
-        .tree-children::before {
-            content: ''; position: absolute; top: 8px; left: 50%;
-            width: 2px; height: 27px; background: var(--tree-line); transform: translateX(-50%);
-        }
-        .tree-children > .tree-node::before {
-            content: ''; position: absolute; top: -27px; left: 50%;
-            width: 2px; height: 27px; background: var(--tree-line); transform: translateX(-50%);
-        }
-        .tree-children.multi::after {
-            content: ''; position: absolute; top: 8px;
-            height: 2px; background: var(--tree-line);
-            left: calc(50% - var(--w) / 2); width: var(--w);
-        }
-
-        /* INFO PANEL */
-        .info-panel {
-            position: fixed; top: 50%; right: 24px; transform: translateY(-50%);
-            width: 340px; background: var(--bg-secondary);
-            border-radius: 20px; box-shadow: var(--shadow-xl);
-            z-index: 200; display: none; overflow: hidden;
-            transition: background-color 0.3s ease;
-        }
+        .tree-children { display: flex; justify-content: center; gap: 12px; position: relative; padding-top: 35px; margin-top: 8px; }
+        .tree-children::before { content: ''; position: absolute; top: 8px; left: 50%; width: 2px; height: 27px; background: var(--tree-line); transform: translateX(-50%); }
+        .tree-children > .tree-node::before { content: ''; position: absolute; top: -27px; left: 50%; width: 2px; height: 27px; background: var(--tree-line); transform: translateX(-50%); }
+        .tree-children.multi::after { content: ''; position: absolute; top: 8px; height: 2px; background: var(--tree-line); left: calc(50% - var(--w) / 2); width: var(--w); }
+        .info-panel { position: fixed; top: 50%; right: 24px; transform: translateY(-50%); width: 340px; background: var(--bg-secondary); border-radius: 20px; box-shadow: var(--shadow-lg); z-index: 200; display: none; overflow: hidden; }
         .info-panel.active { display: block; animation: slideIn 0.3s ease; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-50%) translateX(20px); } to { opacity: 1; transform: translateY(-50%) translateX(0); } }
-        .info-header {
-            padding: 1.75rem; background: var(--accent-gradient);
-            color: var(--text-inverse); text-align: center; position: relative;
-        }
-        .info-close {
-            position: absolute; top: 1rem; right: 1rem;
-            width: 32px; height: 32px; background: rgba(255,255,255,0.2);
-            border: none; border-radius: 50%; color: white;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem; transition: background 0.2s;
-        }
+        .info-header { padding: 1.75rem; background: var(--accent-gradient); color: var(--text-inverse); text-align: center; position: relative; }
+        .info-close { position: absolute; top: 1rem; right: 1rem; width: 32px; height: 32px; background: rgba(255,255,255,0.2); border: none; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         .info-close:hover { background: rgba(255,255,255,0.3); }
-        .info-avatar {
-            width: 72px; height: 72px; border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; margin: 0 auto 0.75rem;
-        }
+        .info-avatar { width: 72px; height: 72px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 0.75rem; }
         .info-name { font-size: 1.2rem; font-weight: 700; }
         .info-alias { font-size: 0.85rem; opacity: 0.85; margin-top: 0.25rem; }
         .info-body { padding: 1.25rem 1.5rem; max-height: 400px; overflow-y: auto; }
         .info-section { margin-bottom: 1rem; }
         .info-section-title { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
         .info-row { display: flex; align-items: center; padding: 0.5rem 0; gap: 0.75rem; }
-        .info-row-icon {
-            width: 32px; height: 32px; background: var(--bg-tertiary);
-            border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
-        }
+        .info-row-icon { width: 32px; height: 32px; background: var(--bg-tertiary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
         .info-row-label { font-size: 0.7rem; color: var(--text-muted); }
         .info-row-value { font-size: 0.875rem; font-weight: 500; color: var(--text-primary); }
         .info-row-value a { color: var(--accent); text-decoration: none; cursor: pointer; }
         .info-row-value a:hover { text-decoration: underline; }
         .info-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
-        .info-tag {
-            padding: 0.35rem 0.65rem; background: var(--bg-tertiary);
-            border-radius: 20px; font-size: 0.75rem; font-weight: 500;
-            cursor: pointer; transition: all 0.2s ease; color: var(--text-secondary);
-        }
+        .info-tag { padding: 0.35rem 0.65rem; background: var(--bg-tertiary); border-radius: 20px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; color: var(--text-secondary); }
         .info-tag:hover { background: var(--accent); color: white; }
-
-        /* RELATIONSHIP */
         .search-form { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.5rem; align-items: end; }
         .form-group label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
-        .form-select {
-            width: 100%; padding: 0.75rem 1rem;
-            font-family: inherit; font-size: 0.9rem;
-            border: 2px solid var(--border); border-radius: 10px;
-            background: var(--bg-secondary); cursor: pointer;
-            transition: all 0.2s ease; color: var(--text-primary);
-        }
+        .form-select { width: 100%; padding: 0.75rem 1rem; font-family: inherit; font-size: 0.9rem; border: 2px solid var(--border); border-radius: 10px; background: var(--bg-secondary); cursor: pointer; color: var(--text-primary); }
         .form-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
-        .search-connector {
-            display: flex; align-items: center; justify-content: center;
-            width: 48px; height: 48px; background: var(--bg-tertiary);
-            border-radius: 50%; color: var(--text-muted); font-size: 1.25rem; margin-bottom: 0.25rem;
-        }
+        .search-connector { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: var(--bg-tertiary); border-radius: 50%; color: var(--text-muted); font-size: 1.25rem; margin-bottom: 0.25rem; }
         .search-actions { margin-top: 1.5rem; text-align: center; }
-
         .result-container { margin-top: 2rem; }
-        .result-card {
-            background: var(--bg-secondary); border-radius: 16px;
-            padding: 2rem; box-shadow: var(--shadow); border: 1px solid var(--border);
-        }
+        .result-card { background: var(--bg-secondary); border-radius: 16px; padding: 2rem; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .result-header { text-align: center; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1.5rem; }
         .result-names { font-size: 1rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
         .result-names strong { color: var(--text-primary); }
-        .result-badge {
-            display: inline-block; padding: 0.65rem 1.5rem;
-            background: var(--accent-gradient); color: white;
-            border-radius: 30px; font-weight: 600; font-size: 1rem;
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-        }
-
+        .result-badge { display: inline-block; padding: 0.65rem 1.5rem; background: var(--accent-gradient); color: white; border-radius: 30px; font-weight: 600; font-size: 1rem; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3); }
         .rel-tree { display: flex; flex-direction: column; align-items: center; padding: 1.5rem 0; }
-        .rel-ancestor {
-            background: var(--warning-gradient); color: white;
-            padding: 1.25rem 2rem; border-radius: 16px; text-align: center;
-            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
-        }
+        .rel-ancestor { background: var(--warning-gradient); color: white; padding: 1.25rem 2rem; border-radius: 16px; text-align: center; box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3); }
         .rel-ancestor-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
         .rel-ancestor-name { font-weight: 700; font-size: 1rem; }
         .rel-ancestor-label { font-size: 0.75rem; opacity: 0.9; margin-top: 0.25rem; }
@@ -409,230 +141,106 @@
         .rel-branches::after { content: ''; position: absolute; top: 20px; left: 20%; right: 20%; height: 2px; background: var(--tree-line); }
         .rel-branch { display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
         .rel-branch::before { content: ''; width: 2px; height: 20px; background: var(--tree-line); }
-        .rel-person {
-            background: var(--bg-secondary); border: 2px solid var(--border);
-            border-radius: 12px; padding: 0.875rem 1.25rem; text-align: center;
-            box-shadow: var(--shadow); min-width: 130px; margin: 0.5rem 0;
-        }
+        .rel-person { background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 12px; padding: 0.875rem 1.25rem; text-align: center; box-shadow: var(--shadow); min-width: 130px; margin: 0.5rem 0; }
         .rel-person.target { background: var(--accent-light); border-color: var(--accent); }
         .rel-person.male { border-left: 4px solid var(--male); }
         .rel-person.female { border-left: 4px solid var(--female); }
         .rel-person-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
         .rel-person-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
-        .rel-person-label {
-            font-size: 0.65rem; background: var(--text-secondary); color: white;
-            padding: 0.2rem 0.5rem; border-radius: 4px; margin-top: 0.35rem; display: inline-block;
-        }
+        .rel-person-label { font-size: 0.65rem; background: var(--text-secondary); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; margin-top: 0.35rem; display: inline-block; }
         .rel-person.target .rel-person-label { background: var(--accent); }
         .branch-line { width: 2px; height: 16px; background: var(--tree-line); }
-
         .explanation { background: var(--bg-tertiary); border-radius: 12px; padding: 1.25rem; margin-top: 1.5rem; }
         .explanation-title { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
         .step { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; }
-        .step-num {
-            width: 22px; height: 22px; background: var(--accent); color: white;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 0.7rem; font-weight: 600; flex-shrink: 0;
-        }
+        .step-num { width: 22px; height: 22px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; flex-shrink: 0; }
         .step-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; }
         .step-text strong { color: var(--text-primary); }
-        .conclusion {
-            margin-top: 1rem; padding: 1rem; background: var(--bg-secondary);
-            border-radius: 10px; text-align: center; border: 1px solid var(--border);
-        }
+        .conclusion { margin-top: 1rem; padding: 1rem; background: var(--bg-secondary); border-radius: 10px; text-align: center; border: 1px solid var(--border); }
         .conclusion-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem; }
         .conclusion-value { font-size: 1.25rem; font-weight: 700; color: var(--accent); }
-
-        /* DIRECTORY */
-        .search-input {
-            width: 100%; padding: 0.875rem 1rem 0.875rem 2.75rem;
-            font-family: inherit; font-size: 0.9rem;
-            border: 2px solid var(--border); border-radius: 12px;
-            background: var(--bg-secondary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E") no-repeat 1rem center;
-            transition: all 0.2s ease; color: var(--text-primary);
-        }
+        .search-input { width: 100%; padding: 0.875rem 1rem 0.875rem 2.75rem; font-family: inherit; font-size: 0.9rem; border: 2px solid var(--border); border-radius: 12px; background: var(--bg-secondary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E") no-repeat 1rem center; color: var(--text-primary); }
         .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
         .person-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-top: 1.25rem; }
-        .person-card {
-            background: var(--bg-secondary); border: 1px solid var(--border);
-            border-radius: 14px; padding: 1.25rem;
-            cursor: pointer; transition: all 0.25s ease;
-        }
+        .person-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; cursor: pointer; transition: all 0.25s ease; }
         .person-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-2px); }
         .person-card-top { display: flex; align-items: center; gap: 0.875rem; }
-        .person-card-avatar {
-            width: 48px; height: 48px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
-        }
+        .person-card-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
         .person-card-avatar.male { background: var(--male-bg); }
         .person-card-avatar.female { background: var(--female-bg); }
         .person-card-name { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); }
         .person-card-alias { font-size: 0.8rem; color: var(--text-muted); }
         .person-card-info { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-light); font-size: 0.8rem; color: var(--text-secondary); }
-
-        /* STATS */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
-        .stat-card {
-            background: var(--bg-secondary); border: 1px solid var(--border);
-            border-radius: 14px; padding: 1.5rem; text-align: center;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .stat-icon {
-            width: 48px; height: 48px; background: var(--accent-light);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            font-size: 1.25rem; margin: 0 auto 0.75rem;
-        }
+        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; text-align: center; }
+        .stat-icon { width: 48px; height: 48px; background: var(--accent-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin: 0 auto 0.75rem; }
         .stat-value { font-size: 2rem; font-weight: 700; color: var(--text-primary); }
         .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
-
-        /* GENERATIONS */
-        .gen-section {
-            background: var(--bg-secondary); border: 1px solid var(--border);
-            border-radius: 14px; margin-bottom: 1rem; overflow: hidden;
-        }
-        .gen-header {
-            padding: 1rem 1.25rem; background: var(--bg-tertiary);
-            display: flex; align-items: center; gap: 0.75rem;
-            border-bottom: 1px solid var(--border);
-        }
+        .gen-section { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 1rem; overflow: hidden; }
+        .gen-header { padding: 1rem 1.25rem; background: var(--bg-tertiary); display: flex; align-items: center; gap: 0.75rem; cursor: pointer; border-bottom: 1px solid var(--border); }
         .gen-badge { background: var(--accent); color: white; padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
         .gen-title { font-weight: 600; color: var(--text-primary); }
+        .gen-count { font-size: 0.8rem; color: var(--text-muted); margin-left: auto; }
         .gen-body { padding: 1rem 1.25rem; }
         .family-group { margin: 0.75rem 0; padding: 1rem; background: var(--bg-tertiary); border-radius: 10px; }
-        .parent-name { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.75rem; }
+        .parent-name { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
         .children-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .child-tag {
-            padding: 0.4rem 0.75rem; background: var(--bg-secondary);
-            border: 1px solid var(--border); border-radius: 20px;
-            font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; color: var(--text-primary);
-        }
+        .child-tag { padding: 0.4rem 0.75rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; color: var(--text-primary); }
         .child-tag:hover { background: var(--accent); color: white; border-color: var(--accent); }
         .child-tag.male { border-left: 3px solid var(--male); }
         .child-tag.female { border-left: 3px solid var(--female); }
-
-        /* MODAL */
-        .modal {
-            display: none; position: fixed; inset: 0;
-            background: var(--modal-overlay); z-index: 1000;
-            justify-content: center; align-items: center;
-            backdrop-filter: blur(4px);
-        }
+        .modal { display: none; position: fixed; inset: 0; background: var(--modal-overlay); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal.active { display: flex; }
-        .modal-content {
-            background: var(--bg-secondary); border-radius: 20px;
-            width: 90%; max-width: 440px; max-height: 85vh; overflow-y: auto;
-            animation: modalIn 0.3s ease;
-        }
+        .modal-content { background: var(--bg-secondary); border-radius: 20px; width: 90%; max-width: 440px; max-height: 85vh; overflow-y: auto; animation: modalIn 0.3s ease; }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        .modal-header {
-            padding: 1.5rem; border-bottom: 1px solid var(--border-light);
-            display: flex; align-items: center; justify-content: space-between;
-        }
+        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
         .modal-title { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); }
-        .modal-close {
-            width: 32px; height: 32px; background: var(--bg-tertiary);
-            border: none; border-radius: 8px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-muted); font-size: 1.1rem;
-        }
+        .modal-close { width: 32px; height: 32px; background: var(--bg-tertiary); border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 1.1rem; }
         .modal-close:hover { background: var(--bg-hover); }
         .modal-body { padding: 1.5rem; }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .main-content { margin-left: 0; }
-            .search-form { grid-template-columns: 1fr; }
-            .search-connector { display: none; }
-            .info-panel { right: 10px; left: 10px; width: auto; }
-            .rel-branches { flex-direction: column; gap: 1rem; }
-        }
+        @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .search-form { grid-template-columns: 1fr; } .search-connector { display: none; } .info-panel { right: 10px; left: 10px; width: auto; } .rel-branches { flex-direction: column; gap: 1rem; } }
     </style>
 </head>
 <body>
-    <div class="app-container">
+    <div class="app">
         <aside class="sidebar">
             <div class="logo">
                 <div class="logo-main">
                     <div class="logo-icon">🌳</div>
-                    <div>
-                        <div class="logo-text">ALY KOÏRA</div>
-                        <div class="logo-subtitle">Généalogie familiale</div>
-                    </div>
+                    <div><div class="logo-text">ALY KOÏRA</div><div class="logo-sub">Généalogie familiale</div></div>
                 </div>
             </div>
-            
-            <nav class="nav-menu">
-                <div class="nav-section-title">Navigation</div>
-                <button class="nav-item active" onclick="showSection('tree')">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 10l7-7 7 7"/></svg>
-                    Arbre interactif
-                </button>
-                <button class="nav-item" onclick="showSection('generations')">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                    Par génération
-                </button>
-                <button class="nav-item" onclick="showSection('relationship')">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    Lien de parenté
-                </button>
-                <button class="nav-item" onclick="showSection('directory')">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    Annuaire
-                </button>
-                
-                <div class="nav-section-title" style="margin-top: 1rem;">Données</div>
-                <button class="nav-item" onclick="showSection('stats')">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-                    Statistiques
-                </button>
-                
-                <div class="nav-section-title" style="margin-top: 1rem;">Apparence</div>
+            <nav class="nav">
+                <div class="nav-title">Navigation</div>
+                <button class="nav-item active" onclick="showSection('tree')">🌳 Arbre interactif</button>
+                <button class="nav-item" onclick="showSection('generations')">📊 Par génération</button>
+                <button class="nav-item" onclick="showSection('relationship')">🔗 Lien de parenté</button>
+                <button class="nav-item" onclick="showSection('directory')">📋 Annuaire</button>
+                <button class="nav-item" onclick="showSection('stats')">📈 Statistiques</button>
+                <div class="nav-title" style="margin-top: 1rem;">Apparence</div>
                 <div class="theme-toggle">
-                    <button class="theme-btn active" onclick="setTheme('light')" id="light-btn">
-                        ☀️ Clair
-                    </button>
-                    <button class="theme-btn" onclick="setTheme('dark')" id="dark-btn">
-                        🌙 Sombre
-                    </button>
+                    <button class="theme-btn active" onclick="setTheme('light')" id="light-btn">☀️ Clair</button>
+                    <button class="theme-btn" onclick="setTheme('dark')" id="dark-btn">🌙 Sombre</button>
                 </div>
             </nav>
-            
             <div class="sidebar-footer">
                 <div class="family-badge">
                     <div class="family-avatar">👨‍👩‍👧‍👦</div>
-                    <div class="family-info">
-                        <div class="family-name">Famille Touré</div>
-                        <div class="family-count" id="total-count">-- membres</div>
-                    </div>
+                    <div><div style="font-weight:600;font-size:0.8rem;color:var(--text-primary)">Famille Touré</div><div id="total-count" style="font-size:0.7rem;color:var(--text-muted)">190 membres</div></div>
                 </div>
             </div>
         </aside>
-
-        <main class="main-content">
+        <main class="main">
             <header class="topbar">
-                <div>
-                    <h1 class="page-title" id="page-title">Arbre interactif</h1>
-                    <p class="page-subtitle" id="page-subtitle">Explorez votre histoire familiale</p>
-                </div>
+                <div><h1 class="page-title" id="page-title">Arbre interactif</h1><p class="page-sub" id="page-sub">Explorez votre histoire familiale</p></div>
             </header>
-
-            <div class="content-area">
+            <div class="content">
                 <section id="tree" class="section active">
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title">Visualisation de l'arbre</span>
                             <div class="tree-toolbar">
-                                <select id="root-select" class="select-modern" onchange="changeRoot()">
-                                    <option value="alkamahamane_sabalkaidi">Alkamahamane Sabalkaidi</option>
-                                    <option value="ali_alkamahamane" selected>Ali Alkamahamane (Aly Koïra)</option>
-                                    <option value="mahamane_ali">Mahamane Ali</option>
-                                    <option value="babachigaw_ali">Babachigaw Ali</option>
-                                    <option value="moussa_ali">Moussa Ali</option>
-                                    <option value="omorou_ali">Omorou Ali</option>
-                                    <option value="tamimoune_ali">Tamimoune Ali</option>
-                                    <option value="mahadi_ali">Mahadi Ali</option>
-                                </select>
+                                <select id="root-select" class="select-modern" onchange="changeRoot()"></select>
                                 <button class="btn btn-sm" onclick="expandAll()">Tout déplier</button>
                                 <button class="btn btn-sm" onclick="collapseAll()">Replier</button>
                                 <div style="display:flex;gap:4px;">
@@ -642,12 +250,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tree-canvas">
-                            <div class="tree-container" id="tree-container"></div>
-                        </div>
+                        <div class="tree-canvas"><div class="tree-container" id="tree-container"></div></div>
                     </div>
                 </section>
-
                 <section id="generations" class="section"><div id="gen-content"></div></section>
                 <section id="relationship" class="section">
                     <div class="card">
@@ -676,7 +281,6 @@
             </div>
         </main>
     </div>
-
     <div class="info-panel" id="info-panel">
         <div class="info-header">
             <button class="info-close" onclick="closeInfo()">×</button>
@@ -686,228 +290,254 @@
         </div>
         <div class="info-body" id="info-body"></div>
     </div>
-
     <div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
         <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title" id="modal-title"></span>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
+            <div class="modal-header"><span class="modal-title" id="modal-title"></span><button class="modal-close" onclick="closeModal()">×</button></div>
             <div class="modal-body" id="modal-body"></div>
         </div>
     </div>
-
     <script>
-// BASE DE DONNÉES COMPLÈTE - ~100 personnes
+// BASE DE DONNÉES - 190 PERSONNES UNIQUES (analyse définitive)
 const data = {
-    // GÉNÉRATION 1
-    "alkamahamane_sabalkaidi": { id: "alkamahamane_sabalkaidi", name: "Alkamahamane Sabalkaidi", alias: null, gender: "M", gen: 1, father: null, mother: null, children: ["goussoumbi_alkamahamane", "goma_alkamahamane", "hounaye_alkamahamane", "soumboulou_alkamahamane", "farimata_alkamahamane", "ali_alkamahamane"], note: "Ancêtre fondateur" },
-    "lalla_hamatou": { id: "lalla_hamatou", name: "Lalla Hamatou", alias: "De Seyna", gender: "F", gen: 1, father: null, mother: null, children: [], linkedTo: "alkamahamane_sabalkaidi", note: "Épouse d'Alkamahamane" },
-    
-    // GÉNÉRATION 2 - Enfants d'Alkamahamane
-    "goussoumbi_alkamahamane": { id: "goussoumbi_alkamahamane", name: "Goussoumbi", alias: null, gender: "M", gen: 2, father: "alkamahamane_sabalkaidi", mother: "lalla_hamatou", children: [] },
-    "goma_alkamahamane": { id: "goma_alkamahamane", name: "Goma", alias: null, gender: "M", gen: 2, father: "alkamahamane_sabalkaidi", mother: "lalla_hamatou", children: [] },
-    "hounaye_alkamahamane": { id: "hounaye_alkamahamane", name: "Hounaye", alias: null, gender: "F", gen: 2, father: "alkamahamane_sabalkaidi", mother: "lalla_hamatou", children: [] },
-    "soumboulou_alkamahamane": { id: "soumboulou_alkamahamane", name: "Soumboulou", alias: null, gender: "F", gen: 2, father: "alkamahamane_sabalkaidi", mother: "lalla_hamatou", children: [] },
-    "farimata_alkamahamane": { id: "farimata_alkamahamane", name: "Farimata Alkamahamane", alias: null, gender: "F", gen: 2, father: "alkamahamane_sabalkaidi", mother: "lalla_hamatou", children: ["dalla"] },
-    "ali_alkamahamane": { id: "ali_alkamahamane", name: "Ali Alkamahamane", alias: "Aly Koïra", gender: "M", gen: 2, father: "alkamahamane_sabalkaidi", mother: "lalla_hamatou", children: ["mahamane_ali", "babachigaw_ali", "agacha_kobbo", "moussa_ali", "omorou_ali", "tamimoune_ali", "mahadi_ali"], note: "Fondateur du quartier Ali Koïra - 7 enfants" },
-    
-    // GÉNÉRATION 3 - Enfants d'Ali Alkamahamane
-    "mahamane_ali": { id: "mahamane_ali", name: "Mahamane Ali", alias: null, gender: "M", gen: 3, father: "ali_alkamahamane", mother: null, children: ["mohomone_galla", "taya_mahamane", "ahmadou_agawa", "yata_mahamane", "issouf_tabbo", "halilou_mahamane", "alhalil_mahamane", "aliou_mahamane", "houzaye_mahamane", "alassane_sosso", "agaicha_mahamane", "abdou_doudou"], note: "Mère: Waykounga Samba - 12 enfants" },
-    "babachigaw_ali": { id: "babachigaw_ali", name: "Babachigaw Ali", alias: "Babachigo", gender: "M", gen: 3, father: "ali_alkamahamane", mother: null, children: ["aliou_babachigaw", "aboubacar_babachigaw", "ousmane_achidogo", "alhousseini_aggada", "abdoulaye_sagara", "nouhoum_babachigaw", "mata_babachigaw"], note: "Mère: Farimata Alassane - 7 enfants" },
-    "agacha_kobbo": { id: "agacha_kobbo", name: "Agacha Ali", alias: "Kobbo", gender: "F", gen: 3, father: "ali_alkamahamane", mother: null, children: ["aicha_fedja", "arhamatou_fedja", "issa_mohomodou", "taya_mohomodou", "izeboncana_tayda", "jaouja_tayda", "dally_tayda"], note: "Mère: Fouga Alassane - 7 enfants" },
-    "moussa_ali": { id: "moussa_ali", name: "Moussa Ali", alias: null, gender: "M", gen: 3, father: "ali_alkamahamane", mother: null, children: ["mata_moussa", "haylloli_moussa", "wanaissou_moussa", "jato_moussa", "alassane_moussa", "assoumane_moussa", "abdou_moussa", "sala_moussa"], note: "Mère: Fouga Alassane - 8 enfants" },
-    "omorou_ali": { id: "omorou_ali", name: "Omorou Ali", alias: null, gender: "M", gen: 3, father: "ali_alkamahamane", mother: null, children: ["houssouba_omorou", "kabongou_omorou", "mahamadou_omorou", "sourgou_omorou", "tabbo_omorou", "zabbo_omorou", "ichata_omorou"], note: "Mère: Fouga Alassane - 7 enfants" },
-    "tamimoune_ali": { id: "tamimoune_ali", name: "Tamimoune Ali", alias: "Tamimou", gender: "M", gen: 3, father: "ali_alkamahamane", mother: null, children: ["chiddaye_alphary", "mata_alphary", "ichata_alphary", "boudjal_alphary", "saleymatou_alphary"], note: "Mère: Fouga Alassane - 5 enfants" },
-    "mahadi_ali": { id: "mahadi_ali", name: "Mahadi Ali", alias: null, gender: "M", gen: 3, father: "ali_alkamahamane", mother: null, children: ["dayo_mahadi", "saffia_mahadi", "sawde_mahadi", "zarha_mahadi", "aminta_mahadi", "seydou_mahadi"], note: "Mère: Fouga Alassane - 6 enfants" },
-    "dalla": { id: "dalla", name: "Dalla", alias: null, gender: "M", gen: 3, father: "alkamahamane_sabalkaidi", mother: "farimata_alkamahamane", children: [] },
-    
-    // GÉNÉRATION 4 - Enfants de Mahamane Ali
-    "mohomone_galla": { id: "mohomone_galla", name: "Mohomone", alias: "Galla", gender: "M", gen: 4, father: "mahamane_ali", mother: null, children: ["ibrahim_mohomone", "seydou_mohomone", "ousmane_mohomone", "adama_mohomone", "hirinissa_mohomone"], note: "Mère: Aicha Houneye" },
-    "taya_mahamane": { id: "taya_mahamane", name: "Taya Mahamane", alias: null, gender: "M", gen: 4, father: "mahamane_ali", mother: null, children: ["halimatou_hamadahamane", "assaliha_hamadahamane", "arboncana_hamadahamane", "hadaye_hamadahamane"], note: "Mère: Aicha Houneye" },
-    "ahmadou_agawa": { id: "ahmadou_agawa", name: "Ahmadou", alias: "Agawa", gender: "M", gen: 4, father: "mahamane_ali", mother: null, children: [], note: "Mère: Adijatou Hamma" },
-    "yata_mahamane": { id: "yata_mahamane", name: "Yata", alias: null, gender: "F", gen: 4, father: "mahamane_ali", mother: null, children: ["momo_assabi", "adama_assabi", "hounaijata_assabi", "waykouti_assabi", "daoulata_assabi", "mouna_assabi", "zeinaba_assabi"], note: "Mère: Adijatou Hamma" },
-    "issouf_tabbo": { id: "issouf_tabbo", name: "Issouf", alias: "Tabbo", gender: "M", gen: 4, father: "mahamane_ali", mother: null, children: ["moulaye_tabbo", "adijatou_tabbo", "annoussourou_tabbo", "alassane_boncana_tabbo", "arhamatou_tabbo", "assaliha_tabbo", "yahiya_tabbo"], note: "Mère: Adijatou Hamma" },
-    "halilou_mahamane": { id: "halilou_mahamane", name: "Halilou", alias: "Halihou", gender: "M", gen: 4, father: "mahamane_ali", mother: null, children: ["hamma_ario_halilou", "idrissa_halilou", "mariam_halilou", "aichata_halilou"], note: "Mère: Aicha Hamma" },
-    "alhalil_mahamane": { id: "alhalil_mahamane", name: "Alhalil", alias: null, gender: "M", gen: 4, father: "mahamane_ali", mother: null, children: [], note: "Mère: Aicha Hamma" },
-    "aliou_mahamane": { id: "aliou_mahamane", name: "Aliou Mahamane", alias: null, gender: "M", gen: 4, father: "mahamane_ali", mother: null, children: [], note: "Mère: Aicha Hamma - Sans enfants" },
-    "houzaye_mahamane": { id: "houzaye_mahamane", name: "Houzaye", alias: null, gender: "M", gen: 4, father: "mahamane_ali", mother: null, children: [], note: "Mère: Aicha Hamma" },
-    "alassane_sosso": { id: "alassane_sosso", name: "Alassane", alias: "Sosso", gender: "M", gen: 4, father: "mahamane_ali", mother: null, children: ["alhabibou_alassane", "alkassoume_alassane", "ibrahim_alassane", "abdourhamane_alassane", "moussa_alassane", "mariama_alassane", "safietou_alassane", "hamsatou_alassane", "arhamatou_alassane", "hawa_alassane", "bintou_alassane", "aichata_alassane"], note: "Mère: Aicha Hamma - 12 enfants" },
-    "agaicha_mahamane": { id: "agaicha_mahamane", name: "Agaicha", alias: null, gender: "F", gen: 4, father: "mahamane_ali", mother: null, children: [], note: "Mère: Aicha Hamma" },
-    "abdou_doudou": { id: "abdou_doudou", name: "Abdou", alias: "Doudou", gender: "M", gen: 4, father: "mahamane_ali", mother: null, children: ["ichata_doudou", "saley_doudou", "hanchata_doudou", "zaouzata_doudou", "sarata_doudou", "akilou_doudou", "moukaila_doudou", "daouda_doudou", "sadou_doudou", "idrissa_doudou"], note: "Mère: Aicha Hamma - 10 enfants" },
-    
-    // GÉNÉRATION 4 - Enfants de Babachigaw Ali
-    "aliou_babachigaw": { id: "aliou_babachigaw", name: "Aliou Babachigaw", alias: null, gender: "M", gen: 4, father: "babachigaw_ali", mother: null, children: [] },
-    "aboubacar_babachigaw": { id: "aboubacar_babachigaw", name: "Aboubacar", alias: "Djama", gender: "M", gen: 4, father: "babachigaw_ali", mother: null, children: [] },
-    "ousmane_achidogo": { id: "ousmane_achidogo", name: "Ousmane", alias: "Achidogo", gender: "M", gen: 4, father: "babachigaw_ali", mother: null, children: ["harouna_achidogo"] },
-    "alhousseini_aggada": { id: "alhousseini_aggada", name: "Alhousseini", alias: "Aggada", gender: "M", gen: 4, father: "babachigaw_ali", mother: null, children: ["hakimoune_aggada", "hamida_aggada", "houna_aggada", "zabbo_aggada"] },
-    "abdoulaye_sagara": { id: "abdoulaye_sagara", name: "Abdoulaye", alias: "Sagara", gender: "M", gen: 4, father: "babachigaw_ali", mother: null, children: [] },
-    "nouhoum_babachigaw": { id: "nouhoum_babachigaw", name: "Nouhoum", alias: null, gender: "M", gen: 4, father: "babachigaw_ali", mother: null, children: ["haoua_nouhou"] },
-    "mata_babachigaw": { id: "mata_babachigaw", name: "Mata Babachigaw", alias: null, gender: "F", gen: 4, father: "babachigaw_ali", mother: null, children: [] },
-    
-    // GÉNÉRATION 4 - Enfants de Moussa Ali
-    "mata_moussa": { id: "mata_moussa", name: "Mata Moussa", alias: null, gender: "F", gen: 4, father: "moussa_ali", mother: null, children: [] },
-    "haylloli_moussa": { id: "haylloli_moussa", name: "Haylloli", alias: null, gender: "F", gen: 4, father: "moussa_ali", mother: null, children: [] },
-    "wanaissou_moussa": { id: "wanaissou_moussa", name: "Wanaissou", alias: null, gender: "M", gen: 4, father: "moussa_ali", mother: null, children: [] },
-    "jato_moussa": { id: "jato_moussa", name: "Jato", alias: null, gender: "F", gen: 4, father: "moussa_ali", mother: null, children: [] },
-    "alassane_moussa": { id: "alassane_moussa", name: "Alassane Moussa", alias: null, gender: "M", gen: 4, father: "moussa_ali", mother: null, children: [] },
-    "assoumane_moussa": { id: "assoumane_moussa", name: "Assoumane", alias: null, gender: "M", gen: 4, father: "moussa_ali", mother: null, children: [] },
-    "abdou_moussa": { id: "abdou_moussa", name: "Abdou Moussa", alias: "Boudou", gender: "M", gen: 4, father: "moussa_ali", mother: null, children: [] },
-    "sala_moussa": { id: "sala_moussa", name: "Sala", alias: null, gender: "M", gen: 4, father: "moussa_ali", mother: null, children: [] },
-    
-    // GÉNÉRATION 4 - Enfants d'Omorou Ali
-    "houssouba_omorou": { id: "houssouba_omorou", name: "Houssouba", alias: null, gender: "M", gen: 4, father: "omorou_ali", mother: null, children: [], note: "Sans enfants" },
-    "kabongou_omorou": { id: "kabongou_omorou", name: "Kabongou", alias: null, gender: "M", gen: 4, father: "omorou_ali", mother: null, children: ["wayo_ngoyba", "aminta_ngoyba", "makiou_ngoyba", "yacouba_ngoyba", "ngolo_ngoyba", "issiaka_ngoyba"] },
-    "mahamadou_omorou": { id: "mahamadou_omorou", name: "Mahamadou Omorou", alias: null, gender: "M", gen: 4, father: "omorou_ali", mother: null, children: ["zeinabou_mahamadou", "koddo_mahamadou", "bouba_mahamadou"] },
-    "sourgou_omorou": { id: "sourgou_omorou", name: "Sourgou", alias: null, gender: "M", gen: 4, father: "omorou_ali", mother: null, children: ["adija_sourgou", "mariama_sourgou", "fatoumata_sourgou", "ammou_sourgou", "koddo_sourgou", "boubacar_sourgou"] },
-    "tabbo_omorou": { id: "tabbo_omorou", name: "Tabbo Omorou", alias: "Abdoulaye", gender: "M", gen: 4, father: "omorou_ali", mother: null, children: ["almahamoudou_tabagore", "minkailou_tabagore", "bacha_tabagore", "moumoumini_tabagore", "gallou_tabagore", "soumma_tabagore", "sadou_tabagore", "abdourhamane_tabagore"] },
-    "zabbo_omorou": { id: "zabbo_omorou", name: "Zabbo Omorou", alias: null, gender: "F", gen: 4, father: "omorou_ali", mother: null, children: [] },
-    "ichata_omorou": { id: "ichata_omorou", name: "Ichata Omorou", alias: null, gender: "F", gen: 4, father: "omorou_ali", mother: null, children: [] },
-    
-    // GÉNÉRATION 4 - Enfants de Tamimoune Ali
-    "chiddaye_alphary": { id: "chiddaye_alphary", name: "Chiddaye", alias: "Sidey", gender: "M", gen: 4, father: "tamimoune_ali", mother: null, children: [] },
-    "mata_alphary": { id: "mata_alphary", name: "Mata Alphary", alias: null, gender: "F", gen: 4, father: "tamimoune_ali", mother: null, children: [] },
-    "ichata_alphary": { id: "ichata_alphary", name: "Ichata Alphary", alias: null, gender: "F", gen: 4, father: "tamimoune_ali", mother: null, children: [] },
-    "boudjal_alphary": { id: "boudjal_alphary", name: "Boudjal", alias: "Boudia", gender: "M", gen: 4, father: "tamimoune_ali", mother: null, children: [] },
-    "saleymatou_alphary": { id: "saleymatou_alphary", name: "Saleymatou", alias: null, gender: "F", gen: 4, father: "tamimoune_ali", mother: null, children: [] },
-    
-    // GÉNÉRATION 4 - Enfants de Mahadi Ali
-    "dayo_mahadi": { id: "dayo_mahadi", name: "Dayo", alias: null, gender: "F", gen: 4, father: "mahadi_ali", mother: null, children: [] },
-    "saffia_mahadi": { id: "saffia_mahadi", name: "Saffia", alias: null, gender: "F", gen: 4, father: "mahadi_ali", mother: null, children: [] },
-    "sawde_mahadi": { id: "sawde_mahadi", name: "Sawde", alias: null, gender: "F", gen: 4, father: "mahadi_ali", mother: null, children: [] },
-    "zarha_mahadi": { id: "zarha_mahadi", name: "Zarha", alias: null, gender: "F", gen: 4, father: "mahadi_ali", mother: null, children: [] },
-    "aminta_mahadi": { id: "aminta_mahadi", name: "Aminta Mahadi", alias: null, gender: "F", gen: 4, father: "mahadi_ali", mother: null, children: [] },
-    "seydou_mahadi": { id: "seydou_mahadi", name: "Seydou Mahadi", alias: null, gender: "M", gen: 4, father: "mahadi_ali", mother: null, children: ["babeye_seydou", "abaneye_seydou", "adija_seydou", "chidi_seydou", "arhamatou_seydou", "mariama_seydou", "ali_seydou", "bibata_seydou", "abdoulaye_seydou", "saleye_seydou"] },
-    
-    // GÉNÉRATION 4 - Enfants d'Agacha (Kobbo)
-    "aicha_fedja": { id: "aicha_fedja", name: "Aicha Fedja", alias: null, gender: "F", gen: 4, father: null, mother: "agacha_kobbo", children: [] },
-    "arhamatou_fedja": { id: "arhamatou_fedja", name: "Arhamatou Fedja", alias: null, gender: "F", gen: 4, father: null, mother: "agacha_kobbo", children: [] },
-    "issa_mohomodou": { id: "issa_mohomodou", name: "Issa Mohomodou", alias: null, gender: "M", gen: 4, father: null, mother: "agacha_kobbo", children: [] },
-    "taya_mohomodou": { id: "taya_mohomodou", name: "Taya Mohomodou", alias: null, gender: "M", gen: 4, father: null, mother: "agacha_kobbo", children: [] },
-    "izeboncana_tayda": { id: "izeboncana_tayda", name: "Izeboncana Tayda", alias: null, gender: "F", gen: 4, father: null, mother: "agacha_kobbo", children: ["timintika_bodowal", "sawata_bodowal", "zarha_bodowal"] },
-    "jaouja_tayda": { id: "jaouja_tayda", name: "Jaouja Tayda", alias: null, gender: "F", gen: 4, father: null, mother: "agacha_kobbo", children: [] },
-    "dally_tayda": { id: "dally_tayda", name: "Dally Tayda", alias: null, gender: "F", gen: 4, father: null, mother: "agacha_kobbo", children: ["arhamatou_dally", "hancha_dally", "idrissa_dally", "abdoulaye_dally", "mouna_dally", "bouba_dally", "souma_dally", "koddo_dally"] },
-    
-    // GÉNÉRATION 5 - Enfants de Mohomone (Galla)
-    "ibrahim_mohomone": { id: "ibrahim_mohomone", name: "Ibrahim Mohomone", alias: null, gender: "M", gen: 5, father: "mohomone_galla", mother: null, children: [] },
-    "seydou_mohomone": { id: "seydou_mohomone", name: "Seydou Mohomone", alias: null, gender: "M", gen: 5, father: "mohomone_galla", mother: null, children: [] },
-    "ousmane_mohomone": { id: "ousmane_mohomone", name: "Ousmane Mohomone", alias: null, gender: "M", gen: 5, father: "mohomone_galla", mother: null, children: [] },
-    "adama_mohomone": { id: "adama_mohomone", name: "Adama Mohomone", alias: null, gender: "M", gen: 5, father: "mohomone_galla", mother: null, children: [] },
-    "hirinissa_mohomone": { id: "hirinissa_mohomone", name: "Hirinissa", alias: "Aichata", gender: "F", gen: 5, father: "mohomone_galla", mother: null, children: [] },
-    
-    // GÉNÉRATION 5 - Enfants d'Alassane (Sosso)
-    "alhabibou_alassane": { id: "alhabibou_alassane", name: "Alhabibou", alias: null, gender: "M", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    "alkassoume_alassane": { id: "alkassoume_alassane", name: "Alkassoume", alias: null, gender: "M", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    "ibrahim_alassane": { id: "ibrahim_alassane", name: "Ibrahim Alassane", alias: null, gender: "M", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    "abdourhamane_alassane": { id: "abdourhamane_alassane", name: "Abdourhamane", alias: null, gender: "M", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    "moussa_alassane": { id: "moussa_alassane", name: "Moussa Alassane", alias: null, gender: "M", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    "mariama_alassane": { id: "mariama_alassane", name: "Mariama Alassane", alias: null, gender: "F", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    "safietou_alassane": { id: "safietou_alassane", name: "Safietou Alassane", alias: null, gender: "F", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    "hamsatou_alassane": { id: "hamsatou_alassane", name: "Hamsatou Alassane", alias: null, gender: "F", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    "arhamatou_alassane": { id: "arhamatou_alassane", name: "Arhamatou Alassane", alias: null, gender: "F", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    "hawa_alassane": { id: "hawa_alassane", name: "Hawa Alassane", alias: null, gender: "F", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    "bintou_alassane": { id: "bintou_alassane", name: "Bintou Alassane", alias: null, gender: "F", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    "aichata_alassane": { id: "aichata_alassane", name: "Aichata Alassane", alias: null, gender: "F", gen: 5, father: "alassane_sosso", mother: null, children: [] },
-    
-    // GÉNÉRATION 5 - Enfants de Tabbo Omorou (Tabagore)
-    "almahamoudou_tabagore": { id: "almahamoudou_tabagore", name: "Almahamoudou", alias: "Illile", gender: "M", gen: 5, father: "tabbo_omorou", mother: "saffia_mahadi", children: [] },
-    "minkailou_tabagore": { id: "minkailou_tabagore", name: "Minkailou", alias: "Kila", gender: "M", gen: 5, father: "tabbo_omorou", mother: "saffia_mahadi", children: [] },
-    "bacha_tabagore": { id: "bacha_tabagore", name: "Bacha Tabagore", alias: null, gender: "M", gen: 5, father: "tabbo_omorou", mother: "saffia_mahadi", children: [] },
-    "moumoumini_tabagore": { id: "moumoumini_tabagore", name: "Moumoumini", alias: "Belleythiero", gender: "M", gen: 5, father: "tabbo_omorou", mother: "saffia_mahadi", children: [] },
-    "gallou_tabagore": { id: "gallou_tabagore", name: "Gallou", alias: null, gender: "M", gen: 5, father: "tabbo_omorou", mother: "saffia_mahadi", children: [], note: "Sans enfants" },
-    "soumma_tabagore": { id: "soumma_tabagore", name: "Soumma", alias: null, gender: "M", gen: 5, father: "tabbo_omorou", mother: "saffia_mahadi", children: [], note: "Sans enfants" },
-    "sadou_tabagore": { id: "sadou_tabagore", name: "Sadou Tabagore", alias: null, gender: "M", gen: 5, father: "tabbo_omorou", mother: "saffia_mahadi", children: [], note: "Sans enfants" },
-    "abdourhamane_tabagore": { id: "abdourhamane_tabagore", name: "Abdourhamane Tabagore", alias: null, gender: "M", gen: 5, father: "tabbo_omorou", mother: null, children: [] },
-    
-    // GÉNÉRATION 5 - Enfants de Kabongou Omorou
-    "wayo_ngoyba": { id: "wayo_ngoyba", name: "Wayo", alias: "N'goyba", gender: "M", gen: 5, father: "kabongou_omorou", mother: "jato_moussa", children: [] },
-    "aminta_ngoyba": { id: "aminta_ngoyba", name: "Aminta", alias: "N'goyba", gender: "F", gen: 5, father: "kabongou_omorou", mother: "jato_moussa", children: [] },
-    "makiou_ngoyba": { id: "makiou_ngoyba", name: "Makiou", alias: "N'goyba", gender: "M", gen: 5, father: "kabongou_omorou", mother: "jato_moussa", children: [] },
-    "yacouba_ngoyba": { id: "yacouba_ngoyba", name: "Yacouba", alias: "N'goyba", gender: "M", gen: 5, father: "kabongou_omorou", mother: "jato_moussa", children: [] },
-    "ngolo_ngoyba": { id: "ngolo_ngoyba", name: "N'Golo", alias: "N'goyba", gender: "M", gen: 5, father: "kabongou_omorou", mother: "jato_moussa", children: [] },
-    "issiaka_ngoyba": { id: "issiaka_ngoyba", name: "Issiaka", alias: "N'goyba", gender: "M", gen: 5, father: "kabongou_omorou", mother: null, children: [] },
-    
-    // GÉNÉRATION 5 - Enfants d'Alhousseini (Aggada)
-    "hakimoune_aggada": { id: "hakimoune_aggada", name: "Hakimoune", alias: null, gender: "M", gen: 5, father: "alhousseini_aggada", mother: "mata_alphary", children: [] },
-    "hamida_aggada": { id: "hamida_aggada", name: "Hamida", alias: null, gender: "F", gen: 5, father: "alhousseini_aggada", mother: "mata_alphary", children: [] },
-    "houna_aggada": { id: "houna_aggada", name: "Houna", alias: null, gender: "F", gen: 5, father: "alhousseini_aggada", mother: "mata_alphary", children: [] },
-    "zabbo_aggada": { id: "zabbo_aggada", name: "Zabbo Aggada", alias: null, gender: "F", gen: 5, father: "alhousseini_aggada", mother: "mata_alphary", children: [] },
-    
-    // GÉNÉRATION 5 - Autres
-    "harouna_achidogo": { id: "harouna_achidogo", name: "Harouna", alias: null, gender: "M", gen: 5, father: "ousmane_achidogo", mother: null, children: [] },
-    "haoua_nouhou": { id: "haoua_nouhou", name: "Haoua Nouhou", alias: null, gender: "F", gen: 5, father: "nouhoum_babachigaw", mother: null, children: [] },
-    
-    // GÉNÉRATION 5 - Enfants de Seydou Mahadi
-    "babeye_seydou": { id: "babeye_seydou", name: "Babeye", alias: null, gender: "M", gen: 5, father: "seydou_mahadi", mother: null, children: [] },
-    "abaneye_seydou": { id: "abaneye_seydou", name: "Abaneye", alias: null, gender: "M", gen: 5, father: "seydou_mahadi", mother: null, children: [] },
-    "adija_seydou": { id: "adija_seydou", name: "Adija Seydou", alias: null, gender: "F", gen: 5, father: "seydou_mahadi", mother: null, children: [] },
-    "chidi_seydou": { id: "chidi_seydou", name: "Chidi", alias: null, gender: "M", gen: 5, father: "seydou_mahadi", mother: null, children: [] },
-    "arhamatou_seydou": { id: "arhamatou_seydou", name: "Arhamatou Seydou", alias: null, gender: "F", gen: 5, father: "seydou_mahadi", mother: null, children: [] },
-    "mariama_seydou": { id: "mariama_seydou", name: "Mariama Seydou", alias: null, gender: "F", gen: 5, father: "seydou_mahadi", mother: null, children: [] },
-    "ali_seydou": { id: "ali_seydou", name: "Ali Seydou", alias: null, gender: "M", gen: 5, father: "seydou_mahadi", mother: null, children: [] },
-    "bibata_seydou": { id: "bibata_seydou", name: "Bibata", alias: null, gender: "F", gen: 5, father: "seydou_mahadi", mother: null, children: [] },
-    "abdoulaye_seydou": { id: "abdoulaye_seydou", name: "Abdoulaye Seydou", alias: null, gender: "M", gen: 5, father: "seydou_mahadi", mother: null, children: [] },
-    "saleye_seydou": { id: "saleye_seydou", name: "Saleye", alias: null, gender: "M", gen: 5, father: "seydou_mahadi", mother: null, children: [] }
+    // ═══ GÉNÉRATION 1 ═══
+    "alkamahamane": { id: "alkamahamane", name: "Alkamahamane Sabalkaidi", alias: null, gender: "M", gen: 1, father: null, mother: null, children: ["goussoumbi","goma","hounaye","soumboulou","farimata_alk","ali"], note: "Ancêtre fondateur" },
+    // ═══ GÉNÉRATION 2 - Enfants d'Alkamahamane (6) ═══
+    "goussoumbi": { id: "goussoumbi", name: "Goussoumbi Alkamahamane", alias: null, gender: "M", gen: 2, father: "alkamahamane", mother: null, children: [] },
+    "goma": { id: "goma", name: "Goma Alkamahamane", alias: null, gender: "M", gen: 2, father: "alkamahamane", mother: null, children: [] },
+    "hounaye": { id: "hounaye", name: "Hounaye Alkamahamane", alias: null, gender: "F", gen: 2, father: "alkamahamane", mother: null, children: [] },
+    "soumboulou": { id: "soumboulou", name: "Soumboulou Alkamahamane", alias: null, gender: "F", gen: 2, father: "alkamahamane", mother: null, children: [] },
+    "farimata_alk": { id: "farimata_alk", name: "Farimata Alkamahamane", alias: null, gender: "F", gen: 2, father: "alkamahamane", mother: null, children: ["dalla"] },
+    "ali": { id: "ali", name: "Ali Alkamahamane", alias: "Aly Koïra", gender: "M", gen: 2, father: "alkamahamane", mother: null, children: ["mahamane","babachigaw","kobbo","moussa","omorou","tamimoune","mahadi"], note: "Fondateur du quartier" },
+    // ═══ GÉNÉRATION 3 - Enfants d'Ali (7) + Dalla ═══
+    "mahamane": { id: "mahamane", name: "Mahamane Ali", alias: null, gender: "M", gen: 3, father: "ali", mother: null, children: ["mohomone","taya","ahmadou","yata","issouf","halilou","alhalil","aliou_m","houzaye","alassane_s","agaicha_m","abdou_d"], note: "Mère: Waykounga Samba - 12 enfants" },
+    "babachigaw": { id: "babachigaw", name: "Babachigaw Ali", alias: null, gender: "M", gen: 3, father: "ali", mother: null, children: ["aliou_b","aboubacar","ousmane_a","alhousseini","abdoulaye_s","nouhoum","mata_b"], note: "Mère: Farimata Alassane - 7 enfants" },
+    "kobbo": { id: "kobbo", name: "Agacha Ali", alias: "Kobbo", gender: "F", gen: 3, father: "ali", mother: null, children: ["aicha_f","arhamatou_f","issa_m","taya_m","izeboncana","jaouja","dally"], note: "Mère: Fouga Alassane - 7 enfants" },
+    "moussa": { id: "moussa", name: "Moussa Ali", alias: null, gender: "M", gen: 3, father: "ali", mother: null, children: ["mata_m","haylloli","wanaissou_m","jato","alassane_m","assoumane_m","abdou_m","sala"], note: "Mère: Fouga Alassane - 8 enfants" },
+    "omorou": { id: "omorou", name: "Omorou Ali", alias: null, gender: "M", gen: 3, father: "ali", mother: null, children: ["houssouba","kabongou","mahamadou_o","sourgou","tabbo_o","zabbo","ichata_o"], note: "Mère: Fouga Alassane - 7 enfants" },
+    "tamimoune": { id: "tamimoune", name: "Tamimoune Ali", alias: null, gender: "M", gen: 3, father: "ali", mother: null, children: ["chiddaye","mata_a","ichata_a","boudjal","saleymatou"], note: "Mère: Fouga Alassane - 5 enfants" },
+    "mahadi": { id: "mahadi", name: "Mahadi Ali", alias: null, gender: "M", gen: 3, father: "ali", mother: null, children: ["dayo","saffia","sawde","zarha","aminta_m","seydou_m"], note: "Mère: Fouga Alassane - 6 enfants" },
+    "dalla": { id: "dalla", name: "Dalla", alias: null, gender: "M", gen: 3, father: null, mother: "farimata_alk", children: [] },
+    // ═══ GÉNÉRATION 4 - Enfants de Mahamane Ali (12) ═══
+    "mohomone": { id: "mohomone", name: "Mohomone Mahamane", alias: "Galla", gender: "M", gen: 4, father: "mahamane", mother: null, children: ["ibrahim_m","seydou_mo","ousmane_m","adama_m","hirinissa"] },
+    "taya": { id: "taya", name: "Taya Mahamane", alias: null, gender: "M", gen: 4, father: "mahamane", mother: null, children: ["halimatou_h","assaliha_h","arboncana","hadaye"] },
+    "ahmadou": { id: "ahmadou", name: "Ahmadou Mahamane", alias: "Agawa", gender: "M", gen: 4, father: "mahamane", mother: null, children: [] },
+    "yata": { id: "yata", name: "Yata Mahamane", alias: null, gender: "F", gen: 4, father: "mahamane", mother: null, children: ["momo","adama_a","hounaijata","waykouti","daoulata","mouna_a","zeinaba"] },
+    "issouf": { id: "issouf", name: "Issouf Mahamane", alias: "Tabbo", gender: "M", gen: 4, father: "mahamane", mother: null, children: ["moulaye","adijatou_t","annoussourou","alassane_t","arhamatou_t","assaliha_t","yahiya_t"] },
+    "halilou": { id: "halilou", name: "Halilou Mahamane", alias: null, gender: "M", gen: 4, father: "mahamane", mother: null, children: ["hamma","idrissa_h","mariam_h","aichata_h"] },
+    "alhalil": { id: "alhalil", name: "Alhalil Mahamane", alias: null, gender: "M", gen: 4, father: "mahamane", mother: null, children: [] },
+    "aliou_m": { id: "aliou_m", name: "Aliou Mahamane", alias: null, gender: "M", gen: 4, father: "mahamane", mother: null, children: [], note: "Sans enfants" },
+    "houzaye": { id: "houzaye", name: "Houzaye Mahamane", alias: null, gender: "M", gen: 4, father: "mahamane", mother: null, children: [] },
+    "alassane_s": { id: "alassane_s", name: "Alassane Mahamane", alias: "Sosso", gender: "M", gen: 4, father: "mahamane", mother: null, children: ["alhabibou","alkassoume","ibrahim_a","abdourhamane_a","moussa_a","mariama_a","safietou_a","hamsatou","arhamatou_a","hawa_a","bintou","aichata_a"] },
+    "agaicha_m": { id: "agaicha_m", name: "Agaicha Mahamane", alias: null, gender: "F", gen: 4, father: "mahamane", mother: null, children: [] },
+    "abdou_d": { id: "abdou_d", name: "Abdou Mahamane", alias: "Doudou", gender: "M", gen: 4, father: "mahamane", mother: null, children: ["ichata_d","saley_d","hanchata","zaouzata","sarata","akilou","moukaila","daouda","sadou_d","idrissa_d"] },
+    // ═══ GÉNÉRATION 4 - Enfants de Babachigaw Ali (7) ═══
+    "aliou_b": { id: "aliou_b", name: "Aliou Babachigaw", alias: null, gender: "M", gen: 4, father: "babachigaw", mother: null, children: [] },
+    "aboubacar": { id: "aboubacar", name: "Aboubacar Babachigaw", alias: "Djama", gender: "M", gen: 4, father: "babachigaw", mother: null, children: [] },
+    "ousmane_a": { id: "ousmane_a", name: "Ousmane Babachigaw", alias: "Achidogo", gender: "M", gen: 4, father: "babachigaw", mother: null, children: [] },
+    "alhousseini": { id: "alhousseini", name: "Alhousseini Babachigaw", alias: "Aggada", gender: "M", gen: 4, father: "babachigaw", mother: null, children: ["hakimoune","hamida","houna","zabbo_ag"] },
+    "abdoulaye_s": { id: "abdoulaye_s", name: "Abdoulaye Babachigaw", alias: "Sagara", gender: "M", gen: 4, father: "babachigaw", mother: null, children: [] },
+    "nouhoum": { id: "nouhoum", name: "Nouhoum Babachigaw", alias: null, gender: "M", gen: 4, father: "babachigaw", mother: null, children: [] },
+    "mata_b": { id: "mata_b", name: "Mata Babachigaw", alias: null, gender: "F", gen: 4, father: "babachigaw", mother: null, children: [] },
+    // ═══ GÉNÉRATION 4 - Enfants de Moussa Ali (8) ═══
+    "mata_m": { id: "mata_m", name: "Mata Moussa", alias: null, gender: "F", gen: 4, father: "moussa", mother: null, children: [] },
+    "haylloli": { id: "haylloli", name: "Haylloli Moussa", alias: null, gender: "F", gen: 4, father: "moussa", mother: null, children: [] },
+    "wanaissou_m": { id: "wanaissou_m", name: "Wanaissou Moussa", alias: null, gender: "M", gen: 4, father: "moussa", mother: null, children: [] },
+    "jato": { id: "jato", name: "Jato Moussa", alias: null, gender: "F", gen: 4, father: "moussa", mother: null, children: [] },
+    "alassane_m": { id: "alassane_m", name: "Alassane Moussa", alias: null, gender: "M", gen: 4, father: "moussa", mother: null, children: [] },
+    "assoumane_m": { id: "assoumane_m", name: "Assoumane Moussa", alias: null, gender: "M", gen: 4, father: "moussa", mother: null, children: [] },
+    "abdou_m": { id: "abdou_m", name: "Abdou Moussa", alias: null, gender: "M", gen: 4, father: "moussa", mother: null, children: [] },
+    "sala": { id: "sala", name: "Sala Moussa", alias: null, gender: "M", gen: 4, father: "moussa", mother: null, children: [] },
+    // ═══ GÉNÉRATION 4 - Enfants d'Omorou Ali (7) ═══
+    "houssouba": { id: "houssouba", name: "Houssouba Omorou", alias: null, gender: "M", gen: 4, father: "omorou", mother: null, children: [], note: "Sans enfants" },
+    "kabongou": { id: "kabongou", name: "Kabongou Omorou", alias: null, gender: "M", gen: 4, father: "omorou", mother: null, children: ["wayo","aminta_k","makiou","yacouba","ngolo","issiaka"] },
+    "mahamadou_o": { id: "mahamadou_o", name: "Mahamadou Omorou", alias: null, gender: "M", gen: 4, father: "omorou", mother: null, children: ["zeinabou","koddo_m","bouba_m"] },
+    "sourgou": { id: "sourgou", name: "Sourgou Omorou", alias: null, gender: "M", gen: 4, father: "omorou", mother: null, children: ["adija_s","mariama_s","fatoumata_s","ammou","koddo_s"] },
+    "tabbo_o": { id: "tabbo_o", name: "Tabbo Omorou", alias: "Abdoulaye", gender: "M", gen: 4, father: "omorou", mother: null, children: ["almahamoudou","minkailou","bacha","moumoumini","gallou","soumma","sadou_t"] },
+    "zabbo": { id: "zabbo", name: "Zabbo Omorou", alias: null, gender: "F", gen: 4, father: "omorou", mother: null, children: [] },
+    "ichata_o": { id: "ichata_o", name: "Ichata Omorou", alias: null, gender: "F", gen: 4, father: "omorou", mother: null, children: ["alhoussouna","hachimine","hallachi","houreita_a","mariama_dj","haoua_dj","aminta_dj","haja"] },
+    // ═══ GÉNÉRATION 4 - Enfants de Tamimoune Ali (5) ═══
+    "chiddaye": { id: "chiddaye", name: "Chiddaye Alphary", alias: null, gender: "M", gen: 4, father: "tamimoune", mother: null, children: ["djiougou","arhamatou_ch"] },
+    "mata_a": { id: "mata_a", name: "Mata Alphary", alias: null, gender: "F", gen: 4, father: "tamimoune", mother: null, children: ["hakimoune","hamida","houna","zabbo_ag"] },
+    "ichata_a": { id: "ichata_a", name: "Ichata Alphary", alias: "Aissata", gender: "F", gen: 4, father: "tamimoune", mother: null, children: [], note: "Sans enfants" },
+    "boudjal": { id: "boudjal", name: "Boudjal Alphary", alias: "Boudia", gender: "M", gen: 4, father: "tamimoune", mother: null, children: [] },
+    "saleymatou": { id: "saleymatou", name: "Saleymatou Alphary", alias: null, gender: "F", gen: 4, father: "tamimoune", mother: null, children: ["salo"] },
+    // ═══ GÉNÉRATION 4 - Enfants de Mahadi Ali (6) ═══
+    "dayo": { id: "dayo", name: "Dayo Mahadi", alias: null, gender: "F", gen: 4, father: "mahadi", mother: null, children: [] },
+    "saffia": { id: "saffia", name: "Saffia Mahadi", alias: null, gender: "F", gen: 4, father: "mahadi", mother: null, children: [] },
+    "sawde": { id: "sawde", name: "Sawde Mahadi", alias: null, gender: "F", gen: 4, father: "mahadi", mother: null, children: [] },
+    "zarha": { id: "zarha", name: "Zarha Mahadi", alias: null, gender: "F", gen: 4, father: "mahadi", mother: null, children: [] },
+    "aminta_m": { id: "aminta_m", name: "Aminta Mahadi", alias: null, gender: "F", gen: 4, father: "mahadi", mother: null, children: [] },
+    "seydou_m": { id: "seydou_m", name: "Seydou Mahadi", alias: null, gender: "M", gen: 4, father: "mahadi", mother: null, children: ["babeye","abaneye","adija_se","chidi","arhamatou_se","mariama_se","ali_se","bibata","abdoulaye_se","saleye"] },
+    // ═══ GÉNÉRATION 4 - Enfants d'Agacha Kobbo (7) ═══
+    "aicha_f": { id: "aicha_f", name: "Aicha Fedja", alias: null, gender: "F", gen: 4, father: null, mother: "kobbo", children: ["safietou_h","farimata_h","mohomodou_h","haoua_h","adama_h"] },
+    "arhamatou_f": { id: "arhamatou_f", name: "Arhamatou Fedja", alias: null, gender: "F", gen: 4, father: null, mother: "kobbo", children: ["fatou_m","maimouna_m","yahiya_m","mommo_m","wanaissou_b"] },
+    "issa_m": { id: "issa_m", name: "Issa Mohomodou", alias: null, gender: "M", gen: 4, father: null, mother: "kobbo", children: ["mohomone_i","haoua_i"] },
+    "taya_m": { id: "taya_m", name: "Taya Mohomodou", alias: null, gender: "M", gen: 4, father: null, mother: "kobbo", children: ["babba","noussoura","kabongou_a"] },
+    "izeboncana": { id: "izeboncana", name: "Izeboncana Tayda", alias: null, gender: "F", gen: 4, father: null, mother: "kobbo", children: ["timintika","sawata","zarha_b"] },
+    "jaouja": { id: "jaouja", name: "Jaouja Tayda", alias: null, gender: "F", gen: 4, father: null, mother: "kobbo", children: ["chidiya","ichata_ha"] },
+    "dally": { id: "dally", name: "Dally Tayda", alias: null, gender: "F", gen: 4, father: null, mother: "kobbo", children: ["arhamatou_d","hancha","idrissa_da","abdoulaye_d","mouna_d","bouba_d","souma","koddo_d"] },
+    // ═══ GÉNÉRATION 5 - Enfants d'Issouf Tabbo (7) ═══
+    "moulaye": { id: "moulaye", name: "Moulaye Tabbo", alias: null, gender: "M", gen: 5, father: "issouf", mother: null, children: [] },
+    "adijatou_t": { id: "adijatou_t", name: "Adijatou Tabbo", alias: null, gender: "F", gen: 5, father: "issouf", mother: null, children: [] },
+    "annoussourou": { id: "annoussourou", name: "Annoussourou Tabbo", alias: null, gender: "M", gen: 5, father: "issouf", mother: null, children: [] },
+    "alassane_t": { id: "alassane_t", name: "Alassane Tabbo", alias: "Boncana", gender: "M", gen: 5, father: "issouf", mother: null, children: [] },
+    "arhamatou_t": { id: "arhamatou_t", name: "Arhamatou Tabbo", alias: null, gender: "F", gen: 5, father: "issouf", mother: null, children: [] },
+    "assaliha_t": { id: "assaliha_t", name: "Assaliha Tabbo", alias: null, gender: "F", gen: 5, father: "issouf", mother: null, children: [], note: "Sans enfants" },
+    "yahiya_t": { id: "yahiya_t", name: "Yahiya Tabbo", alias: null, gender: "M", gen: 5, father: "issouf", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Yata (7) ═══
+    "momo": { id: "momo", name: "Momo Assabi", alias: null, gender: "M", gen: 5, father: null, mother: "yata", children: [] },
+    "adama_a": { id: "adama_a", name: "Adama Assabi", alias: null, gender: "M", gen: 5, father: null, mother: "yata", children: [] },
+    "hounaijata": { id: "hounaijata", name: "Hounaijata Assabi", alias: null, gender: "F", gen: 5, father: null, mother: "yata", children: [] },
+    "waykouti": { id: "waykouti", name: "Waykouti Assabi", alias: null, gender: "F", gen: 5, father: null, mother: "yata", children: [] },
+    "daoulata": { id: "daoulata", name: "Daoulata Assabi", alias: null, gender: "F", gen: 5, father: null, mother: "yata", children: [] },
+    "mouna_a": { id: "mouna_a", name: "Mouna Assabi", alias: null, gender: "F", gen: 5, father: null, mother: "yata", children: [] },
+    "zeinaba": { id: "zeinaba", name: "Zeinaba Assabi", alias: null, gender: "F", gen: 5, father: null, mother: "yata", children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants d'Alassane Sosso (12) ═══
+    "alhabibou": { id: "alhabibou", name: "Alhabibou Alassane", alias: null, gender: "M", gen: 5, father: "alassane_s", mother: null, children: [] },
+    "alkassoume": { id: "alkassoume", name: "Alkassoume Alassane", alias: null, gender: "M", gen: 5, father: "alassane_s", mother: null, children: [] },
+    "ibrahim_a": { id: "ibrahim_a", name: "Ibrahim Alassane", alias: null, gender: "M", gen: 5, father: "alassane_s", mother: null, children: [] },
+    "abdourhamane_a": { id: "abdourhamane_a", name: "Abdourhamane Alassane", alias: null, gender: "M", gen: 5, father: "alassane_s", mother: null, children: [] },
+    "moussa_a": { id: "moussa_a", name: "Moussa Alassane", alias: null, gender: "M", gen: 5, father: "alassane_s", mother: null, children: [] },
+    "mariama_a": { id: "mariama_a", name: "Mariama Alassane", alias: null, gender: "F", gen: 5, father: "alassane_s", mother: null, children: [] },
+    "safietou_a": { id: "safietou_a", name: "Safietou Alassane", alias: null, gender: "F", gen: 5, father: "alassane_s", mother: null, children: [] },
+    "hamsatou": { id: "hamsatou", name: "Hamsatou Alassane", alias: null, gender: "F", gen: 5, father: "alassane_s", mother: null, children: [] },
+    "arhamatou_a": { id: "arhamatou_a", name: "Arhamatou Alassane", alias: null, gender: "F", gen: 5, father: "alassane_s", mother: null, children: [] },
+    "hawa_a": { id: "hawa_a", name: "Hawa Alassane", alias: null, gender: "F", gen: 5, father: "alassane_s", mother: null, children: [] },
+    "bintou": { id: "bintou", name: "Bintou Alassane", alias: null, gender: "F", gen: 5, father: "alassane_s", mother: null, children: [] },
+    "aichata_a": { id: "aichata_a", name: "Aichata Alassane", alias: null, gender: "F", gen: 5, father: "alassane_s", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Mohomone Galla (5) ═══
+    "ibrahim_m": { id: "ibrahim_m", name: "Ibrahim Mohomone", alias: null, gender: "M", gen: 5, father: "mohomone", mother: null, children: [] },
+    "seydou_mo": { id: "seydou_mo", name: "Seydou Mohomone", alias: null, gender: "M", gen: 5, father: "mohomone", mother: null, children: [] },
+    "ousmane_m": { id: "ousmane_m", name: "Ousmane Mohomone", alias: null, gender: "M", gen: 5, father: "mohomone", mother: null, children: [] },
+    "adama_m": { id: "adama_m", name: "Adama Mohomone", alias: null, gender: "M", gen: 5, father: "mohomone", mother: null, children: [] },
+    "hirinissa": { id: "hirinissa", name: "Hirinissa Mohomone", alias: "Aichata", gender: "F", gen: 5, father: "mohomone", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Halilou (4) ═══
+    "hamma": { id: "hamma", name: "Hamma Halilou", alias: "Ario", gender: "M", gen: 5, father: "halilou", mother: null, children: [] },
+    "idrissa_h": { id: "idrissa_h", name: "Idrissa Halilou", alias: null, gender: "M", gen: 5, father: "halilou", mother: null, children: [] },
+    "mariam_h": { id: "mariam_h", name: "Mariam Halilou", alias: null, gender: "F", gen: 5, father: "halilou", mother: null, children: [] },
+    "aichata_h": { id: "aichata_h", name: "Aichata Halilou", alias: null, gender: "F", gen: 5, father: "halilou", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Taya Mahamane (4) ═══
+    "halimatou_h": { id: "halimatou_h", name: "Halimatou Hamadahamane", alias: null, gender: "F", gen: 5, father: "taya", mother: null, children: [] },
+    "assaliha_h": { id: "assaliha_h", name: "Assaliha Hamadahamane", alias: null, gender: "F", gen: 5, father: "taya", mother: null, children: [] },
+    "arboncana": { id: "arboncana", name: "Arboncana Hamadahamane", alias: null, gender: "M", gen: 5, father: "taya", mother: null, children: [] },
+    "hadaye": { id: "hadaye", name: "Hadaye Hamadahamane", alias: null, gender: "F", gen: 5, father: "taya", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants d'Abdou Doudou (10) ═══
+    "ichata_d": { id: "ichata_d", name: "Ichata Doudou", alias: null, gender: "F", gen: 5, father: "abdou_d", mother: null, children: [] },
+    "saley_d": { id: "saley_d", name: "Saley Doudou", alias: null, gender: "M", gen: 5, father: "abdou_d", mother: null, children: [] },
+    "hanchata": { id: "hanchata", name: "Hanchata Doudou", alias: null, gender: "F", gen: 5, father: "abdou_d", mother: null, children: [] },
+    "zaouzata": { id: "zaouzata", name: "Zaouzata Doudou", alias: null, gender: "F", gen: 5, father: "abdou_d", mother: null, children: [] },
+    "sarata": { id: "sarata", name: "Sarata Doudou", alias: null, gender: "F", gen: 5, father: "abdou_d", mother: null, children: [] },
+    "akilou": { id: "akilou", name: "Akilou Doudou", alias: null, gender: "M", gen: 5, father: "abdou_d", mother: null, children: [] },
+    "moukaila": { id: "moukaila", name: "Moukaila Doudou", alias: null, gender: "M", gen: 5, father: "abdou_d", mother: null, children: [] },
+    "daouda": { id: "daouda", name: "Daouda Doudou", alias: null, gender: "M", gen: 5, father: "abdou_d", mother: null, children: [] },
+    "sadou_d": { id: "sadou_d", name: "Sadou Doudou", alias: null, gender: "M", gen: 5, father: "abdou_d", mother: null, children: [] },
+    "idrissa_d": { id: "idrissa_d", name: "Idrissa Doudou", alias: null, gender: "M", gen: 5, father: "abdou_d", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Kabongou Omorou (6) ═══
+    "wayo": { id: "wayo", name: "Wayo Kabongou", alias: "N'goyba", gender: "M", gen: 5, father: "kabongou", mother: null, children: [] },
+    "aminta_k": { id: "aminta_k", name: "Aminta Kabongou", alias: "N'goyba", gender: "F", gen: 5, father: "kabongou", mother: null, children: [] },
+    "makiou": { id: "makiou", name: "Makiou Kabongou", alias: "N'goyba", gender: "M", gen: 5, father: "kabongou", mother: null, children: [] },
+    "yacouba": { id: "yacouba", name: "Yacouba Kabongou", alias: "N'goyba", gender: "M", gen: 5, father: "kabongou", mother: null, children: [] },
+    "ngolo": { id: "ngolo", name: "N'Golo Kabongou", alias: "N'goyba", gender: "M", gen: 5, father: "kabongou", mother: null, children: [] },
+    "issiaka": { id: "issiaka", name: "Issiaka Kabongou", alias: "N'goyba", gender: "M", gen: 5, father: "kabongou", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Mahamadou Omorou (3) ═══
+    "zeinabou": { id: "zeinabou", name: "Zeinabou Mahamadou", alias: null, gender: "F", gen: 5, father: "mahamadou_o", mother: null, children: [] },
+    "koddo_m": { id: "koddo_m", name: "Koddo Mahamadou", alias: null, gender: "F", gen: 5, father: "mahamadou_o", mother: null, children: [] },
+    "bouba_m": { id: "bouba_m", name: "Bouba Mahamadou", alias: null, gender: "M", gen: 5, father: "mahamadou_o", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Sourgou Omorou (5) ═══
+    "adija_s": { id: "adija_s", name: "Adija Sourgou", alias: null, gender: "F", gen: 5, father: "sourgou", mother: null, children: [] },
+    "mariama_s": { id: "mariama_s", name: "Mariama Sourgou", alias: null, gender: "F", gen: 5, father: "sourgou", mother: null, children: [] },
+    "fatoumata_s": { id: "fatoumata_s", name: "Fatoumata Sourgou", alias: null, gender: "F", gen: 5, father: "sourgou", mother: null, children: [] },
+    "ammou": { id: "ammou", name: "Ammou Sourgou", alias: null, gender: "F", gen: 5, father: "sourgou", mother: null, children: [] },
+    "koddo_s": { id: "koddo_s", name: "Koddo Sourgou", alias: null, gender: "F", gen: 5, father: "sourgou", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Tabbo Omorou (7) ═══
+    "almahamoudou": { id: "almahamoudou", name: "Almahamoudou Tabagore", alias: "Illile", gender: "M", gen: 5, father: "tabbo_o", mother: null, children: [] },
+    "minkailou": { id: "minkailou", name: "Minkailou Tabagore", alias: "Kila", gender: "M", gen: 5, father: "tabbo_o", mother: null, children: [] },
+    "bacha": { id: "bacha", name: "Bacha Tabagore", alias: null, gender: "M", gen: 5, father: "tabbo_o", mother: null, children: [] },
+    "moumoumini": { id: "moumoumini", name: "Moumoumini Tabagore", alias: "Belleythiero", gender: "M", gen: 5, father: "tabbo_o", mother: null, children: [] },
+    "gallou": { id: "gallou", name: "Gallou Tabagore", alias: null, gender: "M", gen: 5, father: "tabbo_o", mother: null, children: [], note: "Sans enfants" },
+    "soumma": { id: "soumma", name: "Soumma Tabagore", alias: null, gender: "M", gen: 5, father: "tabbo_o", mother: null, children: [], note: "Sans enfants" },
+    "sadou_t": { id: "sadou_t", name: "Sadou Tabagore", alias: null, gender: "M", gen: 5, father: "tabbo_o", mother: null, children: [], note: "Sans enfants" },
+    // ═══ GÉNÉRATION 5 - Enfants d'Ichata Omorou (8) ═══
+    "alhoussouna": { id: "alhoussouna", name: "Alhoussouna Bodowal", alias: null, gender: "M", gen: 5, father: null, mother: "ichata_o", children: [] },
+    "hachimine": { id: "hachimine", name: "Hachimine Bodowal", alias: null, gender: "M", gen: 5, father: null, mother: "ichata_o", children: [] },
+    "hallachi": { id: "hallachi", name: "Hallachi Agawa", alias: null, gender: "M", gen: 5, father: null, mother: "ichata_o", children: [] },
+    "houreita_a": { id: "houreita_a", name: "Houreita Agawa", alias: null, gender: "F", gen: 5, father: null, mother: "ichata_o", children: [] },
+    "mariama_dj": { id: "mariama_dj", name: "Mariama Djama", alias: null, gender: "F", gen: 5, father: null, mother: "ichata_o", children: [] },
+    "haoua_dj": { id: "haoua_dj", name: "Haoua Djama", alias: null, gender: "F", gen: 5, father: null, mother: "ichata_o", children: [] },
+    "aminta_dj": { id: "aminta_dj", name: "Aminta Djama", alias: null, gender: "F", gen: 5, father: null, mother: "ichata_o", children: [] },
+    "haja": { id: "haja", name: "Haja Galleye", alias: null, gender: "F", gen: 5, father: null, mother: "ichata_o", children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Seydou Mahadi (10) ═══
+    "babeye": { id: "babeye", name: "Babeye Seydou", alias: null, gender: "M", gen: 5, father: "seydou_m", mother: null, children: [] },
+    "abaneye": { id: "abaneye", name: "Abaneye Seydou", alias: null, gender: "M", gen: 5, father: "seydou_m", mother: null, children: [] },
+    "adija_se": { id: "adija_se", name: "Adija Seydou", alias: null, gender: "F", gen: 5, father: "seydou_m", mother: null, children: [] },
+    "chidi": { id: "chidi", name: "Chidi Seydou", alias: null, gender: "M", gen: 5, father: "seydou_m", mother: null, children: [] },
+    "arhamatou_se": { id: "arhamatou_se", name: "Arhamatou Seydou", alias: null, gender: "F", gen: 5, father: "seydou_m", mother: null, children: [] },
+    "mariama_se": { id: "mariama_se", name: "Mariama Seydou", alias: null, gender: "F", gen: 5, father: "seydou_m", mother: null, children: [] },
+    "ali_se": { id: "ali_se", name: "Ali Seydou", alias: null, gender: "M", gen: 5, father: "seydou_m", mother: null, children: [] },
+    "bibata": { id: "bibata", name: "Bibata Seydou", alias: null, gender: "F", gen: 5, father: "seydou_m", mother: null, children: [] },
+    "abdoulaye_se": { id: "abdoulaye_se", name: "Abdoulaye Seydou", alias: null, gender: "M", gen: 5, father: "seydou_m", mother: null, children: [] },
+    "saleye": { id: "saleye", name: "Saleye Seydou", alias: null, gender: "M", gen: 5, father: "seydou_m", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Chiddaye Alphary (2) ═══
+    "djiougou": { id: "djiougou", name: "Djiougou Chideye", alias: null, gender: "M", gen: 5, father: "chiddaye", mother: null, children: [] },
+    "arhamatou_ch": { id: "arhamatou_ch", name: "Arhamatou Chideye", alias: null, gender: "F", gen: 5, father: "chiddaye", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Mata Alphary via Alhousseini Aggada (4) ═══
+    "hakimoune": { id: "hakimoune", name: "Hakimoune Aggada", alias: null, gender: "M", gen: 5, father: "alhousseini", mother: "mata_a", children: [] },
+    "hamida": { id: "hamida", name: "Hamida Aggada", alias: null, gender: "F", gen: 5, father: "alhousseini", mother: "mata_a", children: [] },
+    "houna": { id: "houna", name: "Houna Aggada", alias: null, gender: "F", gen: 5, father: "alhousseini", mother: "mata_a", children: [] },
+    "zabbo_ag": { id: "zabbo_ag", name: "Zabbo Aggada", alias: null, gender: "F", gen: 5, father: "alhousseini", mother: "mata_a", children: [] },
+    // ═══ GÉNÉRATION 5 - Enfant de Saleymatou Alphary (1) ═══
+    "salo": { id: "salo", name: "Salo Alkassahi", alias: null, gender: "M", gen: 5, father: null, mother: "saleymatou", children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants d'Aicha Fedja (5) ═══
+    "safietou_h": { id: "safietou_h", name: "Safietou Hanakoukou", alias: null, gender: "F", gen: 5, father: null, mother: "aicha_f", children: [] },
+    "farimata_h": { id: "farimata_h", name: "Farimata Hanakoukou", alias: null, gender: "F", gen: 5, father: null, mother: "aicha_f", children: [] },
+    "mohomodou_h": { id: "mohomodou_h", name: "Mohomodou Hanakoukou", alias: "Mawal", gender: "M", gen: 5, father: null, mother: "aicha_f", children: [] },
+    "haoua_h": { id: "haoua_h", name: "Haoua Hanakoukou", alias: null, gender: "F", gen: 5, father: null, mother: "aicha_f", children: [] },
+    "adama_h": { id: "adama_h", name: "Adama Hanakoukou", alias: null, gender: "M", gen: 5, father: null, mother: "aicha_f", children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants d'Arhamatou Fedja (5) ═══
+    "fatou_m": { id: "fatou_m", name: "Fatou Moussa", alias: null, gender: "F", gen: 5, father: null, mother: "arhamatou_f", children: [] },
+    "maimouna_m": { id: "maimouna_m", name: "Maimouna Moussa", alias: null, gender: "F", gen: 5, father: null, mother: "arhamatou_f", children: [] },
+    "yahiya_m": { id: "yahiya_m", name: "Yahiya Moussa", alias: null, gender: "M", gen: 5, father: null, mother: "arhamatou_f", children: [] },
+    "mommo_m": { id: "mommo_m", name: "Mommo Moussa", alias: null, gender: "M", gen: 5, father: null, mother: "arhamatou_f", children: [] },
+    "wanaissou_b": { id: "wanaissou_b", name: "Wanaissou Moussa Bahadou", alias: null, gender: "M", gen: 5, father: null, mother: "arhamatou_f", children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Taya Mohomodou (3) ═══
+    "babba": { id: "babba", name: "Babba Amiro", alias: null, gender: "M", gen: 5, father: null, mother: null, children: [] },
+    "noussoura": { id: "noussoura", name: "Noussoura Amiro", alias: null, gender: "F", gen: 5, father: null, mother: null, children: [] },
+    "kabongou_a": { id: "kabongou_a", name: "Kabongou Amiro", alias: null, gender: "M", gen: 5, father: null, mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants d'Issa Mohomodou (2) ═══
+    "mohomone_i": { id: "mohomone_i", name: "Mohomone Issa", alias: null, gender: "M", gen: 5, father: "issa_m", mother: null, children: [] },
+    "haoua_i": { id: "haoua_i", name: "Haoua Issa", alias: "N'gary", gender: "F", gen: 5, father: "issa_m", mother: null, children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants d'Izeboncana Tayda (3) ═══
+    "timintika": { id: "timintika", name: "Timintika Bodowal", alias: null, gender: "F", gen: 5, father: null, mother: "izeboncana", children: [] },
+    "sawata": { id: "sawata", name: "Sawata Bodowal", alias: null, gender: "F", gen: 5, father: null, mother: "izeboncana", children: [] },
+    "zarha_b": { id: "zarha_b", name: "Zarha Bodowal", alias: null, gender: "F", gen: 5, father: null, mother: "izeboncana", children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Jaouja Tayda (2) ═══
+    "chidiya": { id: "chidiya", name: "Chidiya Halimine", alias: null, gender: "F", gen: 5, father: null, mother: "jaouja", children: [] },
+    "ichata_ha": { id: "ichata_ha", name: "Ichata Halimine", alias: null, gender: "F", gen: 5, father: null, mother: "jaouja", children: [] },
+    // ═══ GÉNÉRATION 5 - Enfants de Dally Tayda (8) ═══
+    "arhamatou_d": { id: "arhamatou_d", name: "Arhamatou Dally", alias: null, gender: "F", gen: 5, father: null, mother: "dally", children: [] },
+    "hancha": { id: "hancha", name: "Hancha Dally", alias: null, gender: "F", gen: 5, father: null, mother: "dally", children: [] },
+    "idrissa_da": { id: "idrissa_da", name: "Idrissa Dally", alias: null, gender: "M", gen: 5, father: null, mother: "dally", children: [] },
+    "abdoulaye_d": { id: "abdoulaye_d", name: "Abdoulaye Dally", alias: null, gender: "M", gen: 5, father: null, mother: "dally", children: [] },
+    "mouna_d": { id: "mouna_d", name: "Mouna Dally", alias: null, gender: "F", gen: 5, father: null, mother: "dally", children: [] },
+    "bouba_d": { id: "bouba_d", name: "Bouba Dally", alias: null, gender: "M", gen: 5, father: null, mother: "dally", children: [] },
+    "souma": { id: "souma", name: "Souma Dally", alias: null, gender: "F", gen: 5, father: null, mother: "dally", children: [] },
+    "koddo_d": { id: "koddo_d", name: "Koddo Dally", alias: null, gender: "F", gen: 5, father: null, mother: "dally", children: [] }
 };
 
-// THEME MANAGEMENT
-function setTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-    document.getElementById('light-btn').classList.toggle('active', theme === 'light');
-    document.getElementById('dark-btn').classList.toggle('active', theme === 'dark');
-}
+// THEME
+function setTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); document.getElementById('light-btn').classList.toggle('active', t === 'light'); document.getElementById('dark-btn').classList.toggle('active', t === 'dark'); }
+setTheme(localStorage.getItem('theme') || 'light');
 
-// Load saved theme
-const savedTheme = localStorage.getItem('theme') || 'light';
-setTheme(savedTheme);
-
-let zoomLevel = 1, expanded = new Set(), selected = null, root = 'ali_alkamahamane';
+let zoomLevel = 1, expanded = new Set(), selected = null, root = 'ali';
 const titles = { tree: ['Arbre interactif', 'Explorez votre histoire familiale'], generations: ['Par génération', 'Organisation hiérarchique'], relationship: ['Lien de parenté', 'Découvrez vos liens familiaux'], directory: ['Annuaire', 'Tous les membres de la famille'], stats: ['Statistiques', 'Données sur votre famille'] };
 
-function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    event.target.closest('.nav-item').classList.add('active');
-    document.getElementById('page-title').textContent = titles[id][0];
-    document.getElementById('page-subtitle').textContent = titles[id][1];
-    if (id === 'tree') renderTree();
-    if (id === 'generations') renderGens();
-}
-
+function showSection(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(id).classList.add('active'); event.target.closest('.nav-item')?.classList.add('active'); document.getElementById('page-title').textContent = titles[id][0]; document.getElementById('page-sub').textContent = titles[id][1]; if (id === 'tree') renderTree(); if (id === 'generations') renderGens(); }
 function changeRoot() { root = document.getElementById('root-select').value; expanded.clear(); expanded.add(root); selected = null; closeInfo(); renderTree(); }
 function renderTree() { document.getElementById('tree-container').innerHTML = buildNode(root, true); }
-
-function buildNode(id, isRoot = false) {
-    const p = data[id]; if (!p) return '';
-    const isExp = expanded.has(id);
-    const kids = (p.children || []).filter(c => data[c]);
-    const hasKids = kids.length > 0;
-    let h = `<div class="tree-node"><div class="node-card ${p.gender === 'M' ? 'male' : 'female'} ${isRoot ? 'root' : ''} ${selected === id ? 'selected' : ''}" onclick="select('${id}')"><div class="node-avatar">${p.gender === 'M' ? '👨' : '👩'}</div><div class="node-name">${p.name.split(' ').slice(0, 2).join(' ')}</div>${p.alias ? `<div class="node-alias">${p.alias}</div>` : ''}${hasKids ? `<span class="node-badge">${kids.length}</span>` : ''}${hasKids ? `<button class="node-toggle" onclick="event.stopPropagation();toggle('${id}')">${isExp ? '−' : '+'}</button>` : ''}</div>`;
-    if (hasKids && isExp) { h += `<div class="tree-children ${kids.length > 1 ? 'multi' : ''}" style="--w:${Math.max(0, (kids.length - 1) * 142)}px">${kids.map(c => buildNode(c)).join('')}</div>`; }
-    return h + '</div>';
-}
-
+function buildNode(id, isRoot = false) { const p = data[id]; if (!p) return ''; const isExp = expanded.has(id); const kids = (p.children || []).filter(c => data[c]); const hasKids = kids.length > 0; let h = `<div class="tree-node"><div class="node-card ${p.gender === 'M' ? 'male' : 'female'} ${isRoot ? 'root' : ''} ${selected === id ? 'selected' : ''}" onclick="select('${id}')"><div class="node-avatar">${p.gender === 'M' ? '👨' : '👩'}</div><div class="node-name">${p.name.split(' ').slice(0, 2).join(' ')}</div>${p.alias ? `<div class="node-alias">${p.alias}</div>` : ''}${hasKids ? `<span class="node-badge">${kids.length}</span>` : ''}${hasKids ? `<button class="node-toggle" onclick="event.stopPropagation();toggle('${id}')">${isExp ? '−' : '+'}</button>` : ''}</div>`; if (hasKids && isExp) { h += `<div class="tree-children ${kids.length > 1 ? 'multi' : ''}" style="--w:${Math.max(0, (kids.length - 1) * 142)}px">${kids.map(c => buildNode(c)).join('')}</div>`; } return h + '</div>'; }
 function toggle(id) { expanded.has(id) ? expanded.delete(id) : expanded.add(id); renderTree(); }
 function select(id) { selected = id; renderTree(); showInfo(id); }
-
-function showInfo(id) {
-    const p = data[id]; if (!p) return;
-    document.getElementById('info-avatar').textContent = p.gender === 'M' ? '👨' : '👩';
-    document.getElementById('info-name').textContent = p.name;
-    document.getElementById('info-alias').textContent = p.alias ? `"${p.alias}"` : '';
-    let h = '<div class="info-section"><div class="info-section-title">Informations</div>';
-    h += `<div class="info-row"><div class="info-row-icon">📍</div><div class="info-row-content"><div class="info-row-label">Génération</div><div class="info-row-value">${p.gen}</div></div></div>`;
-    if (p.father && data[p.father]) h += `<div class="info-row"><div class="info-row-icon">👨</div><div class="info-row-content"><div class="info-row-label">Père</div><div class="info-row-value"><a onclick="navTo('${p.father}')">${data[p.father].name}</a></div></div></div>`;
-    if (p.mother && data[p.mother]) h += `<div class="info-row"><div class="info-row-icon">👩</div><div class="info-row-content"><div class="info-row-label">Mère</div><div class="info-row-value"><a onclick="navTo('${p.mother}')">${data[p.mother].name}</a></div></div></div>`;
-    h += '</div>';
-    if (p.children?.length) { const kids = p.children.filter(c => data[c]); if (kids.length) h += `<div class="info-section"><div class="info-section-title">Enfants (${kids.length})</div><div class="info-tags">${kids.map(c => `<span class="info-tag" onclick="navTo('${c}')">${data[c].name.split(' ')[0]}</span>`).join('')}</div></div>`; }
-    if (p.note) h += `<div class="info-section"><div class="info-section-title">Note</div><p style="font-size:0.85rem;color:var(--text-secondary)">${p.note}</p></div>`;
-    document.getElementById('info-body').innerHTML = h;
-    document.getElementById('info-panel').classList.add('active');
-}
-
+function showInfo(id) { const p = data[id]; if (!p) return; document.getElementById('info-avatar').textContent = p.gender === 'M' ? '👨' : '👩'; document.getElementById('info-name').textContent = p.name; document.getElementById('info-alias').textContent = p.alias ? `"${p.alias}"` : ''; let h = '<div class="info-section"><div class="info-section-title">Informations</div>'; h += `<div class="info-row"><div class="info-row-icon">📍</div><div class="info-row-content"><div class="info-row-label">Génération</div><div class="info-row-value">${p.gen}</div></div></div>`; if (p.father && data[p.father]) h += `<div class="info-row"><div class="info-row-icon">👨</div><div class="info-row-content"><div class="info-row-label">Père</div><div class="info-row-value"><a onclick="navTo('${p.father}')">${data[p.father].name}</a></div></div></div>`; if (p.mother && data[p.mother]) h += `<div class="info-row"><div class="info-row-icon">👩</div><div class="info-row-content"><div class="info-row-label">Mère</div><div class="info-row-value"><a onclick="navTo('${p.mother}')">${data[p.mother].name}</a></div></div></div>`; h += '</div>'; if (p.children?.length) { const kids = p.children.filter(c => data[c]); if (kids.length) h += `<div class="info-section"><div class="info-section-title">Enfants (${kids.length})</div><div class="info-tags">${kids.map(c => `<span class="info-tag" onclick="navTo('${c}')">${data[c].name.split(' ')[0]}</span>`).join('')}</div></div>`; } if (p.note) h += `<div class="info-section"><div class="info-section-title">Note</div><p style="font-size:0.85rem;color:var(--text-secondary)">${p.note}</p></div>`; document.getElementById('info-body').innerHTML = h; document.getElementById('info-panel').classList.add('active'); }
 function navTo(id) { let c = id; const exp = [id]; while (c) { const p = data[c]; if (p?.father && data[p.father]) { exp.push(p.father); c = p.father; } else if (p?.mother && data[p.mother]) { exp.push(p.mother); c = p.mother; } else c = null; } exp.forEach(n => expanded.add(n)); select(id); }
 function closeInfo() { document.getElementById('info-panel').classList.remove('active'); selected = null; renderTree(); }
 function expandAll() { Object.keys(data).forEach(id => { if (data[id].children?.filter(c => data[c]).length) expanded.add(id); }); renderTree(); }
@@ -916,119 +546,28 @@ function zoom(d) { zoomLevel = Math.max(0.4, Math.min(1.5, zoomLevel + d)); docu
 function resetZoom() { zoomLevel = 1; document.getElementById('tree-container').style.transform = 'scale(1)'; }
 
 // RELATION
-function getPaths(id, visited = new Set()) {
-    const paths = [], p = data[id];
-    if (!p || visited.has(id)) return [[p]];
-    visited.add(id);
-    if (p.father && data[p.father]) getPaths(p.father, new Set(visited)).forEach(x => paths.push([p, ...x]));
-    if (p.mother && data[p.mother]) getPaths(p.mother, new Set(visited)).forEach(x => paths.push([p, ...x]));
-    if (p.linkedTo && data[p.linkedTo]) getPaths(p.linkedTo, new Set(visited)).forEach(x => paths.push([p, ...x]));
-    if (!paths.length) paths.push([p]);
-    return paths;
-}
-
-function findAncestor(id1, id2) {
-    const p1 = getPaths(id1), p2 = getPaths(id2);
-    let best = null, min = Infinity;
-    for (const a of p1) for (const b of p2) for (let i = 0; i < a.length; i++) { const j = b.findIndex(x => x.id === a[i].id); if (j !== -1 && i + j < min) { min = i + j; best = { ancestor: a[i], path1: a.slice(0, i + 1), path2: b.slice(0, j + 1), d1: i, d2: j }; break; } }
-    return best;
-}
-
-function getRelType(d1, d2, p1, p2) {
-    if (d1 === 0 && d2 === 0) return "Même personne";
-    if (d1 === 1 && d2 === 1) return p1.gender === p2.gender ? (p1.gender === 'M' ? "Frères" : "Sœurs") : "Frère et sœur";
-    if (d1 === 0) return d2 === 1 ? (p1.gender === 'M' ? "Père" : "Mère") : d2 === 2 ? (p1.gender === 'M' ? "Grand-père" : "Grand-mère") : "Ancêtre";
-    if (d2 === 0) return d1 === 1 ? (p1.gender === 'M' ? "Fils" : "Fille") : d1 === 2 ? (p1.gender === 'M' ? "Petit-fils" : "Petite-fille") : "Descendant";
-    if ((d1 === 1 && d2 === 2) || (d1 === 2 && d2 === 1)) return d1 === 1 ? (p1.gender === 'M' ? "Oncle" : "Tante") : (p1.gender === 'M' ? "Neveu" : "Nièce");
-    if (d1 === 2 && d2 === 2) return "Cousins germains";
-    if (d1 === 3 && d2 === 3) return "Cousins issus de germains";
-    const deg = Math.min(d1, d2) - 1, diff = Math.abs(d1 - d2);
-    return `Cousins ${deg === 1 ? "germains" : deg + "e degré"}${diff ? ` (${diff}× éloignés)` : ""}`;
-}
-
-function findRelation() {
-    const id1 = document.getElementById('person1').value, id2 = document.getElementById('person2').value;
-    const cont = document.getElementById('result');
-    if (!id1 || !id2) { cont.innerHTML = '<div class="result-container"><div class="result-card" style="text-align:center;color:var(--text-muted);padding:2rem">Sélectionnez deux personnes</div></div>'; return; }
-    if (id1 === id2) { cont.innerHTML = '<div class="result-container"><div class="result-card" style="text-align:center;color:var(--text-muted);padding:2rem">Même personne !</div></div>'; return; }
-    const p1 = data[id1], p2 = data[id2], r = findAncestor(id1, id2);
-    if (!r) { cont.innerHTML = '<div class="result-container"><div class="result-card" style="text-align:center;color:var(--text-muted);padding:2rem">Lien non trouvé</div></div>'; return; }
-    const rel = getRelType(r.d1, r.d2, p1, p2);
-    const b1 = r.path1.slice(0, -1).reverse(), b2 = r.path2.slice(0, -1).reverse();
-    let h = `<div class="result-container"><div class="result-card"><div class="result-header"><div class="result-names"><strong>${p1.name}</strong> et <strong>${p2.name}</strong></div><span class="result-badge">${rel}</span></div><div class="rel-tree"><div class="rel-ancestor"><div class="rel-ancestor-icon">⭐</div><div class="rel-ancestor-name">${r.ancestor.name}</div><div class="rel-ancestor-label">Ancêtre commun</div></div><div class="rel-line"></div><div class="rel-branches">`;
-    h += `<div class="rel-branch">${b1.map((p, i) => `${i > 0 ? '<div class="branch-line"></div>' : ''}<div class="rel-person ${p.gender === 'M' ? 'male' : 'female'} ${p.id === p1.id ? 'target' : ''}"><div class="rel-person-icon">${p.gender === 'M' ? '👨' : '👩'}</div><div class="rel-person-name">${p.name.split(' ').slice(0, 2).join(' ')}</div><div class="rel-person-label">${p.id === p1.id ? '← ' + p1.name.split(' ')[0] : (p.gender === 'M' ? 'Fils' : 'Fille')}</div></div>`).join('') || '<div style="color:var(--text-muted);font-size:0.8rem;padding:1rem">Direct</div>'}</div>`;
-    h += `<div class="rel-branch">${b2.map((p, i) => `${i > 0 ? '<div class="branch-line"></div>' : ''}<div class="rel-person ${p.gender === 'M' ? 'male' : 'female'} ${p.id === p2.id ? 'target' : ''}"><div class="rel-person-icon">${p.gender === 'M' ? '👨' : '👩'}</div><div class="rel-person-name">${p.name.split(' ').slice(0, 2).join(' ')}</div><div class="rel-person-label">${p.id === p2.id ? p2.name.split(' ')[0] + ' →' : (p.gender === 'M' ? 'Fils' : 'Fille')}</div></div>`).join('') || '<div style="color:var(--text-muted);font-size:0.8rem;padding:1rem">Direct</div>'}</div>`;
-    h += '</div></div><div class="explanation"><div class="explanation-title">📖 Explication</div>';
-    let s = 1;
-    for (let i = 0; i < r.path1.length - 1; i++) h += `<div class="step"><span class="step-num">${s++}</span><span class="step-text"><strong>${r.path1[i].name}</strong> est ${r.path1[i].gender === 'M' ? 'le fils' : 'la fille'} de <strong>${r.path1[i + 1].name}</strong></span></div>`;
-    for (let i = 0; i < r.path2.length - 1; i++) h += `<div class="step"><span class="step-num">${s++}</span><span class="step-text"><strong>${r.path2[i].name}</strong> est ${r.path2[i].gender === 'M' ? 'le fils' : 'la fille'} de <strong>${r.path2[i + 1].name}</strong></span></div>`;
-    h += `<div class="conclusion"><div class="conclusion-label">Donc ils sont</div><div class="conclusion-value">${rel}</div></div></div></div></div>`;
-    cont.innerHTML = h;
-}
+function getPaths(id, visited = new Set()) { const paths = [], p = data[id]; if (!p || visited.has(id)) return [[p]]; visited.add(id); if (p.father && data[p.father]) getPaths(p.father, new Set(visited)).forEach(x => paths.push([p, ...x])); if (p.mother && data[p.mother]) getPaths(p.mother, new Set(visited)).forEach(x => paths.push([p, ...x])); if (!paths.length) paths.push([p]); return paths; }
+function findAncestor(id1, id2) { const p1 = getPaths(id1), p2 = getPaths(id2); let best = null, min = Infinity; for (const a of p1) for (const b of p2) for (let i = 0; i < a.length; i++) { const j = b.findIndex(x => x.id === a[i].id); if (j !== -1 && i + j < min) { min = i + j; best = { ancestor: a[i], path1: a.slice(0, i + 1), path2: b.slice(0, j + 1), d1: i, d2: j }; break; } } return best; }
+function getRelType(d1, d2, p1, p2) { if (d1 === 0 && d2 === 0) return "Même personne"; if (d1 === 1 && d2 === 1) return p1.gender === p2.gender ? (p1.gender === 'M' ? "Frères" : "Sœurs") : "Frère et sœur"; if (d1 === 0) return d2 === 1 ? (p1.gender === 'M' ? "Père" : "Mère") : d2 === 2 ? (p1.gender === 'M' ? "Grand-père" : "Grand-mère") : "Ancêtre"; if (d2 === 0) return d1 === 1 ? (p1.gender === 'M' ? "Fils" : "Fille") : d1 === 2 ? (p1.gender === 'M' ? "Petit-fils" : "Petite-fille") : "Descendant"; if ((d1 === 1 && d2 === 2) || (d1 === 2 && d2 === 1)) return d1 === 1 ? (p1.gender === 'M' ? "Oncle" : "Tante") : (p1.gender === 'M' ? "Neveu" : "Nièce"); if (d1 === 2 && d2 === 2) return "Cousins germains"; if (d1 === 3 && d2 === 3) return "Cousins issus de germains"; const deg = Math.min(d1, d2) - 1, diff = Math.abs(d1 - d2); return `Cousins ${deg === 1 ? "germains" : deg + "e degré"}${diff ? ` (${diff}× éloignés)` : ""}`; }
+function findRelation() { const id1 = document.getElementById('person1').value, id2 = document.getElementById('person2').value; const cont = document.getElementById('result'); if (!id1 || !id2) { cont.innerHTML = '<div class="result-container"><div class="result-card" style="text-align:center;color:var(--text-muted);padding:2rem">Sélectionnez deux personnes</div></div>'; return; } if (id1 === id2) { cont.innerHTML = '<div class="result-container"><div class="result-card" style="text-align:center;color:var(--text-muted);padding:2rem">Même personne !</div></div>'; return; } const p1 = data[id1], p2 = data[id2], r = findAncestor(id1, id2); if (!r) { cont.innerHTML = '<div class="result-container"><div class="result-card" style="text-align:center;color:var(--text-muted);padding:2rem">Lien non trouvé</div></div>'; return; } const rel = getRelType(r.d1, r.d2, p1, p2); const b1 = r.path1.slice(0, -1).reverse(), b2 = r.path2.slice(0, -1).reverse(); let h = `<div class="result-container"><div class="result-card"><div class="result-header"><div class="result-names"><strong>${p1.name}</strong> et <strong>${p2.name}</strong></div><span class="result-badge">${rel}</span></div><div class="rel-tree"><div class="rel-ancestor"><div class="rel-ancestor-icon">⭐</div><div class="rel-ancestor-name">${r.ancestor.name}</div><div class="rel-ancestor-label">Ancêtre commun</div></div><div class="rel-line"></div><div class="rel-branches">`; h += `<div class="rel-branch">${b1.map((p, i) => `${i > 0 ? '<div class="branch-line"></div>' : ''}<div class="rel-person ${p.gender === 'M' ? 'male' : 'female'} ${p.id === p1.id ? 'target' : ''}"><div class="rel-person-icon">${p.gender === 'M' ? '👨' : '👩'}</div><div class="rel-person-name">${p.name.split(' ').slice(0, 2).join(' ')}</div><div class="rel-person-label">${p.id === p1.id ? '← ' + p1.name.split(' ')[0] : (p.gender === 'M' ? 'Fils' : 'Fille')}</div></div>`).join('') || '<div style="color:var(--text-muted);font-size:0.8rem;padding:1rem">Direct</div>'}</div>`; h += `<div class="rel-branch">${b2.map((p, i) => `${i > 0 ? '<div class="branch-line"></div>' : ''}<div class="rel-person ${p.gender === 'M' ? 'male' : 'female'} ${p.id === p2.id ? 'target' : ''}"><div class="rel-person-icon">${p.gender === 'M' ? '👨' : '👩'}</div><div class="rel-person-name">${p.name.split(' ').slice(0, 2).join(' ')}</div><div class="rel-person-label">${p.id === p2.id ? p2.name.split(' ')[0] + ' →' : (p.gender === 'M' ? 'Fils' : 'Fille')}</div></div>`).join('') || '<div style="color:var(--text-muted);font-size:0.8rem;padding:1rem">Direct</div>'}</div>`; h += '</div></div><div class="explanation"><div class="explanation-title">📖 Explication</div>'; let s = 1; for (let i = 0; i < r.path1.length - 1; i++) h += `<div class="step"><span class="step-num">${s++}</span><span class="step-text"><strong>${r.path1[i].name}</strong> est ${r.path1[i].gender === 'M' ? 'le fils' : 'la fille'} de <strong>${r.path1[i + 1].name}</strong></span></div>`; for (let i = 0; i < r.path2.length - 1; i++) h += `<div class="step"><span class="step-num">${s++}</span><span class="step-text"><strong>${r.path2[i].name}</strong> est ${r.path2[i].gender === 'M' ? 'le fils' : 'la fille'} de <strong>${r.path2[i + 1].name}</strong></span></div>`; h += `<div class="conclusion"><div class="conclusion-label">Donc ils sont</div><div class="conclusion-value">${rel}</div></div></div></div></div>`; cont.innerHTML = h; }
 
 // GENERATIONS
-function renderGens() {
-    const gens = {}; Object.values(data).forEach(p => { if (!gens[p.gen]) gens[p.gen] = []; gens[p.gen].push(p); });
-    let h = '';
-    for (let g = 1; g <= 6; g++) { if (!gens[g]) continue;
-        h += `<div class="gen-section"><div class="gen-header"><span class="gen-badge">G${g}</span><span class="gen-title">Génération ${g}</span></div><div class="gen-body">`;
-        const byP = {}; gens[g].forEach(p => { const k = p.father || p.mother || 'root'; if (!byP[k]) byP[k] = []; byP[k].push(p); });
-        Object.entries(byP).forEach(([pid, kids]) => { const parent = data[pid]; h += '<div class="family-group">'; if (parent) h += `<div class="parent-name">Enfants de ${parent.name}</div>`; h += `<div class="children-tags">${kids.map(c => `<span class="child-tag ${c.gender === 'M' ? 'male' : 'female'}" onclick="showModal('${c.id}')">${c.name}${c.alias ? ` (${c.alias})` : ''}</span>`).join('')}</div></div>`; });
-        h += '</div></div>';
-    }
-    document.getElementById('gen-content').innerHTML = h;
-}
+function renderGens() { const gens = {}; Object.values(data).forEach(p => { if (!gens[p.gen]) gens[p.gen] = []; gens[p.gen].push(p); }); let h = ''; for (let g = 1; g <= 5; g++) { if (!gens[g]) continue; h += `<div class="gen-section"><div class="gen-header"><span class="gen-badge">G${g}</span><span class="gen-title">Génération ${g}</span><span class="gen-count">${gens[g].length} personnes</span></div><div class="gen-body">`; const byP = {}; gens[g].forEach(p => { const k = p.father || p.mother || 'root'; if (!byP[k]) byP[k] = []; byP[k].push(p); }); Object.entries(byP).forEach(([pid, kids]) => { const parent = data[pid]; h += '<div class="family-group">'; if (parent) h += `<div class="parent-name">${parent.gender === 'M' ? '👨' : '👩'} Enfants de ${parent.name}</div>`; else h += '<div class="parent-name">🌳 Ancêtre</div>'; h += `<div class="children-tags">${kids.map(c => `<span class="child-tag ${c.gender === 'M' ? 'male' : 'female'}" onclick="showModal('${c.id}')">${c.name}${c.alias ? ` (${c.alias})` : ''}</span>`).join('')}</div></div>`; }); h += '</div></div>'; } document.getElementById('gen-content').innerHTML = h; }
 
 // DIRECTORY
-function renderDir() {
-    const sorted = Object.values(data).sort((a, b) => a.name.localeCompare(b.name, 'fr'));
-    document.getElementById('person-grid').innerHTML = sorted.map(p => `<div class="person-card" onclick="showModal('${p.id}')"><div class="person-card-top"><div class="person-card-avatar ${p.gender === 'M' ? 'male' : 'female'}">${p.gender === 'M' ? '👨' : '👩'}</div><div><div class="person-card-name">${p.name}</div>${p.alias ? `<div class="person-card-alias">"${p.alias}"</div>` : ''}</div></div><div class="person-card-info">Génération ${p.gen}${p.father && data[p.father] ? ` · Fils de ${data[p.father].name.split(' ')[0]}` : ''}</div></div>`).join('');
-}
-
+function renderDir() { const sorted = Object.values(data).sort((a, b) => a.name.localeCompare(b.name, 'fr')); document.getElementById('person-grid').innerHTML = sorted.map(p => `<div class="person-card" onclick="showModal('${p.id}')"><div class="person-card-top"><div class="person-card-avatar ${p.gender === 'M' ? 'male' : 'female'}">${p.gender === 'M' ? '👨' : '👩'}</div><div><div class="person-card-name">${p.name}</div>${p.alias ? `<div class="person-card-alias">"${p.alias}"</div>` : ''}</div></div><div class="person-card-info">Génération ${p.gen}${p.father && data[p.father] ? ` · Fils de ${data[p.father].name.split(' ')[0]}` : p.mother && data[p.mother] ? ` · Fille de ${data[p.mother].name.split(' ')[0]}` : ''}</div></div>`).join(''); }
 function filter() { const q = document.getElementById('search').value.toLowerCase(); document.querySelectorAll('.person-card').forEach(c => { c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none'; }); }
 
 // MODAL
-function showModal(id) {
-    const p = data[id]; if (!p) return;
-    document.getElementById('modal-title').textContent = p.name;
-    let h = `<div style="text-align:center;margin-bottom:1.5rem"><div style="width:72px;height:72px;border-radius:50%;background:${p.gender === 'M' ? 'var(--male-bg)' : 'var(--female-bg)'};display:inline-flex;align-items:center;justify-content:center;font-size:2rem">${p.gender === 'M' ? '👨' : '👩'}</div></div>`;
-    if (p.alias) h += `<p style="text-align:center;color:var(--text-muted);margin-bottom:1.5rem">"${p.alias}"</p>`;
-    h += `<p style="margin:0.5rem 0"><strong>Génération:</strong> ${p.gen}</p>`;
-    if (p.father && data[p.father]) h += `<p style="margin:0.5rem 0"><strong>Père:</strong> ${data[p.father].name}</p>`;
-    if (p.mother && data[p.mother]) h += `<p style="margin:0.5rem 0"><strong>Mère:</strong> ${data[p.mother].name}</p>`;
-    if (p.children?.length) { const kids = p.children.filter(c => data[c]); if (kids.length) h += `<p style="margin:0.5rem 0"><strong>Enfants:</strong> ${kids.map(c => data[c].name).join(', ')}</p>`; }
-    if (p.note) h += `<p style="margin:0.5rem 0"><strong>Note:</strong> ${p.note}</p>`;
-    document.getElementById('modal-body').innerHTML = h;
-    document.getElementById('modal').classList.add('active');
-}
-
+function showModal(id) { const p = data[id]; if (!p) return; document.getElementById('modal-title').textContent = p.name; let h = `<div style="text-align:center;margin-bottom:1.5rem"><div style="width:72px;height:72px;border-radius:50%;background:${p.gender === 'M' ? 'var(--male-bg)' : 'var(--female-bg)'};display:inline-flex;align-items:center;justify-content:center;font-size:2rem">${p.gender === 'M' ? '👨' : '👩'}</div></div>`; if (p.alias) h += `<p style="text-align:center;color:var(--text-muted);margin-bottom:1.5rem">"${p.alias}"</p>`; h += `<p style="margin:0.5rem 0"><strong>Génération:</strong> ${p.gen}</p>`; if (p.father && data[p.father]) h += `<p style="margin:0.5rem 0"><strong>Père:</strong> ${data[p.father].name}</p>`; if (p.mother && data[p.mother]) h += `<p style="margin:0.5rem 0"><strong>Mère:</strong> ${data[p.mother].name}</p>`; if (p.children?.length) { const kids = p.children.filter(c => data[c]); if (kids.length) h += `<p style="margin:0.5rem 0"><strong>Enfants:</strong> ${kids.map(c => data[c].name).join(', ')}</p>`; } if (p.note) h += `<p style="margin:0.5rem 0"><strong>Note:</strong> ${p.note}</p>`; document.getElementById('modal-body').innerHTML = h; document.getElementById('modal').classList.add('active'); }
 function closeModal() { document.getElementById('modal').classList.remove('active'); }
 
 // STATS
-function renderStats() {
-    const ps = Object.values(data);
-    document.getElementById('stats-grid').innerHTML = `
-        <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value">${ps.length}</div><div class="stat-label">Membres</div></div>
-        <div class="stat-card"><div class="stat-icon">👨</div><div class="stat-value">${ps.filter(p => p.gender === 'M').length}</div><div class="stat-label">Hommes</div></div>
-        <div class="stat-card"><div class="stat-icon">👩</div><div class="stat-value">${ps.filter(p => p.gender === 'F').length}</div><div class="stat-label">Femmes</div></div>
-        <div class="stat-card"><div class="stat-icon">🌳</div><div class="stat-value">${new Set(ps.map(p => p.gen)).size}</div><div class="stat-label">Générations</div></div>
-        <div class="stat-card"><div class="stat-icon">👨‍👧</div><div class="stat-value">${ps.filter(p => p.children?.filter(c => data[c]).length).length}</div><div class="stat-label">Avec enfants</div></div>
-    `;
-    document.getElementById('total-count').textContent = ps.length + ' membres';
-}
+function renderStats() { const ps = Object.values(data); document.getElementById('stats-grid').innerHTML = `<div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value">${ps.length}</div><div class="stat-label">Membres</div></div><div class="stat-card"><div class="stat-icon">👨</div><div class="stat-value">${ps.filter(p => p.gender === 'M').length}</div><div class="stat-label">Hommes</div></div><div class="stat-card"><div class="stat-icon">👩</div><div class="stat-value">${ps.filter(p => p.gender === 'F').length}</div><div class="stat-label">Femmes</div></div><div class="stat-card"><div class="stat-icon">🌳</div><div class="stat-value">${new Set(ps.map(p => p.gen)).size}</div><div class="stat-label">Générations</div></div><div class="stat-card"><div class="stat-icon">👨‍👧</div><div class="stat-value">${ps.filter(p => p.children?.filter(c => data[c]).length).length}</div><div class="stat-label">Avec enfants</div></div>`; document.getElementById('total-count').textContent = ps.length + ' membres'; }
 
-function populateSelects() {
-    const sorted = Object.values(data).sort((a, b) => a.name.localeCompare(b.name, 'fr'));
-    ['person1', 'person2'].forEach(id => { const sel = document.getElementById(id); sorted.forEach(p => { const o = document.createElement('option'); o.value = p.id; o.textContent = p.name + (p.alias ? ` (${p.alias})` : ''); sel.appendChild(o); }); });
-}
+function populateSelects() { const sorted = Object.values(data).sort((a, b) => a.name.localeCompare(b.name, 'fr')); ['person1', 'person2'].forEach(id => { const sel = document.getElementById(id); sorted.forEach(p => { const o = document.createElement('option'); o.value = p.id; o.textContent = p.name + (p.alias ? ` (${p.alias})` : ''); sel.appendChild(o); }); }); const rootSel = document.getElementById('root-select'); const roots = ['alkamahamane', 'ali', 'mahamane', 'babachigaw', 'kobbo', 'moussa', 'omorou', 'tamimoune', 'mahadi']; roots.forEach(id => { if (data[id]) { const o = document.createElement('option'); o.value = id; o.textContent = data[id].name + (data[id].alias ? ` (${data[id].alias})` : ''); o.selected = id === 'ali'; rootSel.appendChild(o); } }); }
 
-document.addEventListener('DOMContentLoaded', () => {
-    expanded.add(root);
-    renderTree();
-    renderDir();
-    renderStats();
-    populateSelects();
-});
+document.addEventListener('DOMContentLoaded', () => { expanded.add(root); renderTree(); renderDir(); renderStats(); populateSelects(); });
     </script>
 </body>
 </html>
