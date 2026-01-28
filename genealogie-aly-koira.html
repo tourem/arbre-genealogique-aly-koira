@@ -55,7 +55,7 @@
         .family-badge { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--bg-tertiary); border-radius: 10px; }
         .family-avatar { width: 36px; height: 36px; background: var(--warning-gradient); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
         .main { flex: 1; margin-left: 260px; display: flex; flex-direction: column; }
-        .topbar { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+        .topbar { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 50; }
         .page-title { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
         .page-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
         .content { padding: 1.5rem 2rem; flex: 1; }
@@ -76,9 +76,9 @@
         .select-modern { appearance: none; padding: 0.6rem 2.5rem 0.6rem 1rem; font-family: inherit; font-size: 0.85rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-secondary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E") no-repeat right 0.75rem center; cursor: pointer; min-width: 200px; color: var(--text-primary); }
         .select-modern:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
         .tree-canvas { background: var(--bg-tertiary); border-radius: 12px; margin-top: 1rem; min-height: 500px; max-height: 65vh; overflow: auto; border: 1px solid var(--border); position: relative; }
-        .tree-container { padding: 2rem; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; transform-origin: top center; transition: transform 0.2s ease; }
-        .tree-node { display: flex; flex-direction: column; align-items: center; position: relative; }
-        .node-card { background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 14px; padding: 0.875rem 1rem; text-align: center; cursor: pointer; transition: all 0.25s ease; min-width: 130px; max-width: 160px; position: relative; z-index: 2; box-shadow: var(--shadow); }
+        .tree-container { padding: 2rem; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; transform-origin: top center; transition: transform 0.2s ease; min-width: fit-content; }
+        .tree-node { display: flex; flex-direction: column; align-items: center; position: relative; overflow: visible; }
+        .node-card { background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 14px; padding: 0.875rem 1rem; text-align: center; cursor: pointer; transition: all 0.25s ease; min-width: 130px; max-width: 160px; position: relative; z-index: 2; box-shadow: var(--shadow); overflow: visible; }
         .node-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
         .node-card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light), var(--shadow-lg); }
         .node-card.root { background: var(--accent-gradient); border: none; color: var(--text-inverse); box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35); }
@@ -93,10 +93,10 @@
         .node-badge { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; background: var(--accent); color: white; border-radius: 50%; font-size: 0.65rem; font-weight: 600; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-secondary); }
         .node-toggle { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 24px; height: 24px; background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); z-index: 3; transition: all 0.2s ease; box-shadow: var(--shadow-sm); }
         .node-toggle:hover { background: var(--accent); border-color: var(--accent); color: white; transform: translateX(-50%) scale(1.1); }
-        .tree-children { display: flex; justify-content: center; gap: 12px; position: relative; padding-top: 35px; margin-top: 8px; }
-        .tree-children::before { content: ''; position: absolute; top: 8px; left: 50%; width: 2px; height: 27px; background: var(--tree-line); transform: translateX(-50%); }
-        .tree-children > .tree-node::before { content: ''; position: absolute; top: -27px; left: 50%; width: 2px; height: 27px; background: var(--tree-line); transform: translateX(-50%); }
-        .tree-children.multi::after { content: ''; position: absolute; top: 8px; height: 2px; background: var(--tree-line); left: calc(50% - var(--w) / 2); width: var(--w); }
+        .tree-children { display: flex; justify-content: center; gap: 12px; position: relative; padding-top: 50px; margin-top: 45px; overflow: visible; }
+        .tree-children::before { content: ''; position: absolute; top: -57px; left: 50%; width: 2px; height: 82px; background: var(--tree-line); transform: translateX(-50%); z-index: 0; }
+        .tree-children > .tree-node::before { content: ''; position: absolute; top: -25px; left: 50%; width: 2px; height: 25px; background: var(--tree-line); transform: translateX(-50%); z-index: 0; }
+        .tree-children.multi::after { content: ''; position: absolute; top: 25px; height: 2px; background: var(--tree-line); left: calc(50% - var(--w) / 2); width: var(--w); z-index: 0; }
         .info-panel { position: fixed; top: 50%; right: 24px; transform: translateY(-50%); width: 340px; background: var(--bg-secondary); border-radius: 20px; box-shadow: var(--shadow-lg); z-index: 200; display: none; overflow: hidden; }
         .info-panel.active { display: block; animation: slideIn 0.3s ease; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-50%) translateX(20px); } to { opacity: 1; transform: translateY(-50%) translateX(0); } }
@@ -198,7 +198,86 @@
         .modal-close { width: 32px; height: 32px; background: var(--bg-tertiary); border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 1.1rem; }
         .modal-close:hover { background: var(--bg-hover); }
         .modal-body { padding: 1.5rem; }
-        @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .search-form { grid-template-columns: 1fr; } .search-connector { display: none; } .info-panel { right: 10px; left: 10px; width: auto; } .rel-branches { flex-direction: column; gap: 1rem; } }
+        @media (max-width: 1024px) {
+            .sidebar { width: 220px; }
+            .main { margin-left: 220px; }
+            .person-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+        }
+        @media (max-width: 768px) { 
+            .sidebar { position: fixed; left: -280px; width: 280px; transition: left 0.3s ease; z-index: 1000; }
+            .sidebar.open { left: 0; }
+            .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; }
+            .sidebar-overlay.open { display: block; }
+            .main { margin-left: 0; }
+            .topbar { padding: 1rem; }
+            .mobile-menu-btn { display: flex !important; }
+            .content { padding: 1rem; }
+            .search-form { grid-template-columns: 1fr; gap: 1rem; } 
+            .search-connector { display: none; } 
+            .info-panel { position: fixed; top: auto; bottom: 0; right: 0; left: 0; width: 100%; max-height: 60vh; transform: none; border-radius: 20px 20px 0 0; }
+            .info-panel.active { animation: slideUp 0.3s ease; }
+            @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+            .rel-branches { flex-direction: column; gap: 1rem; }
+            .rel-branches::before, .rel-branches::after { display: none; }
+            .rel-branch::before { display: none; }
+            .card-header { flex-direction: column; align-items: stretch; }
+            .tree-toolbar { flex-wrap: wrap; justify-content: center; }
+            .select-modern { min-width: 100%; }
+            .tree-canvas { max-height: 55vh; }
+            .tree-container { padding: 1rem; }
+            .node-card { min-width: 110px; max-width: 130px; padding: 0.7rem 0.5rem; }
+            .node-avatar { width: 36px; height: 36px; font-size: 1rem; }
+            .node-name { font-size: 0.7rem; }
+            .node-alias { font-size: 0.6rem; }
+            .tree-children { gap: 8px; }
+            .person-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stat-card { padding: 1rem; }
+            .stat-value { font-size: 1.5rem; }
+            .gen-section { margin-bottom: 0.75rem; }
+            .family-group { padding: 0.75rem; }
+            .child-tag { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+            .result-card { padding: 1rem; }
+            .rel-ancestor { padding: 1rem; }
+            .rel-person { padding: 0.65rem 0.75rem; min-width: 100px; }
+            .page-title { font-size: 1.1rem; }
+            .modal-content { width: 95%; max-height: 90vh; }
+        }
+        @media (max-width: 480px) {
+            .topbar { padding: 0.75rem; }
+            .page-title { font-size: 1rem; }
+            .page-sub { font-size: 0.7rem; }
+            .content { padding: 0.75rem; }
+            .card-header { padding: 1rem; }
+            .card-body { padding: 1rem; }
+            .card-title { font-size: 0.85rem; }
+            .tree-canvas { max-height: 50vh; min-height: 350px; }
+            .node-card { min-width: 95px; max-width: 110px; padding: 0.5rem 0.4rem; }
+            .node-avatar { width: 32px; height: 32px; font-size: 0.9rem; margin-bottom: 0.3rem; }
+            .node-name { font-size: 0.65rem; }
+            .node-alias { font-size: 0.55rem; }
+            .node-badge { width: 18px; height: 18px; font-size: 0.6rem; top: -5px; right: -5px; }
+            .node-toggle { width: 20px; height: 20px; font-size: 0.7rem; bottom: -10px; }
+            .tree-children { gap: 6px; margin-top: 35px; padding-top: 40px; }
+            .tree-children::before { top: -47px; height: 72px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+            .stat-card { padding: 0.75rem; }
+            .stat-icon { width: 36px; height: 36px; font-size: 1rem; }
+            .stat-value { font-size: 1.25rem; }
+            .stat-label { font-size: 0.7rem; }
+            .btn { padding: 0.5rem 0.75rem; font-size: 0.75rem; }
+            .btn-sm { padding: 0.35rem 0.5rem; font-size: 0.7rem; }
+            .btn-icon { width: 32px; height: 32px; }
+            .info-panel { max-height: 70vh; }
+            .info-header { padding: 1.25rem; }
+            .info-avatar { width: 56px; height: 56px; font-size: 1.5rem; }
+            .info-name { font-size: 1rem; }
+            .form-select { padding: 0.6rem 0.75rem; font-size: 0.85rem; }
+            .search-input { padding: 0.75rem 1rem 0.75rem 2.5rem; font-size: 0.85rem; }
+            .result-badge { padding: 0.5rem 1rem; font-size: 0.85rem; }
+        }
+        .mobile-menu-btn { display: none; width: 40px; height: 40px; background: var(--bg-tertiary); border: none; border-radius: 10px; cursor: pointer; align-items: center; justify-content: center; font-size: 1.25rem; color: var(--text-primary); }
+        .mobile-menu-btn:hover { background: var(--bg-hover); }
     </style>
 </head>
 <body>
@@ -212,11 +291,11 @@
             </div>
             <nav class="nav">
                 <div class="nav-title">Navigation</div>
-                <button class="nav-item active" onclick="showSection('tree')">🌳 Arbre interactif</button>
-                <button class="nav-item" onclick="showSection('generations')">📊 Par génération</button>
-                <button class="nav-item" onclick="showSection('relationship')">🔗 Lien de parenté</button>
-                <button class="nav-item" onclick="showSection('directory')">📋 Annuaire</button>
-                <button class="nav-item" onclick="showSection('stats')">📈 Statistiques</button>
+                <button class="nav-item active" onclick="showSection('tree', event)">🌳 Arbre interactif</button>
+                <button class="nav-item" onclick="showSection('generations', event)">📊 Par génération</button>
+                <button class="nav-item" onclick="showSection('relationship', event)">🔗 Lien de parenté</button>
+                <button class="nav-item" onclick="showSection('directory', event)">📋 Annuaire</button>
+                <button class="nav-item" onclick="showSection('stats', event)">📈 Statistiques</button>
                 <div class="nav-title" style="margin-top: 1rem;">Apparence</div>
                 <div class="theme-toggle">
                     <button class="theme-btn active" onclick="setTheme('light')" id="light-btn">☀️ Clair</button>
@@ -232,8 +311,10 @@
         </aside>
         <main class="main">
             <header class="topbar">
+                <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
                 <div><h1 class="page-title" id="page-title">Arbre interactif</h1><p class="page-sub" id="page-sub">Explorez votre histoire familiale</p></div>
             </header>
+            <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
             <div class="content">
                 <section id="tree" class="section active">
                     <div class="card">
@@ -527,12 +608,14 @@ const data = {
 
 // THEME
 function setTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); document.getElementById('light-btn').classList.toggle('active', t === 'light'); document.getElementById('dark-btn').classList.toggle('active', t === 'dark'); }
+function toggleSidebar() { document.querySelector('.sidebar').classList.toggle('open'); document.getElementById('sidebar-overlay').classList.toggle('open'); }
 setTheme(localStorage.getItem('theme') || 'light');
 
 let zoomLevel = 1, expanded = new Set(), selected = null, root = 'ali';
 const titles = { tree: ['Arbre interactif', 'Explorez votre histoire familiale'], generations: ['Par génération', 'Organisation hiérarchique'], relationship: ['Lien de parenté', 'Découvrez vos liens familiaux'], directory: ['Annuaire', 'Tous les membres de la famille'], stats: ['Statistiques', 'Données sur votre famille'] };
 
-function showSection(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(id).classList.add('active'); event.target.closest('.nav-item')?.classList.add('active'); document.getElementById('page-title').textContent = titles[id][0]; document.getElementById('page-sub').textContent = titles[id][1]; if (id === 'tree') renderTree(); if (id === 'generations') renderGens(); }
+function showSection(id, evt) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(id).classList.add('active'); if (evt && evt.target) evt.target.closest('.nav-item')?.classList.add('active'); document.getElementById('page-title').textContent = titles[id][0]; document.getElementById('page-sub').textContent = titles[id][1]; if (id === 'tree') { resetTree(); renderTree(); } if (id === 'generations') renderGens(); if (window.innerWidth <= 768) { document.querySelector('.sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('open'); } }
+function resetTree() { expanded.clear(); expanded.add(root); selected = null; zoomLevel = 1; document.getElementById('tree-container').style.transform = 'scale(1)'; document.getElementById('info-panel').classList.remove('active'); }
 function changeRoot() { root = document.getElementById('root-select').value; expanded.clear(); expanded.add(root); selected = null; closeInfo(); renderTree(); }
 function renderTree() { document.getElementById('tree-container').innerHTML = buildNode(root, true); }
 function buildNode(id, isRoot = false) { const p = data[id]; if (!p) return ''; const isExp = expanded.has(id); const kids = (p.children || []).filter(c => data[c]); const hasKids = kids.length > 0; let h = `<div class="tree-node"><div class="node-card ${p.gender === 'M' ? 'male' : 'female'} ${isRoot ? 'root' : ''} ${selected === id ? 'selected' : ''}" onclick="select('${id}')"><div class="node-avatar">${p.gender === 'M' ? '👨' : '👩'}</div><div class="node-name">${p.name.split(' ').slice(0, 2).join(' ')}</div>${p.alias ? `<div class="node-alias">${p.alias}</div>` : ''}${hasKids ? `<span class="node-badge">${kids.length}</span>` : ''}${hasKids ? `<button class="node-toggle" onclick="event.stopPropagation();toggle('${id}')">${isExp ? '−' : '+'}</button>` : ''}</div>`; if (hasKids && isExp) { h += `<div class="tree-children ${kids.length > 1 ? 'multi' : ''}" style="--w:${Math.max(0, (kids.length - 1) * 142)}px">${kids.map(c => buildNode(c)).join('')}</div>`; } return h + '</div>'; }
