@@ -2,366 +2,865 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#16a34a">
-<title>Aly Koïra - Généalogie</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1a2e">
+<title>Famille Aly Koïra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--bg:#0a0a0a;--card:#1a1a1a;--card2:#252525;--text:#fff;--text2:#999;--accent:#22c55e;--male:#3b82f6;--female:#ec4899;--line:#555}
-html,body{font-family:-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--text);height:100%;overflow:hidden}
-.app{display:flex;flex-direction:column;height:100%;height:100dvh}
+:root{
+--bg:#0f0f1a;
+--card:#1a1a2e;
+--card-hover:#252542;
+--surface:#16163a;
+--primary:#6366f1;
+--primary-light:#818cf8;
+--secondary:#ec4899;
+--accent:#22d3ee;
+--success:#10b981;
+--text:#f8fafc;
+--text-secondary:#94a3b8;
+--text-muted:#64748b;
+--male:#3b82f6;
+--female:#f472b6;
+--border:rgba(255,255,255,0.08);
+--shadow:0 4px 24px rgba(0,0,0,0.4);
+--radius:16px;
+--radius-lg:24px;
+--radius-full:9999px;
+}
+html,body{
+font-family:'Inter',system-ui,sans-serif;
+background:var(--bg);
+color:var(--text);
+height:100%;
+overflow:hidden;
+-webkit-font-smoothing:antialiased;
+}
+.app{
+display:flex;
+flex-direction:column;
+height:100dvh;
+max-width:500px;
+margin:0 auto;
+}
 
-header{background:linear-gradient(135deg,#16a34a,#22c55e);padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-header h1{font-size:16px;font-weight:700}
-header small{font-size:10px;opacity:.85}
+/* Header moderne */
+.header{
+padding:16px 20px;
+padding-top:max(16px,env(safe-area-inset-top));
+background:linear-gradient(135deg,#1a1a2e 0%,#16163a 100%);
+border-bottom:1px solid var(--border);
+}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{
+width:40px;height:40px;
+background:linear-gradient(135deg,var(--primary),var(--secondary));
+border-radius:12px;
+display:flex;align-items:center;justify-content:center;
+font-size:20px;
+}
+.logo-text h1{font-size:18px;font-weight:700;letter-spacing:-0.5px}
+.logo-text span{font-size:11px;color:var(--text-secondary);font-weight:500}
+.header-stats{
+display:flex;gap:16px;
+background:var(--surface);
+padding:12px 16px;
+border-radius:var(--radius);
+}
+.header-stat{text-align:center;flex:1}
+.header-stat-value{font-size:20px;font-weight:700;color:var(--primary-light)}
+.header-stat-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
 
-nav{display:flex;background:var(--card);border-bottom:1px solid #333;flex-shrink:0}
-nav button{flex:1;padding:10px 4px;background:none;border:none;color:var(--text2);font-size:9px;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px}
-nav button.on{color:var(--accent);background:rgba(34,197,94,.1)}
-nav button span{font-size:18px}
-
+/* Contenu principal */
 main{flex:1;overflow:hidden;position:relative}
-section{display:none;height:100%;overflow:hidden}
-section.on{display:flex;flex-direction:column}
+.page{
+display:none;
+height:100%;
+flex-direction:column;
+animation:fadeIn 0.3s ease;
+}
+.page.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-#s0{display:none}
-#s0.on{display:flex}
-.tree-controls{display:flex;gap:8px;padding:10px 12px;background:var(--card);border-bottom:1px solid #333;flex-shrink:0;align-items:center}
-.tree-select{flex:1;padding:10px 12px;background:var(--card2);border:1px solid #333;border-radius:10px;color:var(--text);font-size:14px;-webkit-appearance:none}
-.ctrl-btns{display:flex;gap:6px}
-.ctrl-btn{width:40px;height:40px;background:var(--card2);border:1px solid #444;border-radius:8px;color:var(--text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.ctrl-btn:active{background:var(--accent);border-color:var(--accent)}
-.ctrl-btn.accent{background:var(--accent);border-color:var(--accent)}
+/* Scroll container */
+.scroll{
+flex:1;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
+padding:16px 20px;
+padding-bottom:100px;
+}
+.scroll::-webkit-scrollbar{display:none}
 
-.breadcrumb{display:flex;gap:6px;padding:8px 12px;background:var(--card);overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch}
-.breadcrumb::-webkit-scrollbar{display:none}
-.crumb{background:var(--card2);padding:6px 12px;border-radius:20px;font-size:11px;white-space:nowrap;cursor:pointer;flex-shrink:0}
-.crumb:active,.crumb.current{background:var(--accent)}
+/* Navigation bottom moderne */
+.nav{
+position:fixed;
+bottom:0;
+left:50%;
+transform:translateX(-50%);
+width:100%;
+max-width:500px;
+padding:12px 20px;
+padding-bottom:max(12px,env(safe-area-inset-bottom));
+background:rgba(15,15,26,0.95);
+backdrop-filter:blur(20px);
+-webkit-backdrop-filter:blur(20px);
+border-top:1px solid var(--border);
+display:flex;
+justify-content:space-around;
+z-index:100;
+}
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:4px;
+padding:8px 16px;
+border-radius:var(--radius);
+color:var(--text-muted);
+font-size:10px;
+font-weight:500;
+transition:all 0.2s ease;
+cursor:pointer;
+border:none;
+background:none;
+}
+.nav-item.active{color:var(--primary-light);background:rgba(99,102,241,0.15)}
+.nav-item svg{width:24px;height:24px}
 
-.tree-wrap{flex:1;overflow:auto;-webkit-overflow-scrolling:touch}
-.tree-canvas{min-width:100%;padding:20px;display:flex;justify-content:center}
-.tree-container{transform-origin:top center;transition:transform .2s}
+/* === PAGE FAMILLE (Arbre simplifié) === */
+.person-card{
+background:linear-gradient(145deg,var(--card),var(--surface));
+border-radius:var(--radius-lg);
+padding:24px;
+text-align:center;
+border:1px solid var(--border);
+box-shadow:var(--shadow);
+margin-bottom:20px;
+}
+.person-avatar{
+width:80px;height:80px;
+border-radius:50%;
+margin:0 auto 16px;
+display:flex;align-items:center;justify-content:center;
+font-size:36px;
+position:relative;
+}
+.person-avatar.male{background:linear-gradient(135deg,#1e3a5f,#3b82f6)}
+.person-avatar.female{background:linear-gradient(135deg,#5f1e4a,#ec4899)}
+.person-avatar::after{
+content:'';
+position:absolute;
+inset:-4px;
+border-radius:50%;
+border:2px solid var(--primary);
+opacity:0.5;
+}
+.person-name{font-size:22px;font-weight:700;margin-bottom:4px}
+.person-alias{
+display:inline-block;
+background:var(--primary);
+color:white;
+padding:4px 12px;
+border-radius:var(--radius-full);
+font-size:12px;
+font-weight:500;
+margin-top:8px;
+}
+.person-gen{font-size:13px;color:var(--text-secondary);margin-top:12px}
 
-/* ARBRE - Structure corrigée */
-.node{display:flex;flex-direction:column;align-items:center}
-.node-box{position:relative;display:inline-flex;flex-direction:column;align-items:center}
-.node-card{background:var(--card);border:2px solid #444;border-radius:12px;padding:10px 8px;min-width:72px;max-width:88px;text-align:center;cursor:pointer;position:relative}
-.node-card:active{transform:scale(.95)}
-.node-card.male{border-color:var(--male)}
-.node-card.female{border-color:var(--female)}
-.node-card.root{background:linear-gradient(135deg,#16a34a,#22c55e);border-color:#22c55e}
-.node-card.open{border-color:var(--accent)}
-.node-avatar{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.node-avatar.m{background:rgba(59,130,246,.25)}
-.node-avatar.f{background:rgba(236,72,153,.25)}
-.node-card.root .node-avatar{background:rgba(255,255,255,.2)}
-.node-name{font-size:11px;font-weight:600;line-height:1.3}
-.node-alias{font-size:9px;color:var(--text2);margin-top:2px}
-.node-card.root .node-alias{color:rgba(255,255,255,.8)}
-.node-count{position:absolute;top:-8px;right:-8px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;min-width:20px;height:20px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+/* Parents section */
+.section-title{
+font-size:12px;
+font-weight:600;
+color:var(--text-muted);
+text-transform:uppercase;
+letter-spacing:1px;
+margin:24px 0 12px;
+display:flex;
+align-items:center;
+gap:8px;
+}
+.section-title::before{
+content:'';
+flex:1;
+height:1px;
+background:var(--border);
+}
+.section-title::after{
+content:'';
+flex:1;
+height:1px;
+background:var(--border);
+}
 
-/* Bouton expand/collapse - SOUS la carte */
-.node-btn{display:block;width:28px;height:28px;margin:8px auto 0;background:var(--accent);border:none;border-radius:50%;color:#fff;font-size:18px;font-weight:bold;cursor:pointer;line-height:26px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.3)}
-.node-btn:active{transform:scale(.9)}
+.parent-cards{display:flex;gap:12px;margin-bottom:8px}
+.parent-card{
+flex:1;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:16px;
+text-align:center;
+cursor:pointer;
+transition:all 0.2s ease;
+}
+.parent-card:active{transform:scale(0.98);background:var(--card-hover)}
+.parent-card .mini-avatar{
+width:44px;height:44px;
+border-radius:50%;
+margin:0 auto 8px;
+display:flex;align-items:center;justify-content:center;
+font-size:20px;
+}
+.parent-card .mini-avatar.male{background:rgba(59,130,246,0.2)}
+.parent-card .mini-avatar.female{background:rgba(236,72,153,0.2)}
+.parent-card .name{font-size:14px;font-weight:600}
+.parent-card .label{font-size:11px;color:var(--text-muted)}
 
-/* Conteneur enfants */
-.node-kids{display:flex;gap:8px;justify-content:center;margin-top:15px;padding-top:20px;position:relative}
-.node-kids::before{content:'';position:absolute;top:0;left:50%;width:2px;height:20px;background:var(--line);transform:translateX(-50%)}
+/* Children grid */
+.children-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.child-card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:14px 8px;
+text-align:center;
+cursor:pointer;
+transition:all 0.2s ease;
+}
+.child-card:active{transform:scale(0.96);background:var(--card-hover)}
+.child-card .mini-avatar{
+width:40px;height:40px;
+border-radius:50%;
+margin:0 auto 8px;
+display:flex;align-items:center;justify-content:center;
+font-size:18px;
+}
+.child-card .mini-avatar.male{background:rgba(59,130,246,0.2)}
+.child-card .mini-avatar.female{background:rgba(236,72,153,0.2)}
+.child-card .name{font-size:12px;font-weight:600;line-height:1.3}
+.child-card .badge{
+display:inline-block;
+background:var(--success);
+color:white;
+font-size:9px;
+padding:2px 6px;
+border-radius:10px;
+margin-top:6px;
+}
 
-/* Lignes horizontales pour plusieurs enfants */
-.node-kids.multi{position:relative}
-.node-kids.multi::after{content:'';position:absolute;top:20px;left:36px;right:36px;height:2px;background:var(--line)}
+/* Navigation dans l'arbre */
+.tree-nav{
+display:flex;
+gap:8px;
+margin-bottom:16px;
+overflow-x:auto;
+padding-bottom:4px;
+}
+.tree-nav::-webkit-scrollbar{display:none}
+.tree-nav-item{
+display:flex;
+align-items:center;
+gap:6px;
+padding:10px 16px;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius-full);
+font-size:13px;
+font-weight:500;
+white-space:nowrap;
+cursor:pointer;
+transition:all 0.2s;
+flex-shrink:0;
+}
+.tree-nav-item:active{background:var(--primary);border-color:var(--primary)}
+.tree-nav-item svg{width:16px;height:16px}
 
-/* Ligne verticale vers chaque enfant */
-.node-kids>.node::before{content:'';position:absolute;top:-20px;left:50%;width:2px;height:20px;background:var(--line)}
-.node-kids>.node{position:relative;padding-top:20px}
+/* Racine selector */
+.root-select{
+width:100%;
+padding:14px 16px;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius);
+color:var(--text);
+font-size:15px;
+font-family:inherit;
+margin-bottom:16px;
+-webkit-appearance:none;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+background-repeat:no-repeat;
+background-position:right 12px center;
+}
 
-/* Autres sections */
-.section-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px;padding-bottom:max(20px,env(safe-area-inset-bottom))}
-.search{width:100%;padding:14px;background:var(--card);border:none;border-radius:12px;color:var(--text);font-size:16px;margin-bottom:12px}
-.search::placeholder{color:#666}
-.list{background:var(--card);border-radius:16px;overflow:hidden}
-.item{display:flex;align-items:center;padding:14px;gap:12px;border-bottom:1px solid var(--card2);cursor:pointer}
-.item:last-child{border:none}
-.item:active{background:var(--card2)}
-.av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.av.m{background:rgba(59,130,246,.2)}
-.av.f{background:rgba(236,72,153,.2)}
-.txt{flex:1;min-width:0}
-.nm{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sub{font-size:12px;color:var(--text2);margin-top:2px}
+/* === PAGE RECHERCHE === */
+.search-box{
+position:relative;
+margin-bottom:16px;
+}
+.search-input{
+width:100%;
+padding:16px 16px 16px 48px;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius);
+color:var(--text);
+font-size:16px;
+font-family:inherit;
+transition:all 0.2s;
+}
+.search-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,0.2)}
+.search-input::placeholder{color:var(--text-muted)}
+.search-icon{
+position:absolute;
+left:16px;
+top:50%;
+transform:translateY(-50%);
+color:var(--text-muted);
+}
 
-select{width:100%;padding:14px;background:var(--card);border:1px solid #333;border-radius:12px;color:var(--text);font-size:16px;margin-bottom:12px;-webkit-appearance:none}
-.btn{width:100%;padding:16px;background:var(--accent);border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:600;margin-top:8px}
-.btn:active{opacity:.8}
+.person-list{display:flex;flex-direction:column;gap:8px}
+.person-item{
+display:flex;
+align-items:center;
+gap:14px;
+padding:14px 16px;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius);
+cursor:pointer;
+transition:all 0.2s;
+}
+.person-item:active{background:var(--card-hover);transform:scale(0.99)}
+.person-item .avatar{
+width:48px;height:48px;
+border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-size:22px;
+flex-shrink:0;
+}
+.person-item .avatar.male{background:linear-gradient(135deg,#1e3a5f,#3b82f6)}
+.person-item .avatar.female{background:linear-gradient(135deg,#5f1e4a,#ec4899)}
+.person-item .info{flex:1;min-width:0}
+.person-item .info .name{font-size:15px;font-weight:600;margin-bottom:2px}
+.person-item .info .details{font-size:12px;color:var(--text-secondary)}
+.person-item .arrow{color:var(--text-muted)}
 
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat{background:var(--card);border-radius:16px;padding:20px;text-align:center}
-.stat .i{font-size:32px}
-.stat .v{font-size:32px;font-weight:700;color:var(--accent);margin:8px 0 4px}
-.stat .l{font-size:12px;color:var(--text2)}
+/* === PAGE PARENTÉ === */
+.relation-form{display:flex;flex-direction:column;gap:12px}
+.relation-select{
+width:100%;
+padding:16px;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius);
+color:var(--text);
+font-size:15px;
+font-family:inherit;
+-webkit-appearance:none;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+background-repeat:no-repeat;
+background-position:right 12px center;
+}
+.relation-btn{
+width:100%;
+padding:18px;
+background:linear-gradient(135deg,var(--primary),var(--secondary));
+border:none;
+border-radius:var(--radius);
+color:white;
+font-size:16px;
+font-weight:600;
+font-family:inherit;
+cursor:pointer;
+transition:all 0.2s;
+margin-top:8px;
+}
+.relation-btn:active{transform:scale(0.98);opacity:0.9}
 
-.result{background:var(--card);border-radius:16px;padding:20px;margin-top:16px;text-align:center}
-.rel-badge{display:inline-block;background:var(--accent);color:#fff;padding:12px 24px;border-radius:30px;font-size:18px;font-weight:700;margin:12px 0}
-.path{background:var(--card2);border-radius:12px;padding:12px;margin-top:16px;text-align:left}
-.path div{padding:8px 0;font-size:13px;border-bottom:1px solid #333}
-.path div:last-child{border:none}
+.relation-result{
+margin-top:24px;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius-lg);
+padding:24px;
+text-align:center;
+}
+.relation-badge{
+display:inline-block;
+background:linear-gradient(135deg,var(--primary),var(--secondary));
+color:white;
+padding:12px 28px;
+border-radius:var(--radius-full);
+font-size:20px;
+font-weight:700;
+margin:16px 0;
+}
+.relation-detail{
+background:var(--surface);
+border-radius:var(--radius);
+padding:16px;
+margin-top:16px;
+text-align:left;
+}
+.relation-step{
+padding:10px 0;
+font-size:13px;
+color:var(--text-secondary);
+border-bottom:1px solid var(--border);
+display:flex;
+align-items:center;
+gap:10px;
+}
+.relation-step:last-child{border:none}
+.relation-step .dot{
+width:8px;height:8px;
+background:var(--primary);
+border-radius:50%;
+flex-shrink:0;
+}
 
-.gen-btn{display:flex;align-items:center;padding:14px;border-bottom:1px solid var(--card2);cursor:pointer}
-.gen-btn:active{background:var(--card2)}
-.gen-b{background:var(--accent);color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;margin-right:12px}
-.gen-t{flex:1;font-weight:500}
-.gen-c{color:var(--text2);font-size:13px}
-.gen-list{display:none;padding:12px;background:#111;flex-wrap:wrap;gap:8px}
-.gen-list.on{display:flex}
-.gen-tag{padding:8px 12px;background:var(--card);border-radius:20px;font-size:12px;cursor:pointer}
-.gen-tag:active{background:var(--accent)}
+/* === PAGE STATS === */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.stat-card{
+background:linear-gradient(145deg,var(--card),var(--surface));
+border:1px solid var(--border);
+border-radius:var(--radius-lg);
+padding:24px 16px;
+text-align:center;
+}
+.stat-icon{font-size:32px;margin-bottom:12px}
+.stat-value{font-size:36px;font-weight:700;background:linear-gradient(135deg,var(--primary-light),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:12px;color:var(--text-muted);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
 
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:flex-end}
-.modal.on{display:flex}
-.modal-c{background:var(--card);width:100%;max-height:80vh;border-radius:20px 20px 0 0;overflow-y:auto;animation:up .3s;padding-bottom:max(20px,env(safe-area-inset-bottom))}
-@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-h{width:40px;height:4px;background:#444;border-radius:2px;margin:12px auto}
-.modal-top{padding:0 20px 16px;text-align:center}
-.modal-av{width:72px;height:72px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:32px}
-.modal-nm{font-size:20px;font-weight:700}
-.modal-al{font-size:14px;color:var(--text2)}
-.modal-b{padding:0 20px}
-.modal-r{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #333}
-.modal-r:last-child{border:none}
-.modal-l{color:var(--text2)}
-.modal-v{font-weight:500}
-.modal-s{margin-top:16px}
-.modal-st{font-size:12px;color:var(--text2);margin-bottom:10px}
-.modal-kids{display:flex;flex-wrap:wrap;gap:8px}
-.modal-kid{padding:10px 14px;background:var(--card2);border-radius:20px;font-size:13px;cursor:pointer}
-.modal-kid:active{background:var(--accent)}
-.modal-btn{width:calc(100% - 40px);margin:20px;padding:14px;background:var(--accent);border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:600}
-.modal-close{width:calc(100% - 40px);margin:0 20px 10px;padding:14px;background:var(--card2);border:none;border-radius:12px;color:var(--text);font-size:15px}
+/* Empty state */
+.empty{
+text-align:center;
+padding:48px 24px;
+color:var(--text-muted);
+}
+.empty-icon{font-size:48px;margin-bottom:16px;opacity:0.5}
+.empty-text{font-size:14px}
 
-.empty{text-align:center;padding:40px;color:#666}
-.empty span{font-size:48px;display:block;margin-bottom:12px}
+/* Messages */
+.no-data{
+background:var(--surface);
+border-radius:var(--radius);
+padding:20px;
+text-align:center;
+color:var(--text-muted);
+font-size:14px;
+}
 </style>
 </head>
 <body>
 <div class="app">
-<header>
-<div><h1>🌳 ALY KOÏRA</h1><small>191 membres • 5 générations</small></div>
+<!-- Header -->
+<header class="header">
+<div class="header-top">
+<div class="logo">
+<div class="logo-icon">🌳</div>
+<div class="logo-text">
+<h1>Famille Aly Koïra</h1>
+<span>Arbre généalogique</span>
+</div>
+</div>
+</div>
+<div class="header-stats">
+<div class="header-stat">
+<div class="header-stat-value">191</div>
+<div class="header-stat-label">Membres</div>
+</div>
+<div class="header-stat">
+<div class="header-stat-value">5</div>
+<div class="header-stat-label">Générations</div>
+</div>
+<div class="header-stat">
+<div class="header-stat-value" id="maleCount">-</div>
+<div class="header-stat-label">Hommes</div>
+</div>
+<div class="header-stat">
+<div class="header-stat-value" id="femaleCount">-</div>
+<div class="header-stat-label">Femmes</div>
+</div>
+</div>
 </header>
 
-<nav>
-<button class="on" onclick="go(0,this)"><span>🌳</span>Arbre</button>
-<button onclick="go(1,this)"><span>📊</span>Générations</button>
-<button onclick="go(2,this)"><span>🔍</span>Recherche</button>
-<button onclick="go(3,this)"><span>🔗</span>Parenté</button>
-<button onclick="go(4,this)"><span>📈</span>Stats</button>
-</nav>
-
+<!-- Main content -->
 <main>
-<section id="s0" class="on">
-<div class="tree-controls">
-<select class="tree-select" id="rootSel" onchange="changeRoot()"></select>
-<div class="ctrl-btns">
-<button class="ctrl-btn" onclick="expandAll()" title="Tout déplier">⊞</button>
-<button class="ctrl-btn" onclick="collapseAll()" title="Tout replier">⊟</button>
-<button class="ctrl-btn" onclick="zoomOut()">−</button>
-<button class="ctrl-btn" onclick="zoomIn()">+</button>
-</div>
-</div>
-<div class="breadcrumb" id="breadcrumb"></div>
-<div class="tree-wrap" id="treeWrap">
-<div class="tree-canvas">
-<div class="tree-container" id="treeContainer"></div>
-</div>
-</div>
-</section>
+<!-- Page Famille -->
+<div class="page active" id="pageFamille">
+<div class="scroll">
+<select class="root-select" id="rootSelect" onchange="changeRoot()">
+<option value="">📍 Choisir un point de départ...</option>
+</select>
 
-<section id="s1">
-<div class="section-content"><div class="list" id="genList"></div></div>
-</section>
+<div class="tree-nav" id="breadcrumb"></div>
 
-<section id="s2">
-<div class="section-content">
-<input type="text" class="search" placeholder="🔍 Rechercher un nom..." id="q" oninput="filterDir()">
-<div class="list" id="dirList"></div>
+<div id="personView"></div>
 </div>
-</section>
-
-<section id="s3">
-<div class="section-content">
-<select id="p1"><option value="">Première personne...</option></select>
-<select id="p2"><option value="">Deuxième personne...</option></select>
-<button class="btn" onclick="findRel()">🔗 Trouver le lien</button>
-<div id="relRes"></div>
 </div>
-</section>
 
-<section id="s4">
-<div class="section-content"><div class="stats" id="statsG"></div></div>
-</section>
+<!-- Page Recherche -->
+<div class="page" id="pageRecherche">
+<div class="scroll">
+<div class="search-box">
+<svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+<input type="text" class="search-input" placeholder="Rechercher une personne..." id="searchInput" oninput="filterSearch()">
+</div>
+<div class="person-list" id="personList"></div>
+</div>
+</div>
+
+<!-- Page Parenté -->
+<div class="page" id="pageParente">
+<div class="scroll">
+<div class="relation-form">
+<select class="relation-select" id="person1">
+<option value="">👤 Première personne...</option>
+</select>
+<select class="relation-select" id="person2">
+<option value="">👤 Deuxième personne...</option>
+</select>
+<button class="relation-btn" onclick="findRelation()">
+🔗 Trouver le lien de parenté
+</button>
+</div>
+<div id="relationResult"></div>
+</div>
+</div>
+
+<!-- Page Stats -->
+<div class="page" id="pageStats">
+<div class="scroll">
+<div class="stats-grid" id="statsGrid"></div>
+</div>
+</div>
 </main>
-</div>
 
-<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
-<div class="modal-c">
-<div class="modal-h"></div>
-<div class="modal-top">
-<div class="modal-av" id="mAv">👤</div>
-<div class="modal-nm" id="mNm"></div>
-<div class="modal-al" id="mAl"></div>
-</div>
-<div class="modal-b" id="mB"></div>
-<button class="modal-btn" id="mBtn">Voir dans l'arbre</button>
-<button class="modal-close" onclick="closeModal()">Fermer</button>
-</div>
+<!-- Navigation -->
+<nav class="nav">
+<button class="nav-item active" onclick="showPage('pageFamille',this)">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+Famille
+</button>
+<button class="nav-item" onclick="showPage('pageRecherche',this)">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+Recherche
+</button>
+<button class="nav-item" onclick="showPage('pageParente',this)">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+Parenté
+</button>
+<button class="nav-item" onclick="showPage('pageStats',this)">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+Stats
+</button>
+</nav>
 </div>
 
 <script>
 const D={"alkamahamane":{id:"alkamahamane",n:"Alkamahamane Sabalkaidi",a:null,g:"M",gen:1,f:null,m:null,c:["goussoumbi","goma","hounaye","soumboulou","farimata_alk","ali"]},"goussoumbi":{id:"goussoumbi",n:"Goussoumbi Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:null,c:[]},"goma":{id:"goma",n:"Goma Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:null,c:[]},"hounaye":{id:"hounaye",n:"Hounaye Alkamahamane",a:null,g:"F",gen:2,f:"alkamahamane",m:null,c:[]},"soumboulou":{id:"soumboulou",n:"Soumboulou Alkamahamane",a:null,g:"F",gen:2,f:"alkamahamane",m:null,c:[]},"farimata_alk":{id:"farimata_alk",n:"Farimata Alkamahamane",a:null,g:"F",gen:2,f:"alkamahamane",m:null,c:["dalla"]},"ali":{id:"ali",n:"Ali Alkamahamane",a:"Aly Koïra",g:"M",gen:2,f:"alkamahamane",m:null,c:["mahamane","babachigaw","kobbo","moussa","omorou","tamimoune","mahadi"]},"mahamane":{id:"mahamane",n:"Mahamane Ali",a:null,g:"M",gen:3,f:"ali",m:null,c:["mohomone","taya","ahmadou","yata","issouf","halilou","alhalil","aliou_m","houzaye","alassane_s","agaicha_m","abdou_d"]},"babachigaw":{id:"babachigaw",n:"Babachigaw Ali",a:null,g:"M",gen:3,f:"ali",m:null,c:["aliou_b","aboubacar","ousmane_a","alhousseini","abdoulaye_s","nouhoum","mata_b"]},"kobbo":{id:"kobbo",n:"Agacha Ali",a:"Kobbo",g:"F",gen:3,f:"ali",m:null,c:["aicha_f","arhamatou_f","issa_m","taya_m","izeboncana","jaouja","dally"]},"moussa":{id:"moussa",n:"Moussa Ali",a:null,g:"M",gen:3,f:"ali",m:null,c:["mata_m","haylloli","wanaissou_m","jato","alassane_m","assoumane_m","abdou_m","sala"]},"omorou":{id:"omorou",n:"Omorou Ali",a:null,g:"M",gen:3,f:"ali",m:null,c:["houssouba","kabongou","mahamadou_o","sourgou","tabbo_o","zabbo","ichata_o"]},"tamimoune":{id:"tamimoune",n:"Tamimoune Ali",a:null,g:"M",gen:3,f:"ali",m:null,c:["chiddaye","mata_a","ichata_a","boudjal","saleymatou"]},"mahadi":{id:"mahadi",n:"Mahadi Ali",a:null,g:"M",gen:3,f:"ali",m:null,c:["dayo","saffia","sawde","zarha","aminta_m","chaffa","seydou_m"]},"dalla":{id:"dalla",n:"Dalla",a:null,g:"M",gen:3,f:null,m:"farimata_alk",c:[]},"mohomone":{id:"mohomone",n:"Mohomone Mahamane",a:"Galla",g:"M",gen:4,f:"mahamane",m:null,c:["ibrahim_m","seydou_mo","ousmane_m","adama_m","hirinissa"]},"taya":{id:"taya",n:"Taya Mahamane",a:null,g:"M",gen:4,f:"mahamane",m:null,c:["halimatou_h","assaliha_h","arboncana","hadaye"]},"ahmadou":{id:"ahmadou",n:"Ahmadou Mahamane",a:"Agawa",g:"M",gen:4,f:"mahamane",m:null,c:[]},"yata":{id:"yata",n:"Yata Mahamane",a:null,g:"F",gen:4,f:"mahamane",m:null,c:["momo","adama_a","hounaijata","waykouti","daoulata","mouna_a","zeinaba"]},"issouf":{id:"issouf",n:"Issouf Mahamane",a:"Tabbo",g:"M",gen:4,f:"mahamane",m:null,c:["moulaye","adijatou_t","annoussourou","alassane_t","arhamatou_t","assaliha_t","yahiya_t"]},"halilou":{id:"halilou",n:"Halilou Mahamane",a:null,g:"M",gen:4,f:"mahamane",m:null,c:["hamma","idrissa_h","mariam_h","aichata_h"]},"alhalil":{id:"alhalil",n:"Alhalil Mahamane",a:null,g:"M",gen:4,f:"mahamane",m:null,c:[]},"aliou_m":{id:"aliou_m",n:"Aliou Mahamane",a:null,g:"M",gen:4,f:"mahamane",m:null,c:[]},"houzaye":{id:"houzaye",n:"Houzaye Mahamane",a:null,g:"M",gen:4,f:"mahamane",m:null,c:[]},"alassane_s":{id:"alassane_s",n:"Alassane Mahamane",a:"Sosso",g:"M",gen:4,f:"mahamane",m:null,c:["alhabibou","alkassoume","ibrahim_a","abdourhamane_a","moussa_a","mariama_a","safietou_a","hamsatou","arhamatou_a","hawa_a","bintou","aichata_a"]},"agaicha_m":{id:"agaicha_m",n:"Agaicha Mahamane",a:null,g:"F",gen:4,f:"mahamane",m:null,c:[]},"abdou_d":{id:"abdou_d",n:"Abdou Mahamane",a:"Doudou",g:"M",gen:4,f:"mahamane",m:null,c:["ichata_d","saley_d","hanchata","zaouzata","sarata","akilou","moukaila","daouda","sadou_d","idrissa_d"]},"aliou_b":{id:"aliou_b",n:"Aliou Babachigaw",a:null,g:"M",gen:4,f:"babachigaw",m:null,c:[]},"aboubacar":{id:"aboubacar",n:"Aboubacar Babachigaw",a:"Djama",g:"M",gen:4,f:"babachigaw",m:null,c:[]},"ousmane_a":{id:"ousmane_a",n:"Ousmane Babachigaw",a:"Achidogo",g:"M",gen:4,f:"babachigaw",m:null,c:[]},"alhousseini":{id:"alhousseini",n:"Alhousseini Babachigaw",a:"Aggada",g:"M",gen:4,f:"babachigaw",m:null,c:["hakimoune","hamida","houna","zabbo_ag"]},"abdoulaye_s":{id:"abdoulaye_s",n:"Abdoulaye Babachigaw",a:"Sagara",g:"M",gen:4,f:"babachigaw",m:null,c:[]},"nouhoum":{id:"nouhoum",n:"Nouhoum Babachigaw",a:null,g:"M",gen:4,f:"babachigaw",m:null,c:[]},"mata_b":{id:"mata_b",n:"Mata Babachigaw",a:null,g:"F",gen:4,f:"babachigaw",m:null,c:[]},"mata_m":{id:"mata_m",n:"Mata Moussa",a:null,g:"F",gen:4,f:"moussa",m:null,c:[]},"haylloli":{id:"haylloli",n:"Haylloli Moussa",a:null,g:"F",gen:4,f:"moussa",m:null,c:[]},"wanaissou_m":{id:"wanaissou_m",n:"Wanaissou Moussa",a:null,g:"M",gen:4,f:"moussa",m:null,c:[]},"jato":{id:"jato",n:"Jato Moussa",a:null,g:"F",gen:4,f:"moussa",m:null,c:[]},"alassane_m":{id:"alassane_m",n:"Alassane Moussa",a:null,g:"M",gen:4,f:"moussa",m:null,c:[]},"assoumane_m":{id:"assoumane_m",n:"Assoumane Moussa",a:null,g:"M",gen:4,f:"moussa",m:null,c:[]},"abdou_m":{id:"abdou_m",n:"Abdou Moussa",a:null,g:"M",gen:4,f:"moussa",m:null,c:[]},"sala":{id:"sala",n:"Sala Moussa",a:null,g:"M",gen:4,f:"moussa",m:null,c:[]},"houssouba":{id:"houssouba",n:"Houssouba Omorou",a:null,g:"M",gen:4,f:"omorou",m:null,c:[]},"kabongou":{id:"kabongou",n:"Kabongou Omorou",a:null,g:"M",gen:4,f:"omorou",m:null,c:["wayo","aminta_k","makiou","yacouba","ngolo","issiaka"]},"mahamadou_o":{id:"mahamadou_o",n:"Mahamadou Omorou",a:null,g:"M",gen:4,f:"omorou",m:null,c:["zeinabou","koddo_m","bouba_m"]},"sourgou":{id:"sourgou",n:"Sourgou Omorou",a:null,g:"M",gen:4,f:"omorou",m:null,c:["adija_s","mariama_s","fatoumata_s","ammou","koddo_s"]},"tabbo_o":{id:"tabbo_o",n:"Tabbo Omorou",a:"Abdoulaye",g:"M",gen:4,f:"omorou",m:null,c:["almahamoudou","minkailou","bacha","moumoumini","gallou","soumma","sadou_t"]},"zabbo":{id:"zabbo",n:"Zabbo Omorou",a:null,g:"F",gen:4,f:"omorou",m:null,c:[]},"ichata_o":{id:"ichata_o",n:"Ichata Omorou",a:null,g:"F",gen:4,f:"omorou",m:null,c:["alhoussouna","hachimine","hallachi","houreita_a","mariama_dj","haoua_dj","aminta_dj","haja"]},"chiddaye":{id:"chiddaye",n:"Chiddaye Alphary",a:null,g:"M",gen:4,f:"tamimoune",m:null,c:["djiougou","arhamatou_ch"]},"mata_a":{id:"mata_a",n:"Mata Alphary",a:null,g:"F",gen:4,f:"tamimoune",m:null,c:["hakimoune","hamida","houna","zabbo_ag"]},"ichata_a":{id:"ichata_a",n:"Ichata Alphary",a:"Aissata",g:"F",gen:4,f:"tamimoune",m:null,c:[]},"boudjal":{id:"boudjal",n:"Boudjal Alphary",a:"Boudia",g:"M",gen:4,f:"tamimoune",m:null,c:[]},"saleymatou":{id:"saleymatou",n:"Saleymatou Alphary",a:null,g:"F",gen:4,f:"tamimoune",m:null,c:["salo"]},"dayo":{id:"dayo",n:"Dayo Mahadi",a:null,g:"F",gen:4,f:"mahadi",m:null,c:[]},"saffia":{id:"saffia",n:"Saffia Mahadi",a:null,g:"F",gen:4,f:"mahadi",m:null,c:[]},"sawde":{id:"sawde",n:"Sawde Mahadi",a:null,g:"F",gen:4,f:"mahadi",m:null,c:[]},"zarha":{id:"zarha",n:"Zarha Mahadi",a:null,g:"F",gen:4,f:"mahadi",m:null,c:[]},"aminta_m":{id:"aminta_m",n:"Aminta Mahadi",a:null,g:"F",gen:4,f:"mahadi",m:null,c:[]},"chaffa":{id:"chaffa",n:"Chaffa Mahadi",a:null,g:"M",gen:4,f:"mahadi",m:null,c:[]},"seydou_m":{id:"seydou_m",n:"Seydou Mahadi",a:null,g:"M",gen:4,f:"mahadi",m:null,c:["babeye","abaneye","adija_se","chidi","arhamatou_se","mariama_se","ali_se","bibata","abdoulaye_se","saleye"]},"aicha_f":{id:"aicha_f",n:"Aicha Fedja",a:null,g:"F",gen:4,f:null,m:"kobbo",c:["safietou_h","farimata_h","mohomodou_h","haoua_h","adama_h"]},"arhamatou_f":{id:"arhamatou_f",n:"Arhamatou Fedja",a:null,g:"F",gen:4,f:null,m:"kobbo",c:["fatou_m","maimouna_m","yahiya_m","mommo_m","wanaissou_b"]},"issa_m":{id:"issa_m",n:"Issa Mohomodou",a:null,g:"M",gen:4,f:null,m:"kobbo",c:["mohomone_i","haoua_i"]},"taya_m":{id:"taya_m",n:"Taya Mohomodou",a:null,g:"M",gen:4,f:null,m:"kobbo",c:["babba","noussoura","kabongou_a"]},"izeboncana":{id:"izeboncana",n:"Izeboncana Tayda",a:null,g:"F",gen:4,f:null,m:"kobbo",c:["timintika","sawata","zarha_b"]},"jaouja":{id:"jaouja",n:"Jaouja Tayda",a:null,g:"F",gen:4,f:null,m:"kobbo",c:["chidiya","ichata_ha"]},"dally":{id:"dally",n:"Dally Tayda",a:null,g:"F",gen:4,f:null,m:"kobbo",c:["arhamatou_d","hancha","idrissa_da","abdoulaye_d","mouna_d","bouba_d","souma","koddo_d"]},"moulaye":{id:"moulaye",n:"Moulaye Tabbo",a:null,g:"M",gen:5,f:"issouf",m:null,c:[]},"adijatou_t":{id:"adijatou_t",n:"Adijatou Tabbo",a:null,g:"F",gen:5,f:"issouf",m:null,c:[]},"annoussourou":{id:"annoussourou",n:"Annoussourou Tabbo",a:null,g:"M",gen:5,f:"issouf",m:null,c:[]},"alassane_t":{id:"alassane_t",n:"Alassane Tabbo",a:"Boncana",g:"M",gen:5,f:"issouf",m:null,c:[]},"arhamatou_t":{id:"arhamatou_t",n:"Arhamatou Tabbo",a:null,g:"F",gen:5,f:"issouf",m:null,c:[]},"assaliha_t":{id:"assaliha_t",n:"Assaliha Tabbo",a:null,g:"F",gen:5,f:"issouf",m:null,c:[]},"yahiya_t":{id:"yahiya_t",n:"Yahiya Tabbo",a:null,g:"M",gen:5,f:"issouf",m:null,c:[]},"momo":{id:"momo",n:"Momo Assabi",a:null,g:"M",gen:5,f:null,m:"yata",c:[]},"adama_a":{id:"adama_a",n:"Adama Assabi",a:null,g:"M",gen:5,f:null,m:"yata",c:[]},"hounaijata":{id:"hounaijata",n:"Hounaijata Assabi",a:null,g:"F",gen:5,f:null,m:"yata",c:[]},"waykouti":{id:"waykouti",n:"Waykouti Assabi",a:null,g:"F",gen:5,f:null,m:"yata",c:[]},"daoulata":{id:"daoulata",n:"Daoulata Assabi",a:null,g:"F",gen:5,f:null,m:"yata",c:[]},"mouna_a":{id:"mouna_a",n:"Mouna Assabi",a:null,g:"F",gen:5,f:null,m:"yata",c:[]},"zeinaba":{id:"zeinaba",n:"Zeinaba Assabi",a:null,g:"F",gen:5,f:null,m:"yata",c:[]},"alhabibou":{id:"alhabibou",n:"Alhabibou Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:null,c:[]},"alkassoume":{id:"alkassoume",n:"Alkassoume Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:null,c:[]},"ibrahim_a":{id:"ibrahim_a",n:"Ibrahim Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:null,c:[]},"abdourhamane_a":{id:"abdourhamane_a",n:"Abdourhamane Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:null,c:[]},"moussa_a":{id:"moussa_a",n:"Moussa Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:null,c:[]},"mariama_a":{id:"mariama_a",n:"Mariama Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:null,c:[]},"safietou_a":{id:"safietou_a",n:"Safietou Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:null,c:[]},"hamsatou":{id:"hamsatou",n:"Hamsatou Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:null,c:[]},"arhamatou_a":{id:"arhamatou_a",n:"Arhamatou Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:null,c:[]},"hawa_a":{id:"hawa_a",n:"Hawa Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:null,c:[]},"bintou":{id:"bintou",n:"Bintou Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:null,c:[]},"aichata_a":{id:"aichata_a",n:"Aichata Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:null,c:[]},"ibrahim_m":{id:"ibrahim_m",n:"Ibrahim Mohomone",a:null,g:"M",gen:5,f:"mohomone",m:null,c:[]},"seydou_mo":{id:"seydou_mo",n:"Seydou Mohomone",a:null,g:"M",gen:5,f:"mohomone",m:null,c:[]},"ousmane_m":{id:"ousmane_m",n:"Ousmane Mohomone",a:null,g:"M",gen:5,f:"mohomone",m:null,c:[]},"adama_m":{id:"adama_m",n:"Adama Mohomone",a:null,g:"M",gen:5,f:"mohomone",m:null,c:[]},"hirinissa":{id:"hirinissa",n:"Hirinissa Mohomone",a:"Aichata",g:"F",gen:5,f:"mohomone",m:null,c:[]},"hamma":{id:"hamma",n:"Hamma Halilou",a:"Ario",g:"M",gen:5,f:"halilou",m:null,c:[]},"idrissa_h":{id:"idrissa_h",n:"Idrissa Halilou",a:null,g:"M",gen:5,f:"halilou",m:null,c:[]},"mariam_h":{id:"mariam_h",n:"Mariam Halilou",a:null,g:"F",gen:5,f:"halilou",m:null,c:[]},"aichata_h":{id:"aichata_h",n:"Aichata Halilou",a:null,g:"F",gen:5,f:"halilou",m:null,c:[]},"halimatou_h":{id:"halimatou_h",n:"Halimatou Hamadahamane",a:null,g:"F",gen:5,f:"taya",m:null,c:[]},"assaliha_h":{id:"assaliha_h",n:"Assaliha Hamadahamane",a:null,g:"F",gen:5,f:"taya",m:null,c:[]},"arboncana":{id:"arboncana",n:"Arboncana Hamadahamane",a:null,g:"M",gen:5,f:"taya",m:null,c:[]},"hadaye":{id:"hadaye",n:"Hadaye Hamadahamane",a:null,g:"F",gen:5,f:"taya",m:null,c:[]},"ichata_d":{id:"ichata_d",n:"Ichata Doudou",a:null,g:"F",gen:5,f:"abdou_d",m:null,c:[]},"saley_d":{id:"saley_d",n:"Saley Doudou",a:null,g:"M",gen:5,f:"abdou_d",m:null,c:[]},"hanchata":{id:"hanchata",n:"Hanchata Doudou",a:null,g:"F",gen:5,f:"abdou_d",m:null,c:[]},"zaouzata":{id:"zaouzata",n:"Zaouzata Doudou",a:null,g:"F",gen:5,f:"abdou_d",m:null,c:[]},"sarata":{id:"sarata",n:"Sarata Doudou",a:null,g:"F",gen:5,f:"abdou_d",m:null,c:[]},"akilou":{id:"akilou",n:"Akilou Doudou",a:null,g:"M",gen:5,f:"abdou_d",m:null,c:[]},"moukaila":{id:"moukaila",n:"Moukaila Doudou",a:null,g:"M",gen:5,f:"abdou_d",m:null,c:[]},"daouda":{id:"daouda",n:"Daouda Doudou",a:null,g:"M",gen:5,f:"abdou_d",m:null,c:[]},"sadou_d":{id:"sadou_d",n:"Sadou Doudou",a:null,g:"M",gen:5,f:"abdou_d",m:null,c:[]},"idrissa_d":{id:"idrissa_d",n:"Idrissa Doudou",a:null,g:"M",gen:5,f:"abdou_d",m:null,c:[]},"wayo":{id:"wayo",n:"Wayo Kabongou",a:"N'goyba",g:"M",gen:5,f:"kabongou",m:null,c:[]},"aminta_k":{id:"aminta_k",n:"Aminta Kabongou",a:"N'goyba",g:"F",gen:5,f:"kabongou",m:null,c:[]},"makiou":{id:"makiou",n:"Makiou Kabongou",a:"N'goyba",g:"M",gen:5,f:"kabongou",m:null,c:[]},"yacouba":{id:"yacouba",n:"Yacouba Kabongou",a:"N'goyba",g:"M",gen:5,f:"kabongou",m:null,c:[]},"ngolo":{id:"ngolo",n:"N'Golo Kabongou",a:"N'goyba",g:"M",gen:5,f:"kabongou",m:null,c:[]},"issiaka":{id:"issiaka",n:"Issiaka Kabongou",a:"N'goyba",g:"M",gen:5,f:"kabongou",m:null,c:[]},"zeinabou":{id:"zeinabou",n:"Zeinabou Mahamadou",a:null,g:"F",gen:5,f:"mahamadou_o",m:null,c:[]},"koddo_m":{id:"koddo_m",n:"Koddo Mahamadou",a:null,g:"F",gen:5,f:"mahamadou_o",m:null,c:[]},"bouba_m":{id:"bouba_m",n:"Bouba Mahamadou",a:null,g:"M",gen:5,f:"mahamadou_o",m:null,c:[]},"adija_s":{id:"adija_s",n:"Adija Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:null,c:[]},"mariama_s":{id:"mariama_s",n:"Mariama Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:null,c:[]},"fatoumata_s":{id:"fatoumata_s",n:"Fatoumata Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:null,c:[]},"ammou":{id:"ammou",n:"Ammou Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:null,c:[]},"koddo_s":{id:"koddo_s",n:"Koddo Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:null,c:[]},"almahamoudou":{id:"almahamoudou",n:"Almahamoudou Tabagore",a:"Illile",g:"M",gen:5,f:"tabbo_o",m:null,c:[]},"minkailou":{id:"minkailou",n:"Minkailou Tabagore",a:"Kila",g:"M",gen:5,f:"tabbo_o",m:null,c:[]},"bacha":{id:"bacha",n:"Bacha Tabagore",a:null,g:"M",gen:5,f:"tabbo_o",m:null,c:[]},"moumoumini":{id:"moumoumini",n:"Moumoumini Tabagore",a:"Belleythiero",g:"M",gen:5,f:"tabbo_o",m:null,c:[]},"gallou":{id:"gallou",n:"Gallou Tabagore",a:null,g:"M",gen:5,f:"tabbo_o",m:null,c:[]},"soumma":{id:"soumma",n:"Soumma Tabagore",a:null,g:"M",gen:5,f:"tabbo_o",m:null,c:[]},"sadou_t":{id:"sadou_t",n:"Sadou Tabagore",a:null,g:"M",gen:5,f:"tabbo_o",m:null,c:[]},"alhoussouna":{id:"alhoussouna",n:"Alhoussouna Bodowal",a:null,g:"M",gen:5,f:null,m:"ichata_o",c:[]},"hachimine":{id:"hachimine",n:"Hachimine Bodowal",a:null,g:"M",gen:5,f:null,m:"ichata_o",c:[]},"hallachi":{id:"hallachi",n:"Hallachi Agawa",a:null,g:"M",gen:5,f:null,m:"ichata_o",c:[]},"houreita_a":{id:"houreita_a",n:"Houreita Agawa",a:null,g:"F",gen:5,f:null,m:"ichata_o",c:[]},"mariama_dj":{id:"mariama_dj",n:"Mariama Djama",a:null,g:"F",gen:5,f:null,m:"ichata_o",c:[]},"haoua_dj":{id:"haoua_dj",n:"Haoua Djama",a:null,g:"F",gen:5,f:null,m:"ichata_o",c:[]},"aminta_dj":{id:"aminta_dj",n:"Aminta Djama",a:null,g:"F",gen:5,f:null,m:"ichata_o",c:[]},"haja":{id:"haja",n:"Haja Galleye",a:null,g:"F",gen:5,f:null,m:"ichata_o",c:[]},"babeye":{id:"babeye",n:"Babeye Seydou",a:null,g:"M",gen:5,f:"seydou_m",m:null,c:[]},"abaneye":{id:"abaneye",n:"Abaneye Seydou",a:null,g:"M",gen:5,f:"seydou_m",m:null,c:[]},"adija_se":{id:"adija_se",n:"Adija Seydou",a:null,g:"F",gen:5,f:"seydou_m",m:null,c:[]},"chidi":{id:"chidi",n:"Chidi Seydou",a:null,g:"M",gen:5,f:"seydou_m",m:null,c:[]},"arhamatou_se":{id:"arhamatou_se",n:"Arhamatou Seydou",a:null,g:"F",gen:5,f:"seydou_m",m:null,c:[]},"mariama_se":{id:"mariama_se",n:"Mariama Seydou",a:null,g:"F",gen:5,f:"seydou_m",m:null,c:[]},"ali_se":{id:"ali_se",n:"Ali Seydou",a:null,g:"M",gen:5,f:"seydou_m",m:null,c:[]},"bibata":{id:"bibata",n:"Bibata Seydou",a:null,g:"F",gen:5,f:"seydou_m",m:null,c:[]},"abdoulaye_se":{id:"abdoulaye_se",n:"Abdoulaye Seydou",a:null,g:"M",gen:5,f:"seydou_m",m:null,c:[]},"saleye":{id:"saleye",n:"Saleye Seydou",a:null,g:"M",gen:5,f:"seydou_m",m:null,c:[]},"djiougou":{id:"djiougou",n:"Djiougou Chideye",a:null,g:"M",gen:5,f:"chiddaye",m:null,c:[]},"arhamatou_ch":{id:"arhamatou_ch",n:"Arhamatou Chideye",a:null,g:"F",gen:5,f:"chiddaye",m:null,c:[]},"hakimoune":{id:"hakimoune",n:"Hakimoune Aggada",a:null,g:"M",gen:5,f:"alhousseini",m:"mata_a",c:[]},"hamida":{id:"hamida",n:"Hamida Aggada",a:null,g:"F",gen:5,f:"alhousseini",m:"mata_a",c:[]},"houna":{id:"houna",n:"Houna Aggada",a:null,g:"F",gen:5,f:"alhousseini",m:"mata_a",c:[]},"zabbo_ag":{id:"zabbo_ag",n:"Zabbo Aggada",a:null,g:"F",gen:5,f:"alhousseini",m:"mata_a",c:[]},"salo":{id:"salo",n:"Salo Alkassahi",a:null,g:"M",gen:5,f:null,m:"saleymatou",c:[]},"safietou_h":{id:"safietou_h",n:"Safietou Hanakoukou",a:null,g:"F",gen:5,f:null,m:"aicha_f",c:[]},"farimata_h":{id:"farimata_h",n:"Farimata Hanakoukou",a:null,g:"F",gen:5,f:null,m:"aicha_f",c:[]},"mohomodou_h":{id:"mohomodou_h",n:"Mohomodou Hanakoukou",a:"Mawal",g:"M",gen:5,f:null,m:"aicha_f",c:[]},"haoua_h":{id:"haoua_h",n:"Haoua Hanakoukou",a:null,g:"F",gen:5,f:null,m:"aicha_f",c:[]},"adama_h":{id:"adama_h",n:"Adama Hanakoukou",a:null,g:"M",gen:5,f:null,m:"aicha_f",c:[]},"fatou_m":{id:"fatou_m",n:"Fatou Moussa",a:null,g:"F",gen:5,f:null,m:"arhamatou_f",c:[]},"maimouna_m":{id:"maimouna_m",n:"Maimouna Moussa",a:null,g:"F",gen:5,f:null,m:"arhamatou_f",c:[]},"yahiya_m":{id:"yahiya_m",n:"Yahiya Moussa",a:null,g:"M",gen:5,f:null,m:"arhamatou_f",c:[]},"mommo_m":{id:"mommo_m",n:"Mommo Moussa",a:null,g:"M",gen:5,f:null,m:"arhamatou_f",c:[]},"wanaissou_b":{id:"wanaissou_b",n:"Wanaissou Moussa Bahadou",a:null,g:"M",gen:5,f:null,m:"arhamatou_f",c:[]},"babba":{id:"babba",n:"Babba Amiro",a:null,g:"M",gen:5,f:"taya_m",m:null,c:[]},"noussoura":{id:"noussoura",n:"Noussoura Amiro",a:null,g:"F",gen:5,f:"taya_m",m:null,c:[]},"kabongou_a":{id:"kabongou_a",n:"Kabongou Amiro",a:null,g:"M",gen:5,f:"taya_m",m:null,c:[]},"mohomone_i":{id:"mohomone_i",n:"Mohomone Issa",a:null,g:"M",gen:5,f:"issa_m",m:null,c:[]},"haoua_i":{id:"haoua_i",n:"Haoua Issa",a:"N'gary",g:"F",gen:5,f:"issa_m",m:null,c:[]},"timintika":{id:"timintika",n:"Timintika Bodowal",a:null,g:"F",gen:5,f:null,m:"izeboncana",c:[]},"sawata":{id:"sawata",n:"Sawata Bodowal",a:null,g:"F",gen:5,f:null,m:"izeboncana",c:[]},"zarha_b":{id:"zarha_b",n:"Zarha Bodowal",a:null,g:"F",gen:5,f:null,m:"izeboncana",c:[]},"chidiya":{id:"chidiya",n:"Chidiya Halimine",a:null,g:"F",gen:5,f:null,m:"jaouja",c:[]},"ichata_ha":{id:"ichata_ha",n:"Ichata Halimine",a:null,g:"F",gen:5,f:null,m:"jaouja",c:[]},"arhamatou_d":{id:"arhamatou_d",n:"Arhamatou Dally",a:null,g:"F",gen:5,f:null,m:"dally",c:[]},"hancha":{id:"hancha",n:"Hancha Dally",a:null,g:"F",gen:5,f:null,m:"dally",c:[]},"idrissa_da":{id:"idrissa_da",n:"Idrissa Dally",a:null,g:"M",gen:5,f:null,m:"dally",c:[]},"abdoulaye_d":{id:"abdoulaye_d",n:"Abdoulaye Dally",a:null,g:"M",gen:5,f:null,m:"dally",c:[]},"mouna_d":{id:"mouna_d",n:"Mouna Dally",a:null,g:"F",gen:5,f:null,m:"dally",c:[]},"bouba_d":{id:"bouba_d",n:"Bouba Dally",a:null,g:"M",gen:5,f:null,m:"dally",c:[]},"souma":{id:"souma",n:"Souma Dally",a:null,g:"F",gen:5,f:null,m:"dally",c:[]},"koddo_d":{id:"koddo_d",n:"Koddo Dally",a:null,g:"F",gen:5,f:null,m:"dally",c:[]}};
 
-let R='ali',Z=1,expanded=new Set(['ali']);
+let currentPerson = 'ali';
+let history = [];
 
-// Navigation
-function go(i,b){
-document.querySelectorAll('section').forEach((s,j)=>s.classList.toggle('on',j===i));
-document.querySelectorAll('nav button').forEach((t,j)=>t.classList.toggle('on',j===i));
-if(i===0){R='ali';Z=1;expanded.clear();expanded.add('ali');document.getElementById('rootSel').value='ali';document.getElementById('treeContainer').style.transform='scale(1)';renderTree();}
+// Navigation pages
+function showPage(pageId, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  btn.classList.add('active');
 }
 
-// Zoom
-function zoomIn(){Z=Math.min(2,Z+0.2);document.getElementById('treeContainer').style.transform=`scale(${Z})`}
-function zoomOut(){Z=Math.max(0.4,Z-0.2);document.getElementById('treeContainer').style.transform=`scale(${Z})`}
-
-// Expand/Collapse all
-function expandAll(){
-function addAll(id){const p=D[id];if(!p)return;const k=(p.c||[]).filter(c=>D[c]);if(k.length){expanded.add(id);k.forEach(addAll)}}
-addAll(R);
-Z=0.5;
-document.getElementById('treeContainer').style.transform=`scale(${Z})`;
-renderTree();
-}
-function collapseAll(){expanded.clear();expanded.add(R);Z=1;document.getElementById('treeContainer').style.transform='scale(1)';renderTree()}
-
-// Root change
-function changeRoot(){R=document.getElementById('rootSel').value;expanded.clear();expanded.add(R);renderTree()}
-
-// Breadcrumb
-function renderBreadcrumb(){
-const path=[];let cur=R;
-while(cur){path.unshift(cur);const p=D[cur];cur=p.f||p.m}
-document.getElementById('breadcrumb').innerHTML=path.map((id,i)=>`<span class="crumb${i===path.length-1?' current':''}" onclick="jumpTo('${id}')">${D[id].n.split(' ')[0]}</span>`).join('');
-}
-function jumpTo(id){R=id;document.getElementById('rootSel').value=id;expanded.clear();expanded.add(id);renderTree()}
-
-// Toggle expand
-function toggle(id,e){e.stopPropagation();if(expanded.has(id))expanded.delete(id);else expanded.add(id);renderTree()}
-
-// Render tree node
-function renderNode(id,isRoot=false){
-const p=D[id];if(!p)return'';
-const kids=(p.c||[]).filter(c=>D[c]);
-const isOpen=expanded.has(id);
-const name=p.n.split(' ')[0];
-
-let html=`<div class="node">
-<div class="node-box">
-<div class="node-card ${isRoot?'root':p.g==='M'?'male':'female'}${isOpen&&kids.length?' open':''}" onclick="openModal('${id}')">
-<div class="node-avatar ${p.g==='M'?'m':'f'}">${p.g==='M'?'👨':'👩'}</div>
-<div class="node-name">${name}</div>
-${p.a?`<div class="node-alias">${p.a}</div>`:''}
-${kids.length?`<div class="node-count">${kids.length}</div>`:''}
-</div>
-${kids.length?`<button class="node-btn" onclick="toggle('${id}',event)">${isOpen?'−':'+'}</button>`:''}
-</div>`;
-
-if(kids.length&&isOpen){
-html+=`<div class="node-kids${kids.length>1?' multi':''}">`;
-kids.forEach(k=>{html+=renderNode(k,false)});
-html+=`</div>`;
-}
-html+=`</div>`;
-return html;
+// Afficher une personne
+function showPerson(id) {
+  const p = D[id];
+  if (!p) return;
+  
+  if (currentPerson !== id) {
+    history.push(currentPerson);
+  }
+  currentPerson = id;
+  document.getElementById('rootSelect').value = id;
+  
+  renderBreadcrumb();
+  renderPersonView(p);
 }
 
-function renderTree(){renderBreadcrumb();document.getElementById('treeContainer').innerHTML=renderNode(R,true);setTimeout(()=>{const w=document.getElementById('treeWrap');w.scrollLeft=(w.scrollWidth-w.clientWidth)/2},50)}
+// Fil d'ariane
+function renderBreadcrumb() {
+  const path = [];
+  let cur = currentPerson;
+  while (cur && path.length < 5) {
+    path.unshift(cur);
+    const p = D[cur];
+    cur = p.f || p.m;
+  }
+  
+  let html = '';
+  if (history.length > 0) {
+    html += `<div class="tree-nav-item" onclick="goBack()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+      Retour
+    </div>`;
+  }
+  
+  path.forEach((id, i) => {
+    const p = D[id];
+    const isLast = i === path.length - 1;
+    html += `<div class="tree-nav-item" onclick="showPerson('${id}')" style="${isLast ? 'background:var(--primary);color:white;' : ''}">${p.n.split(' ')[0]}</div>`;
+  });
+  
+  document.getElementById('breadcrumb').innerHTML = html;
+}
 
-// Generations
-function renderGen(){
-const G={};Object.values(D).forEach(p=>{if(!G[p.gen])G[p.gen]=[];G[p.gen].push(p)});
-let h='';
-for(let g=1;g<=5;g++){
-if(!G[g])continue;
-h+=`<div class="gen-btn" onclick="this.nextElementSibling.classList.toggle('on')"><span class="gen-b">G${g}</span><span class="gen-t">Génération ${g}</span><span class="gen-c">${G[g].length} ›</span></div>`;
-h+=`<div class="gen-list">${G[g].map(p=>`<span class="gen-tag" onclick="event.stopPropagation();openModal('${p.id}')">${p.n.split(' ').slice(0,2).join(' ')}</span>`).join('')}</div>`;
-}
-document.getElementById('genList').innerHTML=h;
+function goBack() {
+  if (history.length > 0) {
+    currentPerson = history.pop();
+    document.getElementById('rootSelect').value = currentPerson;
+    renderBreadcrumb();
+    renderPersonView(D[currentPerson]);
+  }
 }
 
-// Directory
-function renderDir(){
-const s=Object.values(D).sort((a,b)=>a.n.localeCompare(b.n,'fr'));
-document.getElementById('dirList').innerHTML=s.map(p=>`<div class="item" onclick="openModal('${p.id}')"><div class="av ${p.g==='M'?'m':'f'}">${p.g==='M'?'👨':'👩'}</div><div class="txt"><div class="nm">${p.n}</div><div class="sub">G${p.gen}${p.a?' • "'+p.a+'"':''}</div></div></div>`).join('');
+// Vue personne
+function renderPersonView(p) {
+  const kids = (p.c || []).filter(c => D[c]);
+  const father = p.f && D[p.f] ? D[p.f] : null;
+  const mother = p.m && D[p.m] ? D[p.m] : null;
+  
+  let html = `
+    <div class="person-card">
+      <div class="person-avatar ${p.g === 'M' ? 'male' : 'female'}">${p.g === 'M' ? '👨' : '👩'}</div>
+      <div class="person-name">${p.n}</div>
+      ${p.a ? `<div class="person-alias">${p.a}</div>` : ''}
+      <div class="person-gen">Génération ${p.gen}</div>
+    </div>
+  `;
+  
+  // Parents
+  if (father || mother) {
+    html += `<div class="section-title">Parents</div><div class="parent-cards">`;
+    if (father) {
+      html += `
+        <div class="parent-card" onclick="showPerson('${father.id}')">
+          <div class="mini-avatar male">👨</div>
+          <div class="name">${father.n.split(' ')[0]}</div>
+          <div class="label">Père</div>
+        </div>
+      `;
+    }
+    if (mother) {
+      html += `
+        <div class="parent-card" onclick="showPerson('${mother.id}')">
+          <div class="mini-avatar female">👩</div>
+          <div class="name">${mother.n.split(' ')[0]}</div>
+          <div class="label">Mère</div>
+        </div>
+      `;
+    }
+    html += `</div>`;
+  }
+  
+  // Enfants
+  if (kids.length > 0) {
+    html += `<div class="section-title">Enfants (${kids.length})</div><div class="children-grid">`;
+    kids.forEach(cid => {
+      const c = D[cid];
+      const grandKids = (c.c || []).filter(gc => D[gc]).length;
+      html += `
+        <div class="child-card" onclick="showPerson('${cid}')">
+          <div class="mini-avatar ${c.g === 'M' ? 'male' : 'female'}">${c.g === 'M' ? '👨' : '👩'}</div>
+          <div class="name">${c.n.split(' ')[0]}</div>
+          ${grandKids > 0 ? `<div class="badge">${grandKids} enfants</div>` : ''}
+        </div>
+      `;
+    });
+    html += `</div>`;
+  } else {
+    html += `<div class="section-title">Enfants</div><div class="no-data">Pas d'enfants enregistrés</div>`;
+  }
+  
+  document.getElementById('personView').innerHTML = html;
 }
-function filterDir(){const q=document.getElementById('q').value.toLowerCase();document.querySelectorAll('#dirList .item').forEach(el=>{el.style.display=el.textContent.toLowerCase().includes(q)?'':'none'})}
+
+// Changement racine
+function changeRoot() {
+  const id = document.getElementById('rootSelect').value;
+  if (id && D[id]) {
+    history = [];
+    showPerson(id);
+  }
+}
+
+// Recherche
+function renderSearch() {
+  const list = Object.values(D).sort((a, b) => a.n.localeCompare(b.n, 'fr'));
+  let html = '';
+  list.forEach(p => {
+    html += `
+      <div class="person-item" onclick="goToPerson('${p.id}')">
+        <div class="avatar ${p.g === 'M' ? 'male' : 'female'}">${p.g === 'M' ? '👨' : '👩'}</div>
+        <div class="info">
+          <div class="name">${p.n}</div>
+          <div class="details">Génération ${p.gen}${p.a ? ' • ' + p.a : ''}</div>
+        </div>
+        <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    `;
+  });
+  document.getElementById('personList').innerHTML = html;
+}
+
+function filterSearch() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('#personList .person-item').forEach(el => {
+    el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function goToPerson(id) {
+  history = [];
+  showPerson(id);
+  showPage('pageFamille', document.querySelector('.nav-item'));
+}
+
+// Parenté
+function initSelects() {
+  const list = Object.values(D).sort((a, b) => a.n.localeCompare(b.n, 'fr'));
+  const roots = ['alkamahamane', 'ali', 'mahamane', 'babachigaw', 'kobbo', 'moussa', 'omorou', 'tamimoune', 'mahadi'];
+  
+  // Root select
+  const rootSel = document.getElementById('rootSelect');
+  roots.forEach(id => {
+    if (D[id]) {
+      const o = document.createElement('option');
+      o.value = id;
+      o.textContent = D[id].n + (D[id].a ? ' (' + D[id].a + ')' : '');
+      o.selected = id === 'ali';
+      rootSel.appendChild(o);
+    }
+  });
+  
+  // Relation selects
+  ['person1', 'person2'].forEach(sid => {
+    const sel = document.getElementById(sid);
+    list.forEach(p => {
+      const o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = p.n + (p.a ? ' (' + p.a + ')' : '');
+      sel.appendChild(o);
+    });
+  });
+}
+
+// Algorithme parenté
+function getPaths(id, visited = new Set()) {
+  const paths = [];
+  const p = D[id];
+  if (!p || visited.has(id)) return [[p]];
+  visited.add(id);
+  if (p.f && D[p.f]) getPaths(p.f, new Set(visited)).forEach(x => paths.push([p, ...x]));
+  if (p.m && D[p.m]) getPaths(p.m, new Set(visited)).forEach(x => paths.push([p, ...x]));
+  if (!paths.length) paths.push([p]);
+  return paths;
+}
+
+function findAncestor(id1, id2) {
+  const p1 = getPaths(id1), p2 = getPaths(id2);
+  let best = null, min = Infinity;
+  for (const a of p1) for (const b of p2) for (let i = 0; i < a.length; i++) {
+    const j = b.findIndex(x => x.id === a[i].id);
+    if (j !== -1 && i + j < min) {
+      min = i + j;
+      best = { anc: a[i], path1: a.slice(0, i + 1), path2: b.slice(0, j + 1), d1: i, d2: j };
+      break;
+    }
+  }
+  return best;
+}
+
+function getRelationType(d1, d2, p1, p2) {
+  if (d1 === 0 && d2 === 0) return "Même personne";
+  if (d1 === 1 && d2 === 1) return p1.g === p2.g ? (p1.g === 'M' ? "Frères" : "Sœurs") : "Frère et sœur";
+  if (d1 === 0) return d2 === 1 ? (p1.g === 'M' ? "Père" : "Mère") : d2 === 2 ? (p1.g === 'M' ? "Grand-père" : "Grand-mère") : "Ancêtre";
+  if (d2 === 0) return d1 === 1 ? (p1.g === 'M' ? "Fils" : "Fille") : d1 === 2 ? (p1.g === 'M' ? "Petit-fils" : "Petite-fille") : "Descendant";
+  if ((d1 === 1 && d2 === 2) || (d1 === 2 && d2 === 1)) return d1 === 1 ? (p1.g === 'M' ? "Oncle" : "Tante") : (p1.g === 'M' ? "Neveu" : "Nièce");
+  if (d1 === 2 && d2 === 2) return "Cousins germains";
+  return "Parents éloignés";
+}
+
+function findRelation() {
+  const id1 = document.getElementById('person1').value;
+  const id2 = document.getElementById('person2').value;
+  const container = document.getElementById('relationResult');
+  
+  if (!id1 || !id2) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">👆</div><div class="empty-text">Sélectionnez deux personnes</div></div>';
+    return;
+  }
+  
+  if (id1 === id2) {
+    container.innerHTML = '<div class="relation-result"><div class="relation-badge">Même personne!</div></div>';
+    return;
+  }
+  
+  const r = findAncestor(id1, id2);
+  if (!r) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">❓</div><div class="empty-text">Lien non trouvé</div></div>';
+    return;
+  }
+  
+  const rel = getRelationType(r.d1, r.d2, D[id1], D[id2]);
+  let steps = '';
+  for (let i = 0; i < r.path1.length - 1; i++) {
+    steps += `<div class="relation-step"><div class="dot"></div>${r.path1[i].n} est ${r.path1[i].g === 'M' ? 'fils' : 'fille'} de ${r.path1[i + 1].n}</div>`;
+  }
+  for (let i = 0; i < r.path2.length - 1; i++) {
+    steps += `<div class="relation-step"><div class="dot"></div>${r.path2[i].n} est ${r.path2[i].g === 'M' ? 'fils' : 'fille'} de ${r.path2[i + 1].n}</div>`;
+  }
+  
+  container.innerHTML = `
+    <div class="relation-result">
+      <div style="color:var(--text-secondary);font-size:13px">${D[id1].n}<br>&<br>${D[id2].n}</div>
+      <div class="relation-badge">${rel}</div>
+      <div style="color:var(--text-muted);font-size:12px">Ancêtre commun : ${r.anc.n}</div>
+      <div class="relation-detail">${steps}</div>
+    </div>
+  `;
+}
 
 // Stats
-function renderStats(){
-const ps=Object.values(D);
-document.getElementById('statsG').innerHTML=`
-<div class="stat"><div class="i">👥</div><div class="v">${ps.length}</div><div class="l">Membres</div></div>
-<div class="stat"><div class="i">👨</div><div class="v">${ps.filter(p=>p.g==='M').length}</div><div class="l">Hommes</div></div>
-<div class="stat"><div class="i">👩</div><div class="v">${ps.filter(p=>p.g==='F').length}</div><div class="l">Femmes</div></div>
-<div class="stat"><div class="i">🌳</div><div class="v">5</div><div class="l">Générations</div></div>`;
+function renderStats() {
+  const ps = Object.values(D);
+  const males = ps.filter(p => p.g === 'M').length;
+  const females = ps.filter(p => p.g === 'F').length;
+  
+  document.getElementById('maleCount').textContent = males;
+  document.getElementById('femaleCount').textContent = females;
+  
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value">${ps.length}</div><div class="stat-label">Membres</div></div>
+    <div class="stat-card"><div class="stat-icon">👨</div><div class="stat-value">${males}</div><div class="stat-label">Hommes</div></div>
+    <div class="stat-card"><div class="stat-icon">👩</div><div class="stat-value">${females}</div><div class="stat-label">Femmes</div></div>
+    <div class="stat-card"><div class="stat-icon">🌳</div><div class="stat-value">5</div><div class="stat-label">Générations</div></div>
+  `;
 }
-
-// Selects
-function initSelects(){
-const s=Object.values(D).sort((a,b)=>a.n.localeCompare(b.n,'fr'));
-const roots=['alkamahamane','ali','mahamane','babachigaw','kobbo','moussa','omorou','tamimoune','mahadi'];
-const rs=document.getElementById('rootSel');
-roots.forEach(id=>{if(D[id]){const o=document.createElement('option');o.value=id;o.textContent=D[id].n+(D[id].a?' ('+D[id].a+')':'');o.selected=id==='ali';rs.appendChild(o)}});
-['p1','p2'].forEach(sid=>{const sel=document.getElementById(sid);s.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.n+(p.a?' ('+p.a+')':'');sel.appendChild(o)})});
-}
-
-// Relation finder
-function gP(id,v=new Set()){const paths=[],p=D[id];if(!p||v.has(id))return[[p]];v.add(id);if(p.f&&D[p.f])gP(p.f,new Set(v)).forEach(x=>paths.push([p,...x]));if(p.m&&D[p.m])gP(p.m,new Set(v)).forEach(x=>paths.push([p,...x]));if(!paths.length)paths.push([p]);return paths}
-function fA(id1,id2){const p1=gP(id1),p2=gP(id2);let best=null,min=Infinity;for(const a of p1)for(const b of p2)for(let i=0;i<a.length;i++){const j=b.findIndex(x=>x.id===a[i].id);if(j!==-1&&i+j<min){min=i+j;best={anc:a[i],path1:a.slice(0,i+1),path2:b.slice(0,j+1),d1:i,d2:j};break}}return best}
-function gRT(d1,d2,p1,p2){if(d1===0&&d2===0)return"Même personne";if(d1===1&&d2===1)return p1.g===p2.g?(p1.g==='M'?"Frères":"Sœurs"):"Frère et sœur";if(d1===0)return d2===1?(p1.g==='M'?"Père":"Mère"):d2===2?(p1.g==='M'?"Grand-père":"Grand-mère"):"Ancêtre";if(d2===0)return d1===1?(p1.g==='M'?"Fils":"Fille"):d1===2?(p1.g==='M'?"Petit-fils":"Petite-fille"):"Descendant";if((d1===1&&d2===2)||(d1===2&&d2===1))return d1===1?(p1.g==='M'?"Oncle":"Tante"):(p1.g==='M'?"Neveu":"Nièce");if(d1===2&&d2===2)return"Cousins germains";return"Parents éloignés"}
-
-function findRel(){
-const id1=document.getElementById('p1').value,id2=document.getElementById('p2').value,c=document.getElementById('relRes');
-if(!id1||!id2){c.innerHTML='<div class="empty"><span>👆</span>Sélectionnez deux personnes</div>';return}
-if(id1===id2){c.innerHTML='<div class="result"><div class="rel-badge">Même personne!</div></div>';return}
-const r=fA(id1,id2);
-if(!r){c.innerHTML='<div class="empty"><span>❓</span>Lien non trouvé</div>';return}
-const rl=gRT(r.d1,r.d2,D[id1],D[id2]);
-let steps='';
-for(let i=0;i<r.path1.length-1;i++)steps+=`<div>↳ ${r.path1[i].n} est ${r.path1[i].g==='M'?'fils':'fille'} de ${r.path1[i+1].n}</div>`;
-for(let i=0;i<r.path2.length-1;i++)steps+=`<div>↳ ${r.path2[i].n} est ${r.path2[i].g==='M'?'fils':'fille'} de ${r.path2[i+1].n}</div>`;
-c.innerHTML=`<div class="result"><div style="color:#888;font-size:13px">${D[id1].n} & ${D[id2].n}</div><div class="rel-badge">${rl}</div><div style="color:#888;font-size:12px">Ancêtre: ${r.anc.n}</div><div class="path">${steps}</div></div>`;
-}
-
-// Modal
-function openModal(id){
-const p=D[id];if(!p)return;
-document.getElementById('mAv').className='modal-av '+(p.g==='M'?'m':'f');
-document.getElementById('mAv').textContent=p.g==='M'?'👨':'👩';
-document.getElementById('mNm').textContent=p.n;
-document.getElementById('mAl').textContent=p.a?'"'+p.a+'"':'';
-let h=`<div class="modal-r"><span class="modal-l">Génération</span><span class="modal-v">${p.gen}</span></div>`;
-if(p.f&&D[p.f])h+=`<div class="modal-r"><span class="modal-l">Père</span><span class="modal-v">${D[p.f].n}</span></div>`;
-if(p.m&&D[p.m])h+=`<div class="modal-r"><span class="modal-l">Mère</span><span class="modal-v">${D[p.m].n}</span></div>`;
-const k=(p.c||[]).filter(c=>D[c]);
-if(k.length)h+=`<div class="modal-s"><div class="modal-st">Enfants (${k.length})</div><div class="modal-kids">${k.map(c=>`<span class="modal-kid" onclick="openModal('${c}')">${D[c].n.split(' ')[0]}</span>`).join('')}</div></div>`;
-document.getElementById('mB').innerHTML=h;
-document.getElementById('mBtn').onclick=()=>{closeModal();jumpTo(id);go(0,document.querySelector('nav button'))};
-document.getElementById('modal').classList.add('on');
-}
-function closeModal(){document.getElementById('modal').classList.remove('on')}
 
 // Init
-document.addEventListener('DOMContentLoaded',()=>{initSelects();renderTree();renderGen();renderDir();renderStats()});
+document.addEventListener('DOMContentLoaded', () => {
+  initSelects();
+  showPerson('ali');
+  renderSearch();
+  renderStats();
+});
 </script>
 </body>
 </html>
