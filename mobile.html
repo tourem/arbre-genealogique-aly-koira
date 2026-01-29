@@ -1251,35 +1251,33 @@ Contribuer
 </div>
 
 <script>
-// ========== AUTHENTIFICATION ==========
-// Hash SHA-256 du mot de passe (BerrahAlyKoira2026)
-const PASSWORD_HASH = '8a9bcb6a3d4e5f1c2b7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b';
+// ========== AUTHENTIFICATION SÉCURISÉE ==========
+// Seul le hash SHA-256 est stocké - le mot de passe n'apparaît JAMAIS dans le code
+const VALID_HASH = '2846e08eff7ade0829bf37e3bd3b0022e34649e1271cedd88a986c59df8afe77';
 
-// Fonction de hashage simple (suffisant pour usage familial)
-function simpleHash(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
-  return hash.toString(16);
+// Fonction de hashage SHA-256
+async function sha256(message) {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 // Vérification du mot de passe
-const CORRECT_PASSWORD = 'BerrahAlyKoira2026';
-
-function login() {
+async function login() {
   const input = document.getElementById('loginPassword').value;
   const remember = document.getElementById('rememberMe').checked;
   const errorEl = document.getElementById('loginError');
   
-  if (input === CORRECT_PASSWORD) {
-    // Succès
+  // Hasher l'input et comparer avec le hash valide
+  const inputHash = await sha256(input);
+  
+  if (inputHash === VALID_HASH) {
+    // Succès - stocker le hash comme preuve d'authentification
     if (remember) {
-      localStorage.setItem('aly_koira_auth', simpleHash(CORRECT_PASSWORD + '_authenticated'));
+      localStorage.setItem('aly_koira_auth', inputHash);
     } else {
-      sessionStorage.setItem('aly_koira_auth', 'true');
+      sessionStorage.setItem('aly_koira_auth', inputHash);
     }
     
     // Animation et affichage de l'app
@@ -1293,8 +1291,6 @@ function login() {
     errorEl.textContent = '❌ Mot de passe incorrect';
     document.getElementById('loginPassword').value = '';
     document.getElementById('loginPassword').focus();
-    
-    // Réinitialiser le message après 3s
     setTimeout(() => { errorEl.textContent = ''; }, 3000);
   }
 }
@@ -1315,7 +1311,8 @@ function checkAuth() {
   const remembered = localStorage.getItem('aly_koira_auth');
   const session = sessionStorage.getItem('aly_koira_auth');
   
-  if (remembered === simpleHash(CORRECT_PASSWORD + '_authenticated') || session === 'true') {
+  // Vérifier si le hash stocké correspond au hash valide
+  if (remembered === VALID_HASH || session === VALID_HASH) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainApp').style.display = 'flex';
     return true;
@@ -1329,10 +1326,10 @@ function logout() {
   location.reload();
 }
 
-// Ajouter animation de sortie
-const style = document.createElement('style');
-style.textContent = '@keyframes loginFadeOut{from{opacity:1}to{opacity:0}}';
-document.head.appendChild(style);
+// Animation de sortie
+const loginStyle = document.createElement('style');
+loginStyle.textContent = '@keyframes loginFadeOut{from{opacity:1}to{opacity:0}}';
+document.head.appendChild(loginStyle);
 
 // Vérifier l'auth au chargement
 document.addEventListener('DOMContentLoaded', () => {
