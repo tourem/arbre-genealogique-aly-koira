@@ -1412,31 +1412,43 @@ const D={
 "alkamahamane":{id:"alkamahamane",n:"Alkamahamane Sabalkaidi",a:null,g:"M",gen:1,f:null,m:null,sp:["Lalla Hamatou Lassane Koro"],c:["goussoumbi","goma","hounaye","soumboulou","farimata_alk","ali"]},
 
 // GÉNÉRATION 2
-"goussoumbi":{id:"goussoumbi",n:"Goussoumbi Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:"Lalla Hamatou",sp:["Aissa Mahamane Hamatou"],c:["alphary_g","garba_g","tillimmazou"]},
+"goussoumbi":{id:"goussoumbi",n:"Goussoumbi Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:"Lalla Hamatou",sp:["Aissa Mahamane Hamatou"],c:["alphary_g","garba_g"]},
 "goma":{id:"goma",n:"Goma Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:"Lalla Hamatou",c:["sidiki_g"]},
 "hounaye":{id:"hounaye",n:"Hounaye (Hounna) Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:"Lalla Hamatou",sp:["Ibannia Albichir"],c:["hallachi_h","aissa_h","tayda_h"]},
-"soumboulou":{id:"soumboulou",n:"Soumboulou Alkamahamane",a:null,g:"F",gen:2,f:"alkamahamane",m:"Lalla Hamatou",c:[]},
+"soumboulou":{id:"soumboulou",n:"Soumboulou Alkamahamane",a:null,g:"F",gen:2,f:"alkamahamane",m:"Lalla Hamatou",sp:["Alphaga Labassou Saye"],c:["kohondo","sagayo","tassaye"]},
 "farimata_alk":{id:"farimata_alk",n:"Farimata Alkamahamane",a:null,g:"F",gen:2,f:"alkamahamane",m:"Lalla Hamatou",c:["dalla"]},
 "ali":{id:"ali",n:"Ali Alkamahamane",a:"Aly Koïra",g:"M",gen:2,f:"alkamahamane",m:"Lalla Hamatou",sp:["Waykounga Samba","Farimata Alassane","Fouga Alassane Hamatou"],c:["mahamane","babachigaw","kobbo","moussa","omorou","tamimoune","mahadi"]},
 
 // GÉNÉRATION 3
 // Enfants de Goussoumbi
-"alphary_g":{id:"alphary_g",n:"Alphary Goussoumbi",a:null,g:"M",gen:3,f:"goussoumbi",m:"Aissa Mahamane Hamatou",c:[]},
-"garba_g":{id:"garba_g",n:"Garba Goussoumbi",a:null,g:"M",gen:3,f:"goussoumbi",m:"Aissa Mahamane Hamatou",c:[]},
-"tillimmazou":{id:"tillimmazou",n:"Tillimmazou Goussoumbi",a:null,g:"M",gen:3,f:"goussoumbi",m:"Aissa Mahamane Hamatou",c:[]},
+"alphary_g":{id:"alphary_g",n:"Alphary Goussoumbi",a:null,g:"M",gen:3,f:"goussoumbi",m:"Aissa Mahamane Hamatou",sp:["Tamimoune Ali"],c:["chiddaye","mata_a","ichata_a","boudjal","saleymatou"]},
+"garba_g":{id:"garba_g",n:"Garba Goussoumbi",a:null,g:"F",gen:3,f:"goussoumbi",m:"Aissa Mahamane Hamatou",sp:["Alhady"],c:["hamadahamane_al","albakaya_al","yahiya_al","ndolly_al","hajarata_al"]},
 // Enfants de Goma
 "sidiki_g":{id:"sidiki_g",n:"Sidiki Goma",a:null,g:"M",gen:3,f:"goma",m:null,c:[]},
 // Enfants de Hounaye
 "hallachi_h":{id:"hallachi_h",n:"Hallachi Hounna",a:null,g:"M",gen:3,f:"hounaye",m:"Ibannia Albichir",c:[]},
 "aissa_h":{id:"aissa_h",n:"Aissa Hounna",a:null,g:"F",gen:3,f:"hounaye",m:"Ibannia Albichir",c:[]},
 "tayda_h":{id:"tayda_h",n:"Tayda Hounna",a:null,g:"M",gen:3,f:"hounaye",m:"Ibannia Albichir",c:[]},
+// Enfants de Soumboulou
+"kohondo":{id:"kohondo",n:"Kohondo Alphaga Labassou Saye",a:null,g:"F",gen:3,f:null,m:"soumboulou",c:[]},
+"sagayo":{id:"sagayo",n:"Sagayo Alphaga Labassou Saye",a:null,g:"M",gen:3,f:null,m:"soumboulou",c:[]},
+"tassaye":{id:"tassaye",n:"Tassaye Alphaga Labassou Saye",a:null,g:"F",gen:3,f:null,m:"soumboulou",c:[]},
+
+// Petits-enfants de Goussoumbi (Génération 4)
+// Enfants de Garba Goussoumbi (père: Alhady)
+"hamadahamane_al":{id:"hamadahamane_al",n:"Hamadahamane Alhady",a:"Larbou",g:"M",gen:4,f:null,m:"garba_g",c:[]},
+"albakaya_al":{id:"albakaya_al",n:"Albakaya Alhady",a:null,g:"M",gen:4,f:null,m:"garba_g",c:[]},
+"yahiya_al":{id:"yahiya_al",n:"Yahiya Alhady",a:null,g:"M",gen:4,f:null,m:"garba_g",c:[]},
+"ndolly_al":{id:"ndolly_al",n:"N'dolly Alhady",a:null,g:"M",gen:4,f:null,m:"garba_g",c:[]},
+"hajarata_al":{id:"hajarata_al",n:"Hajarata Alhady",a:"Haji",g:"F",gen:4,f:null,m:"garba_g",c:[]},
+
 // Enfants de Ali Alkamahamane
 "mahamane":{id:"mahamane",n:"Mahamane Ali",a:null,g:"M",gen:3,f:"ali",m:"Waykounga Samba",sp:["Aïcha Houneye","Adijatou Hamma (Hadizatou)","Aïcha Hamma"],c:["mohomone","taya","ahmadou","yata","issouf","halilou","alhalil","aliou_m","houzaye","alassane_s","agaicha_m","abdou_d"]},
 "babachigaw":{id:"babachigaw",n:"Babachigaw Ali",a:null,g:"M",gen:3,f:"ali",m:"Farimata Alassane",sp:["Halimatou Mohomodou"],c:["aliou_b","aboubacar","ousmane_a","alhousseini","abdoulaye_s","nouhoum","mata_b"]},
 "kobbo":{id:"kobbo",n:"Agacha Ali",a:"Kobbo",g:"F",gen:3,f:"ali",m:"Fouga Alassane",sp:["Fedja Zongo","Mouhammadou Gagay","Taïda Houneï"],c:["aicha_f","arhamatou_f","issa_m","taya_m","izeboncana","jaouja","dally"]},
 "moussa":{id:"moussa",n:"Moussa Ali",a:null,g:"M",gen:3,f:"ali",m:"Fouga Alassane",sp:["Habïlatou Mama"],c:["mata_m","haylloli","wanaissou_m","jato","alassane_m","assoumane_m","abdou_m","sala"]},
 "omorou":{id:"omorou",n:"Omorou Ali",a:null,g:"M",gen:3,f:"ali",m:"Fouga Alassane",sp:["Cheffou Aliou"],c:["houssouba","kabongou","mahamadou_o","sourgou","tabbo_o","zabbo","ichata_o"]},
-"tamimoune":{id:"tamimoune",n:"Tamimoune Ali",a:null,g:"M",gen:3,f:"ali",m:"Fouga Alassane",sp:["Alfari Goussoundi"],c:["chiddaye","mata_a","ichata_a","boudjal","saleymatou"]},
+"tamimoune":{id:"tamimoune",n:"Tamimoune Ali",a:null,g:"F",gen:3,f:"ali",m:"Fouga Alassane",sp:["Alphary Goussoumbi"],c:["chiddaye","mata_a","ichata_a","boudjal","saleymatou"]},
 "mahadi":{id:"mahadi",n:"Mahadi Ali",a:null,g:"M",gen:3,f:"ali",m:"Fouga Alassane",sp:["Aldjannatou Ahmadou"],c:["dayo","saffia","sawde","zarha","aminta_m","chaffa","seydou_m"]},
 "dalla":{id:"dalla",n:"Dalla",a:null,g:"M",gen:3,f:null,m:"farimata_alk",c:[]},
 
@@ -1483,11 +1495,11 @@ const D={
 "ichata_o":{id:"ichata_o",n:"Ichata Omorou",a:null,g:"F",gen:4,f:"omorou",m:"Cheffou Aliou",c:["alhoussouna","hachimine","hallachi","houreita_a","mariama_dj","haoua_dj","aminta_dj","haja"]},
 
 // GÉNÉRATION 4 - Enfants de Tamimoune
-"chiddaye":{id:"chiddaye",n:"Chiddaye Alphary",a:null,g:"M",gen:4,f:"tamimoune",m:"Alfari Goussoundi",sp:["Bintou Mayloule"],c:["djiougou","arhamatou_ch"]},
-"mata_a":{id:"mata_a",n:"Mata Alphary",a:null,g:"F",gen:4,f:"tamimoune",m:"Alfari Goussoundi",sp:["Alhousseini Babachigaw (Aggada)"],c:["hakimoune","hamida","houna","zabbo_ag"]},
-"ichata_a":{id:"ichata_a",n:"Ichata Alphary",a:"Aissata",g:"F",gen:4,f:"tamimoune",m:"Alfari Goussoundi",c:[]},
-"boudjal":{id:"boudjal",n:"Boudjal Alphary",a:"Boudia",g:"M",gen:4,f:"tamimoune",m:"Alfari Goussoundi",c:[]},
-"saleymatou":{id:"saleymatou",n:"Saleymatou Alphary",a:null,g:"F",gen:4,f:"tamimoune",m:"Alfari Goussoundi",sp:["Ario Salo de Zindiga"],c:["salo"]},
+"chiddaye":{id:"chiddaye",n:"Chiddaye Alphary",a:null,g:"M",gen:4,f:"alphary_g",m:"tamimoune",sp:["Bintou Mayloule"],c:["djiougou","arhamatou_ch"]},
+"mata_a":{id:"mata_a",n:"Mata Alphary",a:null,g:"F",gen:4,f:"alphary_g",m:"tamimoune",sp:["Alhousseini Babachigaw (Aggada)"],c:["hakimoune","hamida","houna","zabbo_ag"]},
+"ichata_a":{id:"ichata_a",n:"Ichata Alphary",a:"Aissata",g:"F",gen:4,f:"alphary_g",m:"tamimoune",c:[]},
+"boudjal":{id:"boudjal",n:"Boudjal Alphary",a:"Boudia",g:"M",gen:4,f:"alphary_g",m:"tamimoune",c:[]},
+"saleymatou":{id:"saleymatou",n:"Saleymatou Alphary",a:null,g:"F",gen:4,f:"alphary_g",m:"tamimoune",sp:["Ario Salo de Zindiga"],c:["salo"]},
 
 // GÉNÉRATION 4 - Enfants de Mahadi
 "dayo":{id:"dayo",n:"Dayo Mahadi",a:null,g:"F",gen:4,f:"mahadi",m:"Aldjannatou Ahmadou",c:[]},
