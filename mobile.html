@@ -37,6 +37,8 @@
 --gen3:#6366f1;--gen3-bg:rgba(99,102,241,0.15);
 --gen4:#ec4899;--gen4-bg:rgba(236,72,153,0.15);
 --gen5:#8b5cf6;--gen5-bg:rgba(139,92,246,0.15);
+--gen6:#14b8a6;--gen6-bg:rgba(20,184,166,0.15);
+--gen7:#f97316;--gen7-bg:rgba(249,115,22,0.15);
 }
 
 /* ========== ÉCRAN DE CONNEXION ========== */
@@ -389,6 +391,8 @@ height:6px;
 .person-card.gen3::before{background:linear-gradient(90deg,var(--gen3),#818cf8)}
 .person-card.gen4::before{background:linear-gradient(90deg,var(--gen4),#f472b6)}
 .person-card.gen5::before{background:linear-gradient(90deg,var(--gen5),#a78bfa)}
+.person-card.gen6::before{background:linear-gradient(90deg,var(--gen6),#2dd4bf)}
+.person-card.gen7::before{background:linear-gradient(90deg,var(--gen7),#fb923c)}
 
 /* Badge génération flottant */
 .gen-badge{
@@ -495,6 +499,8 @@ height:3px;
 .parent-card.gen3::before{background:var(--gen3)}
 .parent-card.gen4::before{background:var(--gen4)}
 .parent-card.gen5::before{background:var(--gen5)}
+.parent-card.gen6::before{background:var(--gen6)}
+.parent-card.gen7::before{background:var(--gen7)}
 .parent-card:active{transform:scale(0.96);background:var(--card-hover)}
 .parent-card .mini-avatar{
 width:44px;height:44px;
@@ -541,6 +547,8 @@ height:3px;
 .child-card.gen3::before{background:var(--gen3)}
 .child-card.gen4::before{background:var(--gen4)}
 .child-card.gen5::before{background:var(--gen5)}
+.child-card.gen6::before{background:var(--gen6)}
+.child-card.gen7::before{background:var(--gen7)}
 .child-card:active{transform:scale(0.94);background:var(--card-hover)}
 .child-card .mini-avatar{
 width:40px;height:40px;
@@ -989,6 +997,28 @@ gap:10px;
 display:flex;
 gap:8px;
 }
+.gender-selector{
+display:flex;
+gap:10px;
+margin-top:8px;
+}
+.gender-selector .gender-option{
+flex:1;
+padding:14px 12px;
+background:var(--card);
+border:2px solid var(--border);
+border-radius:var(--radius);
+text-align:center;
+cursor:pointer;
+transition:all 0.2s;
+font-size:14px;
+font-weight:500;
+}
+.gender-selector .gender-option.selected{
+border-color:var(--primary);
+background:rgba(99,102,241,0.15);
+}
+.gender-selector .gender-option:active{transform:scale(0.98)}
 .gender-option{
 flex:1;
 padding:12px;
@@ -1231,6 +1261,23 @@ Accéder à l'arbre familial
 <div class="form-group">
 <label>Prénom</label>
 <input type="text" id="f_prenom" placeholder="Votre prénom">
+</div>
+<div class="form-group">
+<label>Genre</label>
+<div class="gender-selector">
+<div class="gender-option" onclick="selectMyGender('M', this)">👨 Homme</div>
+<div class="gender-option" onclick="selectMyGender('F', this)">👩 Femme</div>
+</div>
+<input type="hidden" id="f_genre" value="">
+</div>
+</div>
+
+<div class="form-section" id="spouseSection" style="display:none;">
+<div class="form-section-title" id="spouseSectionTitle">
+<span>💑 Votre époux</span>
+</div>
+<div id="spouseContent">
+<!-- Contenu dynamique selon le genre -->
 </div>
 </div>
 
@@ -1539,7 +1586,7 @@ const D={
 "zeinaba":{id:"zeinaba",n:"Zeinaba Assabi",a:null,g:"F",gen:5,f:null,m:"yata",c:[]},
 "alhabibou":{id:"alhabibou",n:"Alhabibou Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
 "alkassoume":{id:"alkassoume",n:"Alkassoume Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
-"ibrahim_a":{id:"ibrahim_a",n:"Ibrahim Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
+"ibrahim_a":{id:"ibrahim_a",n:"Ibrahim Alassane",a:"Bruno",g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",sp:["Leïla Abdourhamane Maiga"],c:["ahmed_salia"]},
 "abdourhamane_a":{id:"abdourhamane_a",n:"Abdourhamane Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
 "moussa_a":{id:"moussa_a",n:"Moussa Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
 "mariama_a":{id:"mariama_a",n:"Mariama Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
@@ -1645,7 +1692,15 @@ const D={
 "mouna_d":{id:"mouna_d",n:"Mouna Dally",a:null,g:"F",gen:5,f:null,m:"dally",c:[]},
 "bouba_d":{id:"bouba_d",n:"Bouba Dally",a:null,g:"M",gen:5,f:null,m:"dally",c:[]},
 "souma":{id:"souma",n:"Souma Dally",a:null,g:"F",gen:5,f:null,m:"dally",c:[]},
-"koddo_d":{id:"koddo_d",n:"Koddo Dally",a:null,g:"F",gen:5,f:null,m:"dally",c:[]}
+"koddo_d":{id:"koddo_d",n:"Koddo Dally",a:null,g:"F",gen:5,f:null,m:"dally",c:[]},
+
+// GÉNÉRATION 6 - Arrière-petits-enfants
+// Enfants d'Ibrahim Alassane (Bruno)
+"ahmed_salia":{id:"ahmed_salia",n:"Ahmed Salia Toure",a:null,g:"M",gen:6,f:"ibrahim_a",m:"Leïla Abdourhamane Maiga",sp:[],c:["amadou_yusuf"]},
+
+// GÉNÉRATION 7
+// Enfant d'Ahmed Salia
+"amadou_yusuf":{id:"amadou_yusuf",n:"Amadou-Yûsuf Toure",a:null,g:"M",gen:7,f:"ahmed_salia",m:null,c:[]}
 };
 
 let currentPerson = 'ali';
@@ -1665,7 +1720,9 @@ const genColors = {
   2: '#10b981', 
   3: '#6366f1',
   4: '#ec4899',
-  5: '#8b5cf6'
+  5: '#8b5cf6',
+  6: '#14b8a6',
+  7: '#f97316'
 };
 
 // Afficher une personne avec animation
@@ -1751,7 +1808,7 @@ function renderPersonView(p) {
   const spouses = p.sp || [];
   const genClass = `gen${p.gen}`;
   const genColor = genColors[p.gen];
-  const genNames = {1: '1ère', 2: '2ème', 3: '3ème', 4: '4ème', 5: '5ème'};
+  const genNames = {1: '1ère', 2: '2ème', 3: '3ème', 4: '4ème', 5: '5ème', 6: '6ème', 7: '7ème'};
   
   let html = `
     <div class="person-card ${genClass}">
@@ -1880,6 +1937,8 @@ function renderPersonView(p) {
       <div class="gen-legend-item"><div class="gen-legend-dot" style="background:var(--gen3)"></div>G3</div>
       <div class="gen-legend-item"><div class="gen-legend-dot" style="background:var(--gen4)"></div>G4</div>
       <div class="gen-legend-item"><div class="gen-legend-dot" style="background:var(--gen5)"></div>G5</div>
+      <div class="gen-legend-item"><div class="gen-legend-dot" style="background:var(--gen6)"></div>G6</div>
+      <div class="gen-legend-item"><div class="gen-legend-dot" style="background:var(--gen7)"></div>G7</div>
     </div>
   `;
   
@@ -2052,6 +2111,87 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ========== FORMULAIRE CONTRIBUER ==========
 let childCount = 0;
+let spouseCount = 0;
+let myGender = '';
+
+function selectMyGender(gender, el) {
+  // Retirer la sélection des autres options
+  el.parentElement.querySelectorAll('.gender-option').forEach(opt => opt.classList.remove('selected'));
+  // Ajouter la sélection
+  el.classList.add('selected');
+  // Mettre à jour la valeur
+  document.getElementById('f_genre').value = gender;
+  myGender = gender;
+  
+  // Afficher la section époux/épouses
+  document.getElementById('spouseSection').style.display = 'block';
+  
+  if (gender === 'M') {
+    // Homme : peut avoir plusieurs épouses
+    document.getElementById('spouseSectionTitle').innerHTML = `
+      <span>💑 Vos épouse(s)</span>
+      <button class="add-child-btn" onclick="addSpouse()">+ Ajouter</button>
+    `;
+    document.getElementById('spouseContent').innerHTML = `
+      <div id="spousesList"></div>
+      <div class="no-children" id="noSpouses">
+        <p>Aucune épouse ajoutée</p>
+        <button class="add-first-child" onclick="addSpouse()">+ Ajouter une épouse</button>
+      </div>
+    `;
+    spouseCount = 0;
+  } else {
+    // Femme : un seul époux
+    document.getElementById('spouseSectionTitle').innerHTML = '<span>💑 Votre époux</span>';
+    document.getElementById('spouseContent').innerHTML = `
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="text" id="f_epoux_nom" placeholder="Nom de l'époux">
+        </div>
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="text" id="f_epoux_prenom" placeholder="Prénom de l'époux">
+        </div>
+      </div>
+    `;
+  }
+}
+
+function addSpouse() {
+  spouseCount++;
+  document.getElementById('noSpouses').style.display = 'none';
+  
+  const spouseHtml = `
+    <div class="child-item" id="spouse${spouseCount}">
+      <div class="child-item-header">
+        <span class="child-number">Épouse ${spouseCount}</span>
+        <button class="remove-child" onclick="removeSpouse(${spouseCount})">×</button>
+      </div>
+      <div class="child-fields">
+        <div class="child-row">
+          <div class="form-group">
+            <label>Nom</label>
+            <input type="text" id="spouse${spouseCount}_nom" placeholder="Nom">
+          </div>
+          <div class="form-group">
+            <label>Prénom</label>
+            <input type="text" id="spouse${spouseCount}_prenom" placeholder="Prénom">
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('spousesList').insertAdjacentHTML('beforeend', spouseHtml);
+}
+
+function removeSpouse(num) {
+  document.getElementById(`spouse${num}`).remove();
+  if (document.getElementById('spousesList').children.length === 0) {
+    document.getElementById('noSpouses').style.display = 'block';
+  }
+}
 
 function addChild() {
   childCount++;
@@ -2113,9 +2253,11 @@ function selectGender(childNum, gender, el) {
 }
 
 function collectFormData() {
+  const genre = document.getElementById('f_genre').value;
   const data = {
     nom: document.getElementById('f_nom').value.trim(),
     prenom: document.getElementById('f_prenom').value.trim(),
+    genre: genre,
     pere: {
       nom: document.getElementById('f_pere_nom').value.trim(),
       prenom: document.getElementById('f_pere_prenom').value.trim()
@@ -2124,19 +2266,48 @@ function collectFormData() {
       nom: document.getElementById('f_mere_nom').value.trim(),
       prenom: document.getElementById('f_mere_prenom').value.trim()
     },
+    epoux: null,
+    epouses: [],
     enfants: []
   };
   
+  // Collecter l'époux (si femme)
+  if (genre === 'F') {
+    const epouxNom = document.getElementById('f_epoux_nom')?.value.trim() || '';
+    const epouxPrenom = document.getElementById('f_epoux_prenom')?.value.trim() || '';
+    if (epouxNom || epouxPrenom) {
+      data.epoux = { nom: epouxNom, prenom: epouxPrenom };
+    }
+  }
+  
+  // Collecter les épouses (si homme)
+  if (genre === 'M') {
+    document.querySelectorAll('[id^="spouse"]').forEach(item => {
+      if (item.id.match(/^spouse\d+$/)) {
+        const id = item.id.replace('spouse', '');
+        const epouse = {
+          nom: document.getElementById(`spouse${id}_nom`)?.value.trim() || '',
+          prenom: document.getElementById(`spouse${id}_prenom`)?.value.trim() || ''
+        };
+        if (epouse.nom || epouse.prenom) {
+          data.epouses.push(epouse);
+        }
+      }
+    });
+  }
+  
   // Collecter les enfants
   document.querySelectorAll('.child-item').forEach(item => {
-    const id = item.id.replace('child', '');
-    const enfant = {
-      nom: document.getElementById(`child${id}_nom`)?.value.trim() || '',
-      prenom: document.getElementById(`child${id}_prenom`)?.value.trim() || '',
-      genre: document.getElementById(`child${id}_genre`)?.value || ''
-    };
-    if (enfant.nom || enfant.prenom) {
-      data.enfants.push(enfant);
+    if (!item.id.startsWith('spouse')) {
+      const id = item.id.replace('child', '');
+      const enfant = {
+        nom: document.getElementById(`child${id}_nom`)?.value.trim() || '',
+        prenom: document.getElementById(`child${id}_prenom`)?.value.trim() || '',
+        genre: document.getElementById(`child${id}_genre`)?.value || ''
+      };
+      if (enfant.nom || enfant.prenom) {
+        data.enfants.push(enfant);
+      }
     }
   });
   
@@ -2144,12 +2315,29 @@ function collectFormData() {
 }
 
 function formatDataAsText(data) {
+  const genreEmoji = data.genre === 'M' ? '👨' : data.genre === 'F' ? '👩' : '👤';
   let text = `🌳 CONTRIBUTION ARBRE FAMILIAL ALY KOÏRA\n`;
   text += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
   
-  text += `👤 INFORMATIONS PERSONNELLES\n`;
+  text += `${genreEmoji} INFORMATIONS PERSONNELLES\n`;
   text += `   Nom: ${data.nom || '(non renseigné)'}\n`;
   text += `   Prénom: ${data.prenom || '(non renseigné)'}\n\n`;
+  
+  // Époux (si femme)
+  if (data.genre === 'F' && data.epoux) {
+    text += `💑 ÉPOUX\n`;
+    text += `   Nom: ${data.epoux.nom || '(non renseigné)'}\n`;
+    text += `   Prénom: ${data.epoux.prenom || '(non renseigné)'}\n\n`;
+  }
+  
+  // Épouses (si homme)
+  if (data.genre === 'M' && data.epouses.length > 0) {
+    text += `💑 ÉPOUSE(S) (${data.epouses.length})\n`;
+    data.epouses.forEach((ep, i) => {
+      text += `   ${i + 1}. ${ep.prenom} ${ep.nom}\n`;
+    });
+    text += `\n`;
+  }
   
   text += `👨 PÈRE\n`;
   text += `   Nom: ${data.pere.nom || '(non renseigné)'}\n`;
