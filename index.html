@@ -39,6 +39,7 @@
 --gen5:#8b5cf6;--gen5-bg:rgba(139,92,246,0.15);
 --gen6:#14b8a6;--gen6-bg:rgba(20,184,166,0.15);
 --gen7:#f97316;--gen7-bg:rgba(249,115,22,0.15);
+--gen0:#9333ea;--gen0-bg:rgba(147,51,234,0.15);
 }
 
 /* ========== ÉCRAN DE CONNEXION ========== */
@@ -393,6 +394,7 @@ height:6px;
 .person-card.gen5::before{background:linear-gradient(90deg,var(--gen5),#a78bfa)}
 .person-card.gen6::before{background:linear-gradient(90deg,var(--gen6),#2dd4bf)}
 .person-card.gen7::before{background:linear-gradient(90deg,var(--gen7),#fb923c)}
+.person-card.gen0::before{background:linear-gradient(90deg,var(--gen0),#a855f7)}
 
 /* Badge génération flottant */
 .gen-badge{
@@ -438,6 +440,7 @@ animation:pulseRing 2s ease infinite;
 50%{transform:scale(1.05);opacity:0.5}
 }
 .person-name{font-size:22px;font-weight:700;margin-bottom:4px}
+.person-name .alias-inline{font-weight:500;color:var(--primary);font-size:18px}
 .person-alias{
 display:inline-block;
 background:var(--primary);
@@ -501,6 +504,7 @@ height:3px;
 .parent-card.gen5::before{background:var(--gen5)}
 .parent-card.gen6::before{background:var(--gen6)}
 .parent-card.gen7::before{background:var(--gen7)}
+.parent-card.gen0::before{background:var(--gen0)}
 .parent-card:active{transform:scale(0.96);background:var(--card-hover)}
 .parent-card .mini-avatar{
 width:44px;height:44px;
@@ -611,6 +615,28 @@ transform:none;
 background:var(--card);
 }
 
+/* Famille élargie */
+.extended-family-note{
+font-size:12px;
+color:var(--text-muted);
+text-align:center;
+margin-bottom:12px;
+font-style:italic;
+}
+.parent-card.extended{
+background:linear-gradient(135deg,rgba(20,184,166,0.15),rgba(6,182,212,0.15));
+border:2px solid rgba(20,184,166,0.4);
+}
+.parent-card.extended::before{
+background:linear-gradient(135deg,#14b8a6,#06b6d4);
+}
+.extended-badge{
+font-size:10px;
+color:#14b8a6;
+margin-top:4px;
+font-weight:600;
+}
+
 /* Épouses */
 .spouses-list{
 display:flex;
@@ -626,6 +652,20 @@ background:linear-gradient(135deg,rgba(236,72,153,0.15),rgba(139,92,246,0.15));
 border:1px solid rgba(236,72,153,0.3);
 border-radius:var(--radius);
 padding:14px 16px;
+}
+.spouse-card.clickable{
+cursor:pointer;
+transition:all 0.2s;
+}
+.spouse-card.clickable:active{
+transform:scale(0.98);
+background:linear-gradient(135deg,rgba(236,72,153,0.25),rgba(139,92,246,0.25));
+}
+.spouse-link{
+font-size:11px;
+color:var(--primary);
+margin-top:4px;
+font-weight:500;
 }
 .spouse-avatar{
 width:44px;height:44px;
@@ -1181,11 +1221,11 @@ Accéder à l'arbre familial
 </div>
 <div class="header-stats">
 <div class="header-stat">
-<div class="header-stat-value">191</div>
+<div class="header-stat-value" id="memberCount">-</div>
 <div class="header-stat-label">Membres</div>
 </div>
 <div class="header-stat">
-<div class="header-stat-value">5</div>
+<div class="header-stat-value" id="genCount">-</div>
 <div class="header-stat-label">Générations</div>
 </div>
 <div class="header-stat">
@@ -1456,15 +1496,15 @@ document.addEventListener('DOMContentLoaded', () => {
 // ========== DONNÉES ==========
 const D={
 // GÉNÉRATION 1
-"alkamahamane":{id:"alkamahamane",n:"Alkamahamane Sabalkaidi",a:null,g:"M",gen:1,f:null,m:null,sp:["Lalla Hamatou Lassane Koro"],c:["goussoumbi","goma","hounaye","soumboulou","farimata_alk","ali"]},
+"alkamahamane":{id:"alkamahamane",n:"Alkamahamane Sabalkaidi",a:null,g:"M",gen:1,f:null,m:null,sp:["lalla_hamatou"],c:["goussoumbi","goma","hounaye","soumboulou","farimata_alk","ali"]},
 
 // GÉNÉRATION 2
-"goussoumbi":{id:"goussoumbi",n:"Goussoumbi Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:"Lalla Hamatou",sp:["Aissa Mahamane Hamatou"],c:["alphary_g","garba_g","klimazou"]},
-"goma":{id:"goma",n:"Goma Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:"Lalla Hamatou",c:["sidiki_g"]},
-"hounaye":{id:"hounaye",n:"Hounaye (Hounna) Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:"Lalla Hamatou",sp:["Ibannia Albichir"],c:["hallachi_h","aissa_h","tayda_h"]},
-"soumboulou":{id:"soumboulou",n:"Soumboulou Alkamahamane",a:null,g:"F",gen:2,f:"alkamahamane",m:"Lalla Hamatou",sp:["Alphaga Labassou Saye"],c:["kohondo","sagayo","tassaye"]},
-"farimata_alk":{id:"farimata_alk",n:"Farimata Alkamahamane",a:null,g:"F",gen:2,f:"alkamahamane",m:"Lalla Hamatou",c:["dalla"]},
-"ali":{id:"ali",n:"Ali Alkamahamane",a:"Aly Koïra",g:"M",gen:2,f:"alkamahamane",m:"Lalla Hamatou",sp:["Waykounga Samba","Farimata Alassane","Fouga Alassane Hamatou"],c:["mahamane","babachigaw","kobbo","moussa","omorou","tamimoune","mahadi"]},
+"goussoumbi":{id:"goussoumbi",n:"Goussoumbi Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:"lalla_hamatou",sp:["Aissa Mahamane Hamatou"],c:["alphary_g","garba_g","klimazou"]},
+"goma":{id:"goma",n:"Goma Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:"lalla_hamatou",c:["sidiki_g"]},
+"hounaye":{id:"hounaye",n:"Hounaye (Hounna) Alkamahamane",a:null,g:"M",gen:2,f:"alkamahamane",m:"lalla_hamatou",sp:["Ibannia Albichir"],c:["hallachi_h","aissa_h","tayda_h"]},
+"soumboulou":{id:"soumboulou",n:"Soumboulou Alkamahamane",a:null,g:"F",gen:2,f:"alkamahamane",m:"lalla_hamatou",sp:["Alphaga Labassou Saye"],c:["kohondo","sagayo","tassaye"]},
+"farimata_alk":{id:"farimata_alk",n:"Farimata Alkamahamane",a:null,g:"F",gen:2,f:"alkamahamane",m:"lalla_hamatou",c:["dalla"]},
+"ali":{id:"ali",n:"Ali Alkamahamane",a:"Aly Koïra",g:"M",gen:2,f:"alkamahamane",m:"lalla_hamatou",sp:["Waykounga Samba","Farimata Alassane","Fouga Alassane Hamatou"],c:["mahamane","babachigaw","kobbo","moussa","omorou","tamimoune","mahadi"]},
 
 // GÉNÉRATION 3
 // Enfants de Goussoumbi
@@ -1538,8 +1578,8 @@ const D={
 // GÉNÉRATION 4 - Enfants d'Omorou
 "houssouba":{id:"houssouba",n:"Houssouba Omorou",a:null,g:"M",gen:4,f:"omorou",m:"Cheffou Aliou",c:[]},
 "kabongou":{id:"kabongou",n:"Kabongou Omorou",a:null,g:"M",gen:4,f:"omorou",m:"Cheffou Aliou",c:["wayo","aminta_k","makiou","yacouba","ngolo","issiaka"]},
-"mahamadou_o":{id:"mahamadou_o",n:"Mahamadou Omorou",a:null,g:"M",gen:4,f:"omorou",m:"Cheffou Aliou",c:["zeinabou","koddo_m","bouba_m"]},
-"sourgou":{id:"sourgou",n:"Sourgou Omorou",a:null,g:"M",gen:4,f:"omorou",m:"Cheffou Aliou",c:["adija_s","mariama_s","fatoumata_s","ammou","koddo_s"]},
+"mahamadou_o":{id:"mahamadou_o",n:"Mahamadou Omorou",a:null,g:"M",gen:4,f:"omorou",m:"Cheffou Aliou",sp:["Izéboncana Bangando"],c:["zeinabou","koddo_m","bouba_m"]},
+"sourgou":{id:"sourgou",n:"Ibrahim Omorou",a:"Sourgou",g:"M",gen:4,f:"omorou",m:"Cheffou Aliou",c:["adija_s","mariama_s","fatoumata_s","ammou","bouba_s","koddo_s"]},
 "tabbo_o":{id:"tabbo_o",n:"Tabbo Omorou",a:"Abdoulaye",g:"M",gen:4,f:"omorou",m:"Cheffou Aliou",sp:["Saffia Mahadi"],c:["almahamoudou","minkailou","bacha","moumoumini","gallou","soumma","sadou_t"]},
 "zabbo":{id:"zabbo",n:"Zabbo Omorou",a:null,g:"F",gen:4,f:"omorou",m:"Cheffou Aliou",c:[]},
 "ichata_o":{id:"ichata_o",n:"Ichata Omorou",a:null,g:"F",gen:4,f:"omorou",m:"Cheffou Aliou",c:["alhoussouna","hachimine","hallachi","houreita_a","mariama_dj","haoua_dj","aminta_dj","haja"]},
@@ -1584,11 +1624,11 @@ const D={
 "daoulata":{id:"daoulata",n:"Daoulata Assabi",a:null,g:"F",gen:5,f:null,m:"yata",c:[]},
 "mouna_a":{id:"mouna_a",n:"Mouna Assabi",a:null,g:"F",gen:5,f:null,m:"yata",c:[]},
 "zeinaba":{id:"zeinaba",n:"Zeinaba Assabi",a:null,g:"F",gen:5,f:null,m:"yata",c:[]},
-"alhabibou":{id:"alhabibou",n:"Alhabibou Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
+"alhabibou":{id:"alhabibou",n:"Abdoulaye Alassane",a:"Alhabibou",g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
 "alkassoume":{id:"alkassoume",n:"Alkassoume Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
 "ibrahim_a":{id:"ibrahim_a",n:"Ibrahim Alassane",a:"Bruno",g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",sp:["Leïla Abdourhamane Maiga"],c:["ahmed_salia"]},
-"abdourhamane_a":{id:"abdourhamane_a",n:"Abdourhamane Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
-"moussa_a":{id:"moussa_a",n:"Moussa Alassane",a:null,g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
+"abdourhamane_a":{id:"abdourhamane_a",n:"Abdourhamane Alassane",a:"Doumma",g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
+"moussa_a":{id:"moussa_a",n:"Moussa Alassane",a:"Assani",g:"M",gen:5,f:"alassane_s",m:"Aminta N'Goiba",sp:["Lalla Az-Zahra Almoudou Touré","Mariame Boubacar Alassane Wanaysou"],c:["alassane_ma","abdoulaye_ma","ibrahim_ma","abdourahman_ma","hadijatou_ma","zoumouroudatou","arrahmatoulahi","azzahratou","mariame_ma","aminata_ma","alkassoum_ma","mohammed_ma","hamidou_ma"]},
 "mariama_a":{id:"mariama_a",n:"Mariama Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
 "safietou_a":{id:"safietou_a",n:"Safietou Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
 "hamsatou":{id:"hamsatou",n:"Hamsatou Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
@@ -1596,6 +1636,23 @@ const D={
 "hawa_a":{id:"hawa_a",n:"Hawa Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
 "bintou":{id:"bintou",n:"Bintou Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
 "aichata_a":{id:"aichata_a",n:"Aichata Alassane",a:null,g:"F",gen:5,f:"alassane_s",m:"Aminta N'Goiba",c:[]},
+
+// GÉNÉRATION 6 - Enfants de Moussa Alassane (Assani)
+// 1ère épouse : Lalla Az-Zahra Almoudou Touré
+"alassane_ma":{id:"alassane_ma",n:"Alassane Moussa Alassane",a:"décédé",g:"M",gen:6,f:"moussa_a",m:"Lalla Az-Zahra Almoudou Touré",c:[]},
+"abdoulaye_ma":{id:"abdoulaye_ma",n:"Abdoulaye Alhabib Moussa Alassane",a:null,g:"M",gen:6,f:"moussa_a",m:"Lalla Az-Zahra Almoudou Touré",c:[]},
+"ibrahim_ma":{id:"ibrahim_ma",n:"Ibrahim Haliloulahi Moussa Alassane",a:null,g:"M",gen:6,f:"moussa_a",m:"Lalla Az-Zahra Almoudou Touré",c:[]},
+"abdourahman_ma":{id:"abdourahman_ma",n:"Abdourahman Moussa Alassane",a:null,g:"M",gen:6,f:"moussa_a",m:"Lalla Az-Zahra Almoudou Touré",c:[]},
+"hadijatou_ma":{id:"hadijatou_ma",n:"Hadijatou Moussa Alassane",a:null,g:"F",gen:6,f:"moussa_a",m:"Lalla Az-Zahra Almoudou Touré",c:[]},
+"zoumouroudatou":{id:"zoumouroudatou",n:"Zoumouroudatou Moussa Alassane",a:null,g:"F",gen:6,f:"moussa_a",m:"Lalla Az-Zahra Almoudou Touré",c:[]},
+"arrahmatoulahi":{id:"arrahmatoulahi",n:"Ar-Rahmatoulahi Moussa Alassane",a:null,g:"F",gen:6,f:"moussa_a",m:"Lalla Az-Zahra Almoudou Touré",c:[]},
+"azzahratou":{id:"azzahratou",n:"Az-Zahratou Moussa Alassane",a:null,g:"F",gen:6,f:"moussa_a",m:"Lalla Az-Zahra Almoudou Touré",c:[]},
+// 2ème épouse : Mariame Boubacar Alassane Wanaysou
+"mariame_ma":{id:"mariame_ma",n:"Mariame Moussa Alassane",a:"décédée",g:"F",gen:6,f:"moussa_a",m:"Mariame Boubacar Alassane Wanaysou",c:[]},
+"aminata_ma":{id:"aminata_ma",n:"Aminata Moussa Alassane",a:null,g:"F",gen:6,f:"moussa_a",m:"Mariame Boubacar Alassane Wanaysou",c:[]},
+"alkassoum_ma":{id:"alkassoum_ma",n:"Alkassoum Moussa Alassane",a:null,g:"M",gen:6,f:"moussa_a",m:"Mariame Boubacar Alassane Wanaysou",c:[]},
+"mohammed_ma":{id:"mohammed_ma",n:"Mohammed Taher Moussa Alassane",a:null,g:"M",gen:6,f:"moussa_a",m:"Mariame Boubacar Alassane Wanaysou",c:[]},
+"hamidou_ma":{id:"hamidou_ma",n:"Hamidou Moussa Alassane",a:null,g:"M",gen:6,f:"moussa_a",m:"Mariame Boubacar Alassane Wanaysou",c:[]},
 "ibrahim_m":{id:"ibrahim_m",n:"Ibrahim Mohomone",a:null,g:"M",gen:5,f:"mohomone",m:null,c:[]},
 "seydou_mo":{id:"seydou_mo",n:"Seydou Mohomone",a:null,g:"M",gen:5,f:"mohomone",m:null,c:[]},
 "ousmane_m":{id:"ousmane_m",n:"Ousmane Mohomone",a:null,g:"M",gen:5,f:"mohomone",m:null,c:[]},
@@ -1625,14 +1682,15 @@ const D={
 "yacouba":{id:"yacouba",n:"Yacouba Kabongou",a:"N'goyba",g:"M",gen:5,f:"kabongou",m:null,c:[]},
 "ngolo":{id:"ngolo",n:"N'Golo Kabongou",a:"N'goyba",g:"M",gen:5,f:"kabongou",m:null,c:[]},
 "issiaka":{id:"issiaka",n:"Issiaka Kabongou",a:"N'goyba",g:"M",gen:5,f:"kabongou",m:null,c:[]},
-"zeinabou":{id:"zeinabou",n:"Zeinabou Mahamadou",a:null,g:"F",gen:5,f:"mahamadou_o",m:null,c:[]},
-"koddo_m":{id:"koddo_m",n:"Koddo Mahamadou",a:null,g:"F",gen:5,f:"mahamadou_o",m:null,c:[]},
-"bouba_m":{id:"bouba_m",n:"Bouba Mahamadou",a:null,g:"M",gen:5,f:"mahamadou_o",m:null,c:[]},
-"adija_s":{id:"adija_s",n:"Adija Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:null,c:[]},
-"mariama_s":{id:"mariama_s",n:"Mariama Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:null,c:[]},
-"fatoumata_s":{id:"fatoumata_s",n:"Fatoumata Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:null,c:[]},
-"ammou":{id:"ammou",n:"Ammou Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:null,c:[]},
-"koddo_s":{id:"koddo_s",n:"Koddo Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:null,c:[]},
+"zeinabou":{id:"zeinabou",n:"Zeinabou Mahamadou",a:null,g:"F",gen:5,f:"mahamadou_o",m:"Izéboncana Bangando",c:[]},
+"koddo_m":{id:"koddo_m",n:"Koddo Mahamadou",a:null,g:"F",gen:5,f:"mahamadou_o",m:"Izéboncana Bangando",c:[]},
+"bouba_m":{id:"bouba_m",n:"Bouba Mahamadou",a:null,g:"M",gen:5,f:"mahamadou_o",m:"Izéboncana Bangando",c:[]},
+"adija_s":{id:"adija_s",n:"Adija Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:"Ibania Seydou",c:[]},
+"mariama_s":{id:"mariama_s",n:"Mariama Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:"Ibania Seydou",c:[]},
+"fatoumata_s":{id:"fatoumata_s",n:"Fatoumata Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:"Ibania Seydou",c:[]},
+"ammou":{id:"ammou",n:"Ammou Sourgou",a:null,g:"F",gen:5,f:"sourgou",m:"(à définir)",c:[]},
+"bouba_s":{id:"bouba_s",n:"Bouba Sourgou",a:null,g:"M",gen:5,f:"sourgou",m:"(à définir)",c:[]},
+"koddo_s":{id:"koddo_s",n:"Aichata Sourgou",a:"Koddo",g:"F",gen:5,f:"sourgou",m:"(à définir)",c:[]},
 "almahamoudou":{id:"almahamoudou",n:"Almahamoudou Tabagore",a:"Illile",g:"M",gen:5,f:"tabbo_o",m:"Saffia Mahadi",c:[]},
 "minkailou":{id:"minkailou",n:"Minkailou Tabagore",a:"Kila",g:"M",gen:5,f:"tabbo_o",m:"Saffia Mahadi",c:[]},
 "bacha":{id:"bacha",n:"Bacha Tabagore",a:null,g:"M",gen:5,f:"tabbo_o",m:"Saffia Mahadi",c:[]},
@@ -1696,11 +1754,75 @@ const D={
 
 // GÉNÉRATION 6 - Arrière-petits-enfants
 // Enfants d'Ibrahim Alassane (Bruno)
-"ahmed_salia":{id:"ahmed_salia",n:"Ahmed Salia Toure",a:null,g:"M",gen:6,f:"ibrahim_a",m:"Leïla Abdourhamane Maiga",sp:[],c:["amadou_yusuf"]},
+"ahmed_salia":{id:"ahmed_salia",n:"Ahmed Salia Toure",a:null,g:"M",gen:6,f:"ibrahim_a",m:"Leïla Abdourhamane Maiga",sp:["Kadidia Djibo Diango"],c:["amadou_yusuf"]},
 
 // GÉNÉRATION 7
 // Enfant d'Ahmed Salia
-"amadou_yusuf":{id:"amadou_yusuf",n:"Amadou-Yûsuf Toure",a:null,g:"M",gen:7,f:"ahmed_salia",m:null,c:[]}
+"amadou_yusuf":{id:"amadou_yusuf",n:"Amadou-Yûsuf Toure",a:null,g:"M",gen:7,f:"ahmed_salia",m:"Kadidia Djibo Diango",c:[]},
+
+// ═══════════════════════════════════════════════════════════════
+// FAMILLE ÉLARGIE - Branche MAHAMANE HAMATOU (beau-frère d'Alkamahamane)
+// Mahamane Hamatou est le frère de Lalla Hamatou (épouse d'Alkamahamane)
+// ═══════════════════════════════════════════════════════════════
+
+// ANCÊTRE COMMUN - Père de Lalla Hamatou et Mahamane Hamatou
+"hamatou_lassane":{id:"hamatou_lassane",n:"Hamatou Lassane",a:"Koro",g:"M",gen:0,f:null,m:null,sp:[],c:["lalla_hamatou","mahamane_h"]},
+
+// Enfants de Hamatou Lassane
+"lalla_hamatou":{id:"lalla_hamatou",n:"Lalla Hamatou Lassane Koro",a:null,g:"F",gen:1,f:"hamatou_lassane",m:"(à définir)",sp:["alkamahamane"],c:["goussoumbi","goma","hounaye","soumboulou","farimata_alk","ali"]},
+
+"mahamane_h":{id:"mahamane_h",n:"Mahamane Hamatou Lashane Almansour",a:"Koro Souafou Jaouder boun Zarkoum",g:"M",gen:1,f:"hamatou_lassane",m:"(à définir)",sp:["Farimata Aliou Gourmanthia"],c:["alkaido","alamiro","assoura","aliou_mh","abouchamataye","aicha_mh","gombo","adiza_mh","aboubaye_mh"]},
+
+// GÉNÉRATION 2 - Enfants de Mahamane Hamatou
+"alkaido":{id:"alkaido",n:"Alkaido Mahamane",a:null,g:"M",gen:2,f:"mahamane_h",m:"Farimata Aliou Gourmanthia",sp:["Hawa Alkaidi Bokar"],c:["halimatou_alk","mohomodou_alk","fadimata_alk","bana","hailalle","zahara_alk"]},
+"alamiro":{id:"alamiro",n:"Alamiro Mahamane",a:null,g:"M",gen:2,f:"mahamane_h",m:"Farimata Aliou Gourmanthia",c:[]},
+"assoura":{id:"assoura",n:"Assoura Mahamane",a:null,g:"M",gen:2,f:"mahamane_h",m:"Farimata Aliou Gourmanthia",c:[]},
+"aliou_mh":{id:"aliou_mh",n:"Aliou Mahamane",a:null,g:"M",gen:2,f:"mahamane_h",m:"(à définir)",c:[]},
+"abouchamataye":{id:"abouchamataye",n:"Abouchamataye Mahamane",a:null,g:"M",gen:2,f:"mahamane_h",m:"(à définir)",c:[]},
+"aicha_mh":{id:"aicha_mh",n:"Aïcha Mahamane",a:null,g:"F",gen:2,f:"mahamane_h",m:"(à définir)",c:[]},
+"gombo":{id:"gombo",n:"Gombo Mahamane",a:null,g:"M",gen:2,f:"mahamane_h",m:"Farimata Aliou Gourmanthia",c:[]},
+"adiza_mh":{id:"adiza_mh",n:"Adiza Mahamane",a:null,g:"F",gen:2,f:"mahamane_h",m:"(à définir)",c:[]},
+"aboubaye_mh":{id:"aboubaye_mh",n:"Aboubaye Mahamane",a:null,g:"M",gen:2,f:"mahamane_h",m:"(à définir)",c:[]},
+
+// GÉNÉRATION 3 - Enfants d'Alkaido Mahamane
+"halimatou_alk":{id:"halimatou_alk",n:"Halimatou Alkaido",a:"Goungou",g:"F",gen:3,f:"alkaido",m:"Hawa Alkaidi Bokar",sp:["Aboubaye Kouwal dit Idrissa"],c:["omorou_ab","hamaya","farimata_ab"]},
+"mohomodou_alk":{id:"mohomodou_alk",n:"Mohomodou Alkaido",a:null,g:"M",gen:3,f:"alkaido",m:"Hawa Alkaidi Bokar",sp:["Fatoumata Molla Kader"],c:["halimatou_moh","alkalifa","ichata_moh","tabati","djinna","abacar_moh"]},
+"fadimata_alk":{id:"fadimata_alk",n:"Fadimata Alkaido",a:null,g:"F",gen:3,f:"alkaido",m:"Hawa Alkaidi Bokar",sp:["Moyadji Alkaidi Mohouta Bacha"],c:["kabongou_moy","boubaye_moy","alhassane_moy","agacha_moy"]},
+"bana":{id:"bana",n:"Bana Alkaido",a:null,g:"F",gen:3,f:"alkaido",m:"Hawa Alkaidi Bokar",c:["oura"]},
+"hailalle":{id:"hailalle",n:"Hailalle Alkaido",a:null,g:"F",gen:3,f:"alkaido",m:"Hawa Alkaidi Bokar",sp:["Chirime Hamane de Bamba"],c:["abdoulaye_ch","abacar_ch","mouazou","fatto","ibrayhawi"]},
+"zahara_alk":{id:"zahara_alk",n:"Zahara Alkaido",a:null,g:"F",gen:3,f:"alkaido",m:"Hawa Alkaidi Bokar",c:["abacar_sidi"]},
+
+// GÉNÉRATION 4 - Petits-enfants d'Alkaido via Halimatou (Goungou)
+"omorou_ab":{id:"omorou_ab",n:"Omorou Aboubaye",a:null,g:"M",gen:4,f:null,m:"halimatou_alk",c:[]},
+"hamaya":{id:"hamaya",n:"Hamaya Aboubaye",a:null,g:"M",gen:4,f:null,m:"halimatou_alk",c:[]},
+"farimata_ab":{id:"farimata_ab",n:"Farimata Aboubaye",a:"Falladia",g:"F",gen:4,f:null,m:"halimatou_alk",c:[]},
+
+// GÉNÉRATION 4 - Petits-enfants d'Alkaido via Mohomodou
+"halimatou_moh":{id:"halimatou_moh",n:"Halimatou Mohomodou",a:null,g:"F",gen:4,f:"mohomodou_alk",m:"Fatoumata Molla Kader",c:[]},
+"alkalifa":{id:"alkalifa",n:"Alkalifa Mohomodou",a:null,g:"M",gen:4,f:"mohomodou_alk",m:"Fatoumata Molla Kader",c:[]},
+"ichata_moh":{id:"ichata_moh",n:"Ichata Mohomodou",a:null,g:"F",gen:4,f:"mohomodou_alk",m:"Fatoumata Molla Kader",c:[]},
+"tabati":{id:"tabati",n:"Tabati Mohomodou",a:null,g:"F",gen:4,f:"mohomodou_alk",m:"Fatoumata Molla Kader",c:[]},
+"djinna":{id:"djinna",n:"Djinna Mohomodou",a:null,g:"F",gen:4,f:"mohomodou_alk",m:"Fatoumata Molla Kader",c:[]},
+"abacar_moh":{id:"abacar_moh",n:"Abacar Mohomodou",a:null,g:"M",gen:4,f:"mohomodou_alk",m:"Fatoumata Molla Kader",c:[]},
+
+// GÉNÉRATION 4 - Petits-enfants d'Alkaido via Fadimata
+"kabongou_moy":{id:"kabongou_moy",n:"Kabongou Moyadji",a:null,g:"M",gen:4,f:null,m:"fadimata_alk",c:[]},
+"boubaye_moy":{id:"boubaye_moy",n:"Boubaye Moyadji",a:null,g:"M",gen:4,f:null,m:"fadimata_alk",c:[]},
+"alhassane_moy":{id:"alhassane_moy",n:"Alhassane Moyadji",a:null,g:"M",gen:4,f:null,m:"fadimata_alk",c:[]},
+"agacha_moy":{id:"agacha_moy",n:"Agacha Moyadji",a:null,g:"F",gen:4,f:null,m:"fadimata_alk",c:[]},
+
+// GÉNÉRATION 4 - Petit-enfant d'Alkaido via Bana
+"oura":{id:"oura",n:"Oura Bana",a:null,g:"F",gen:4,f:null,m:"bana",c:[]},
+
+// GÉNÉRATION 4 - Petits-enfants d'Alkaido via Hailalle
+"abdoulaye_ch":{id:"abdoulaye_ch",n:"Abdoulaye Chirime",a:"Mouta",g:"M",gen:4,f:null,m:"hailalle",c:[]},
+"abacar_ch":{id:"abacar_ch",n:"Abacar Chirime",a:null,g:"M",gen:4,f:null,m:"hailalle",c:[]},
+"mouazou":{id:"mouazou",n:"Mouazou Chirime",a:null,g:"M",gen:4,f:null,m:"hailalle",c:[]},
+"fatto":{id:"fatto",n:"Fatto Chirime",a:null,g:"F",gen:4,f:null,m:"hailalle",c:[]},
+"ibrayhawi":{id:"ibrayhawi",n:"Ibrayhawi Chirime",a:null,g:"M",gen:4,f:null,m:"hailalle",c:[]},
+
+// GÉNÉRATION 4 - Petit-enfant d'Alkaido via Zahara
+"abacar_sidi":{id:"abacar_sidi",n:"Abacar Sidi",a:null,g:"M",gen:4,f:null,m:"zahara_alk",c:[]}
 };
 
 let currentPerson = 'ali';
@@ -1716,6 +1838,7 @@ function showPage(pageId, btn) {
 
 // Couleurs par génération
 const genColors = {
+  0: '#9333ea',
   1: '#f59e0b',
   2: '#10b981', 
   3: '#6366f1',
@@ -1724,6 +1847,18 @@ const genColors = {
   6: '#14b8a6',
   7: '#f97316'
 };
+
+// Fonction pour formater le nom avec le surnom
+function formatName(p, short = false) {
+  if (!p) return '';
+  if (short) {
+    // Version courte : juste le prénom + surnom si existe
+    const prenom = p.n.split(' ')[0];
+    return p.a ? `${prenom} (${p.a})` : prenom;
+  }
+  // Version complète : nom complet + surnom
+  return p.a ? `${p.n} dit "${p.a}"` : p.n;
+}
 
 // Afficher une personne avec animation
 function showPerson(id) {
@@ -1808,14 +1943,13 @@ function renderPersonView(p) {
   const spouses = p.sp || [];
   const genClass = `gen${p.gen}`;
   const genColor = genColors[p.gen];
-  const genNames = {1: '1ère', 2: '2ème', 3: '3ème', 4: '4ème', 5: '5ème', 6: '6ème', 7: '7ème'};
+  const genNames = {0: 'Ancêtre', 1: '1ère', 2: '2ème', 3: '3ème', 4: '4ème', 5: '5ème', 6: '6ème', 7: '7ème'};
   
   let html = `
     <div class="person-card ${genClass}">
       <div class="gen-badge">G${p.gen}</div>
       <div class="person-avatar ${p.g === 'M' ? 'male' : 'female'}">${p.g === 'M' ? '👨' : '👩'}</div>
-      <div class="person-name">${p.n}</div>
-      ${p.a ? `<div class="person-alias">${p.a}</div>` : ''}
+      <div class="person-name">${p.n}${p.a ? ` <span class="alias-inline">(${p.a})</span>` : ''}</div>
       <div class="person-gen">${genNames[p.gen]} génération</div>
     </div>
   `;
@@ -1825,10 +1959,11 @@ function renderPersonView(p) {
     html += `<div class="section-title">⬆️ Parents</div><div class="parent-cards">`;
     if (father) {
       const fGenClass = `gen${father.gen}`;
+      const fName = father.a ? `${father.n.split(' ')[0]} (${father.a})` : father.n.split(' ')[0];
       html += `
         <div class="parent-card ${fGenClass}" onclick="showPerson('${father.id}')">
           <div class="mini-avatar male">👨</div>
-          <div class="name">${father.n.split(' ')[0]}</div>
+          <div class="name">${fName}</div>
           <div class="label">Père</div>
           <div class="gen-tag" style="background:${genColors[father.gen]}">G${father.gen}</div>
         </div>
@@ -1836,10 +1971,11 @@ function renderPersonView(p) {
     }
     if (mother) {
       const mGenClass = `gen${mother.gen}`;
+      const mName = mother.a ? `${mother.n.split(' ')[0]} (${mother.a})` : mother.n.split(' ')[0];
       html += `
         <div class="parent-card ${mGenClass}" onclick="showPerson('${mother.id}')">
           <div class="mini-avatar female">👩</div>
-          <div class="name">${mother.n.split(' ')[0]}</div>
+          <div class="name">${mName}</div>
           <div class="label">Mère</div>
           <div class="gen-tag" style="background:${genColors[mother.gen]}">G${mother.gen}</div>
         </div>
@@ -1862,12 +1998,20 @@ function renderPersonView(p) {
     const spouseIcon = p.g === 'M' ? '👩' : '👨';
     html += `<div class="section-title">💑 ${spouseLabel}</div><div class="spouses-list">`;
     spouses.forEach((sp, idx) => {
+      // Vérifier si l'épouse est une personne dans l'arbre
+      const spouseInTree = D[sp];
+      const spouseName = spouseInTree ? spouseInTree.n : sp;
+      const spouseAlias = spouseInTree && spouseInTree.a ? ` (${spouseInTree.a})` : '';
+      const clickable = spouseInTree ? `onclick="showPerson('${sp}')"` : '';
+      const clickableClass = spouseInTree ? 'clickable' : '';
+      
       html += `
-        <div class="spouse-card">
+        <div class="spouse-card ${clickableClass}" ${clickable}>
           <div class="spouse-avatar">${spouseIcon}</div>
           <div class="spouse-info">
-            <div class="spouse-name">${sp}</div>
+            <div class="spouse-name">${spouseName}${spouseAlias}</div>
             ${spouses.length > 1 ? `<div class="spouse-num">${idx + 1}${idx === 0 ? 'ère' : 'ème'} épouse</div>` : ''}
+            ${spouseInTree ? `<div class="spouse-link">Voir sa famille →</div>` : ''}
           </div>
         </div>
       `;
@@ -1882,7 +2026,11 @@ function renderPersonView(p) {
       const childrenByMother = {};
       kids.forEach(cid => {
         const c = D[cid];
-        const motherKey = c.m || 'Mère inconnue';
+        let motherKey = c.m || 'Mère inconnue';
+        // Si la mère est un ID dans l'arbre, récupérer son nom
+        if (D[motherKey]) {
+          motherKey = D[motherKey].n;
+        }
         if (!childrenByMother[motherKey]) childrenByMother[motherKey] = [];
         childrenByMother[motherKey].push(c);
       });
@@ -1896,10 +2044,11 @@ function renderPersonView(p) {
         children.forEach(c => {
           const cGenClass = `gen${c.gen}`;
           const grandKids = (c.c || []).filter(gc => D[gc]).length;
+          const cName = c.a ? `${c.n.split(' ')[0]} (${c.a})` : c.n.split(' ')[0];
           html += `
             <div class="child-card ${cGenClass}" onclick="showPerson('${c.id}')">
               <div class="mini-avatar ${c.g === 'M' ? 'male' : 'female'}">${c.g === 'M' ? '👨' : '👩'}</div>
-              <div class="name">${c.n.split(' ')[0]}</div>
+              <div class="name">${cName}</div>
               <span class="gen-tag" style="background:${genColors[c.gen]}">G${c.gen}</span>
               ${grandKids > 0 ? `<div class="badge">${grandKids} 👶</div>` : ''}
             </div>
@@ -1914,10 +2063,11 @@ function renderPersonView(p) {
         const c = D[cid];
         const cGenClass = `gen${c.gen}`;
         const grandKids = (c.c || []).filter(gc => D[gc]).length;
+        const cName = c.a ? `${c.n.split(' ')[0]} (${c.a})` : c.n.split(' ')[0];
         html += `
           <div class="child-card ${cGenClass}" onclick="showPerson('${cid}')">
             <div class="mini-avatar ${c.g === 'M' ? 'male' : 'female'}">${c.g === 'M' ? '👨' : '👩'}</div>
-            <div class="name">${c.n.split(' ')[0]}</div>
+            <div class="name">${cName}</div>
             <span class="gen-tag" style="background:${genColors[c.gen]}">G${c.gen}</span>
             ${grandKids > 0 ? `<div class="badge">${grandKids} 👶</div>` : ''}
           </div>
@@ -1929,9 +2079,63 @@ function renderPersonView(p) {
     html += `<div class="section-title">Enfants</div><div class="no-data">Pas d'enfants enregistrés</div>`;
   }
   
+  // Famille élargie (par alliance) - pour Alkamahamane
+  if (p.id === 'alkamahamane' && D['hamatou_lassane']) {
+    html += `<div class="section-title">👨‍👩‍👧‍👦 Belle-famille (famille de l'épouse)</div>`;
+    html += `<div class="extended-family-note">Famille de Lalla Hamatou - Cliquez sur son nom ci-dessus pour voir</div>`;
+    html += `<div class="parent-cards">
+      <div class="parent-card extended" onclick="showPerson('hamatou_lassane')">
+        <div class="mini-avatar male">👨</div>
+        <div class="name">Hamatou Lassane (Koro)</div>
+        <div class="label">Beau-père</div>
+        <div class="extended-badge">Père de l'épouse →</div>
+      </div>
+      <div class="parent-card extended" onclick="showPerson('mahamane_h')">
+        <div class="mini-avatar male">👨</div>
+        <div class="name">Mahamane (Koro)</div>
+        <div class="label">Beau-frère</div>
+        <div class="extended-badge">Frère de l'épouse →</div>
+      </div>
+    </div>`;
+  }
+  
+  // Famille élargie (par alliance) - pour Mahamane Hamatou
+  if (p.id === 'mahamane_h' && D['alkamahamane']) {
+    html += `<div class="section-title">👨‍👩‍👧‍👦 Famille élargie (par alliance)</div>`;
+    html += `<div class="extended-family-note">Époux de sa sœur Lalla Hamatou</div>`;
+    html += `<div class="parent-cards">
+      <div class="parent-card extended" onclick="showPerson('alkamahamane')">
+        <div class="mini-avatar male">👨</div>
+        <div class="name">Alkamahamane</div>
+        <div class="label">Beau-frère</div>
+        <div class="extended-badge">Voir sa branche →</div>
+      </div>
+      <div class="parent-card extended" onclick="showPerson('lalla_hamatou')">
+        <div class="mini-avatar female">👩</div>
+        <div class="name">Lalla Hamatou</div>
+        <div class="label">Sœur</div>
+        <div class="extended-badge">Voir ses enfants →</div>
+      </div>
+    </div>`;
+  }
+  
+  // Frère/Sœur pour Lalla Hamatou
+  if (p.id === 'lalla_hamatou' && D['mahamane_h']) {
+    html += `<div class="section-title">👫 Frère</div>`;
+    html += `<div class="parent-cards">
+      <div class="parent-card extended" onclick="showPerson('mahamane_h')">
+        <div class="mini-avatar male">👨</div>
+        <div class="name">Mahamane (Koro)</div>
+        <div class="label">Frère</div>
+        <div class="extended-badge">Même père →</div>
+      </div>
+    </div>`;
+  }
+  
   // Légende des générations
   html += `
     <div class="gen-legend">
+      <div class="gen-legend-item"><div class="gen-legend-dot" style="background:var(--gen0)"></div>G0</div>
       <div class="gen-legend-item"><div class="gen-legend-dot" style="background:var(--gen1)"></div>G1</div>
       <div class="gen-legend-item"><div class="gen-legend-dot" style="background:var(--gen2)"></div>G2</div>
       <div class="gen-legend-item"><div class="gen-legend-dot" style="background:var(--gen3)"></div>G3</div>
@@ -1959,12 +2163,13 @@ function renderSearch() {
   const list = Object.values(D).sort((a, b) => a.n.localeCompare(b.n, 'fr'));
   let html = '';
   list.forEach(p => {
+    const displayName = p.a ? `${p.n} (${p.a})` : p.n;
     html += `
       <div class="person-item" onclick="goToPerson('${p.id}')">
         <div class="avatar ${p.g === 'M' ? 'male' : 'female'}">${p.g === 'M' ? '👨' : '👩'}</div>
         <div class="info">
-          <div class="name">${p.n}</div>
-          <div class="details">Génération ${p.gen}${p.a ? ' • ' + p.a : ''}</div>
+          <div class="name">${displayName}</div>
+          <div class="details">Génération ${p.gen}</div>
         </div>
         <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
       </div>
@@ -1989,7 +2194,7 @@ function goToPerson(id) {
 // Parenté
 function initSelects() {
   const list = Object.values(D).sort((a, b) => a.n.localeCompare(b.n, 'fr'));
-  const roots = ['alkamahamane', 'ali', 'mahamane', 'babachigaw', 'kobbo', 'moussa', 'omorou', 'tamimoune', 'mahadi'];
+  const roots = ['alkamahamane', 'ali', 'mahamane', 'babachigaw', 'kobbo', 'moussa', 'omorou', 'tamimoune', 'mahadi', 'goussoumbi', 'hamatou_lassane', 'mahamane_h'];
   
   // Root select
   const rootSel = document.getElementById('rootSelect');
@@ -2096,7 +2301,11 @@ function renderStats() {
   const ps = Object.values(D);
   const males = ps.filter(p => p.g === 'M').length;
   const females = ps.filter(p => p.g === 'F').length;
+  const totalMembers = ps.length;
+  const maxGen = Math.max(...ps.map(p => p.gen));
   
+  document.getElementById('memberCount').textContent = totalMembers;
+  document.getElementById('genCount').textContent = maxGen + 1; // +1 car on commence à 0
   document.getElementById('maleCount').textContent = males;
   document.getElementById('femaleCount').textContent = females;
 }
