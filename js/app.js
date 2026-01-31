@@ -36,6 +36,8 @@ async function login() {
     setTimeout(() => {
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('mainApp').style.display = 'flex';
+      // IMPORTANT: Initialiser l'application après connexion
+      initApp();
     }, 300);
   } else {
     // Erreur
@@ -84,10 +86,21 @@ document.head.appendChild(loginStyle);
 
 // Vérifier l'auth au chargement
 document.addEventListener('DOMContentLoaded', () => {
-  if (!checkAuth()) {
+  if (checkAuth()) {
+    // Utilisateur déjà authentifié - initialiser l'app
+    initApp();
+  } else {
     document.getElementById('loginPassword').focus();
   }
 });
+
+// Fonction d'initialisation de l'app
+function initApp() {
+  initSelects();
+  showPerson('ali');
+  renderSearch();
+  renderStats();
+}
 
 // ========== DONNÉES ==========
 
@@ -578,13 +591,7 @@ function renderStats() {
   document.getElementById('femaleCount').textContent = females;
 }
 
-// Init
-document.addEventListener('DOMContentLoaded', () => {
-  initSelects();
-  showPerson('ali');
-  renderSearch();
-  renderStats();
-});
+// L'initialisation est gérée dans le premier DOMContentLoaded
 
 // ========== FORMULAIRE CONTRIBUER ==========
 let childCount = 0;
