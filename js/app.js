@@ -475,14 +475,16 @@ function initSelects() {
   });
   
   // Relation selects
-  ['person1', 'person2'].forEach(sid => {
+  ['person1Select', 'person2Select'].forEach(sid => {
     const sel = document.getElementById(sid);
-    list.forEach(p => {
-      const o = document.createElement('option');
-      o.value = p.id;
-      o.textContent = p.n + (p.a ? ' (' + p.a + ')' : '');
-      sel.appendChild(o);
-    });
+    if (sel) {
+      list.forEach(p => {
+        const o = document.createElement('option');
+        o.value = p.id;
+        o.textContent = p.n + (p.a ? ' (' + p.a + ')' : '');
+        sel.appendChild(o);
+      });
+    }
   });
 }
 
@@ -522,10 +524,10 @@ function getRelationType(d1, d2, p1, p2) {
   return "Parents éloignés";
 }
 
-function findRelation() {
-  const id1 = document.getElementById('person1').value;
-  const id2 = document.getElementById('person2').value;
-  const container = document.getElementById('relationResult');
+function findRelationship() {
+  const id1 = document.getElementById('person1Select').value;
+  const id2 = document.getElementById('person2Select').value;
+  const container = document.getElementById('parenteResult');
   
   if (!id1 || !id2) {
     container.innerHTML = '<div class="empty"><div class="empty-icon">👆</div><div class="empty-text">Sélectionnez deux personnes</div></div>';
