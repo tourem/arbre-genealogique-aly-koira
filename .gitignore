@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.env
+.pid
+
+# IDE
+.idea/
+
+# Fichiers sensibles
+donnes-sensibles-a-ne-pas-commiter.txt
+react-app/scripts/create-users.sql
+
+# Debug
+react-app/debug/
+
+# React app
+react-app/node_modules/
+react-app/dist/
+react-app/.env
+react-app/.vite-dev.pid
+react-app/scripts/members-extracted.json
