@@ -5,6 +5,7 @@ interface Props {
   person: Member;
   members: MemberDict;
   onNavigate: (id: string) => void;
+  onInfo?: (member: Member) => void;
 }
 
 function shortName(p: Member): string {
@@ -12,7 +13,7 @@ function shortName(p: Member): string {
   return p.alias ? `${first} (${p.alias})` : first;
 }
 
-export default function ParentCard({ person, members, onNavigate }: Props) {
+export default function ParentCard({ person, members, onNavigate, onInfo }: Props) {
   const father = person.father_id && members[person.father_id] ? members[person.father_id] : null;
   const mother = person.mother_ref && members[person.mother_ref] ? members[person.mother_ref] : null;
   const motherName = typeof person.mother_ref === 'string' && !members[person.mother_ref] ? person.mother_ref : null;
@@ -28,6 +29,15 @@ export default function ParentCard({ person, members, onNavigate }: Props) {
             className={`parent-card gen${father.generation}`}
             onClick={() => onNavigate(father.id)}
           >
+            {onInfo && (
+              <button
+                className="info-icon-btn"
+                onClick={(e) => { e.stopPropagation(); onInfo(father); }}
+                type="button"
+              >
+                i
+              </button>
+            )}
             <div className="mini-avatar male">{'\u{1F468}'}</div>
             <div className="name">{shortName(father)}</div>
             <div className="label">P&egrave;re</div>
@@ -41,6 +51,15 @@ export default function ParentCard({ person, members, onNavigate }: Props) {
             className={`parent-card gen${mother.generation}`}
             onClick={() => onNavigate(mother.id)}
           >
+            {onInfo && (
+              <button
+                className="info-icon-btn"
+                onClick={(e) => { e.stopPropagation(); onInfo(mother); }}
+                type="button"
+              >
+                i
+              </button>
+            )}
             <div className="mini-avatar female">{'\u{1F469}'}</div>
             <div className="name">{shortName(mother)}</div>
             <div className="label">M&egrave;re</div>

@@ -4,9 +4,10 @@ interface Props {
   person: Member;
   members: MemberDict;
   onNavigate: (id: string) => void;
+  onInfo?: (member: Member) => void;
 }
 
-export default function SpouseCard({ person, members, onNavigate }: Props) {
+export default function SpouseCard({ person, members, onNavigate, onInfo }: Props) {
   const spouses = person.spouses || [];
   if (spouses.length === 0) return null;
 
@@ -28,6 +29,15 @@ export default function SpouseCard({ person, members, onNavigate }: Props) {
               className={`spouse-card ${spouseInTree ? 'clickable' : ''}`}
               onClick={spouseInTree ? () => onNavigate(sp) : undefined}
             >
+              {spouseInTree && onInfo && (
+                <button
+                  className="info-icon-btn"
+                  onClick={(e) => { e.stopPropagation(); onInfo(spouseInTree); }}
+                  type="button"
+                >
+                  i
+                </button>
+              )}
               <div className="spouse-avatar">{spouseIcon}</div>
               <div className="spouse-info">
                 <div className="spouse-name">{spouseName}{spouseAlias}</div>

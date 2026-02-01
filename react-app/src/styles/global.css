@@ -634,6 +634,7 @@ gap:10px;
 margin-bottom:8px;
 }
 .spouse-card{
+position:relative;
 display:flex;
 align-items:center;
 gap:14px;
@@ -1564,4 +1565,451 @@ gap:8px;
 justify-content:flex-end;
 padding:16px 20px;
 border-top:1px solid var(--border);
+}
+
+/* ========== VIEW TOGGLE (Fiche / Arbre) ========== */
+.view-toggle{
+display:flex;
+gap:0;
+margin-bottom:16px;
+border-radius:var(--radius);
+overflow:hidden;
+background:var(--surface);
+}
+.view-toggle-btn{
+flex:1;
+padding:10px 16px;
+border:none;
+background:transparent;
+color:var(--text-muted);
+font-size:14px;
+font-weight:600;
+cursor:pointer;
+transition:all 0.2s;
+font-family:inherit;
+}
+.view-toggle-btn.active{
+background:var(--primary);
+color:white;
+}
+
+/* ========== TREE VIEW ========== */
+.tree-view-wrapper{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+.tree-view-toolbar{
+display:flex;
+gap:8px;
+}
+.tree-toolbar-btn{
+padding:8px 16px;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius-full);
+color:var(--text-secondary);
+font-size:13px;
+font-weight:500;
+cursor:pointer;
+transition:all 0.2s;
+font-family:inherit;
+}
+.tree-toolbar-btn:active{
+background:var(--primary);
+color:white;
+border-color:var(--primary);
+}
+.tree-view-scroll{
+position:relative;
+overflow-x:auto;
+overflow-y:visible;
+-webkit-overflow-scrolling:touch;
+padding-bottom:16px;
+}
+.tree-view-scroll::-webkit-scrollbar{display:none}
+.tree-view-canvas{
+display:inline-flex;
+min-width:max-content;
+padding:8px 32px 8px 0;
+}
+.tree-scroll-fade{
+position:sticky;
+right:0;
+top:0;
+bottom:0;
+width:32px;
+pointer-events:none;
+background:linear-gradient(to right,transparent,var(--bg));
+position:absolute;
+right:0;top:0;bottom:0;
+}
+
+/* ========== TREE NODE ========== */
+.tree-node{
+display:flex;
+flex-direction:row;
+align-items:center;
+}
+.tree-node-content{
+display:flex;
+flex-direction:row;
+align-items:center;
+flex-shrink:0;
+}
+.tree-node-bridge{
+width:24px;
+height:2px;
+background:var(--border);
+flex-shrink:0;
+}
+.tree-node-children{
+display:flex;
+flex-direction:column;
+}
+
+/* ========== CHILD ROW BRANCHES ========== */
+.tree-child-row{
+display:flex;
+flex-direction:row;
+align-items:center;
+position:relative;
+padding-left:24px;
+}
+/* Vertical bus line */
+.tree-child-row::before{
+content:'';
+position:absolute;
+left:0;
+top:0;
+bottom:0;
+width:2px;
+background:var(--border);
+}
+/* First child: cut top half */
+.tree-child-row:first-child::before{
+top:50%;
+}
+/* Last child: cut bottom half */
+.tree-child-row:last-child::before{
+bottom:50%;
+}
+/* Only child: no vertical bus */
+.tree-child-row.only-child::before{
+display:none;
+}
+/* Horizontal stub from bus to child card */
+.tree-child-row::after{
+content:'';
+position:absolute;
+left:0;
+top:50%;
+width:24px;
+height:2px;
+background:var(--border);
+}
+
+/* ========== TREE CARD ========== */
+.tree-card{
+display:flex;
+align-items:center;
+gap:8px;
+padding:8px 12px;
+background:var(--card);
+border:2px solid var(--border);
+border-radius:12px;
+cursor:pointer;
+transition:all 0.2s ease;
+position:relative;
+min-width:120px;
+max-width:180px;
+margin:4px 0;
+flex-shrink:0;
+}
+.tree-card:hover{
+background:var(--card-hover);
+border-color:rgba(255,255,255,0.15);
+}
+.tree-card:active{
+transform:scale(0.97);
+}
+
+/* Generation top accent */
+.tree-card::before{
+content:'';
+position:absolute;
+top:0;left:0;right:0;
+height:3px;
+border-radius:12px 12px 0 0;
+}
+.tree-card.gen0::before{background:var(--gen0)}
+.tree-card.gen1::before{background:var(--gen1)}
+.tree-card.gen2::before{background:var(--gen2)}
+.tree-card.gen3::before{background:var(--gen3)}
+.tree-card.gen4::before{background:var(--gen4)}
+.tree-card.gen5::before{background:var(--gen5)}
+.tree-card.gen6::before{background:var(--gen6)}
+.tree-card.gen7::before{background:var(--gen7)}
+
+/* Avatar */
+.tree-card-avatar{
+width:32px;height:32px;
+border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-size:16px;
+flex-shrink:0;
+}
+.tree-card.male .tree-card-avatar{background:rgba(59,130,246,0.25)}
+.tree-card.female .tree-card-avatar{background:rgba(236,72,153,0.25)}
+
+/* Info */
+.tree-card-info{
+flex:1;
+min-width:0;
+overflow:hidden;
+}
+.tree-card-name{
+font-size:12px;
+font-weight:600;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+color:var(--text);
+}
+.tree-card-alias{
+font-weight:400;
+color:var(--primary-light);
+font-size:11px;
+}
+.tree-card-gen{
+font-size:10px;
+font-weight:600;
+margin-top:2px;
+}
+.tree-card-gen.gen0{color:var(--gen0)}
+.tree-card-gen.gen1{color:var(--gen1)}
+.tree-card-gen.gen2{color:var(--gen2)}
+.tree-card-gen.gen3{color:var(--gen3)}
+.tree-card-gen.gen4{color:var(--gen4)}
+.tree-card-gen.gen5{color:var(--gen5)}
+.tree-card-gen.gen6{color:var(--gen6)}
+.tree-card-gen.gen7{color:var(--gen7)}
+
+/* Toggle +/- button */
+.tree-card-toggle{
+position:absolute;
+right:-12px;
+top:50%;
+transform:translateY(-50%);
+width:24px;height:24px;
+border-radius:50%;
+background:var(--primary);
+color:white;
+border:2px solid var(--bg);
+font-size:11px;
+font-weight:700;
+display:flex;align-items:center;justify-content:center;
+cursor:pointer;
+z-index:2;
+transition:all 0.15s;
+line-height:1;
+}
+.tree-card-toggle:hover{
+background:var(--primary-light);
+transform:translateY(-50%) scale(1.1);
+}
+
+/* ========== TREE POPUP ========== */
+.tree-popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.6);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:9999;
+padding:20px;
+animation:fadeIn 0.15s ease;
+}
+@keyframes fadeIn{
+from{opacity:0}
+to{opacity:1}
+}
+.tree-popup{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius-lg);
+width:100%;
+max-width:340px;
+padding:24px;
+position:relative;
+animation:popIn 0.2s ease;
+}
+@keyframes popIn{
+from{opacity:0;transform:scale(0.95)}
+to{opacity:1;transform:scale(1)}
+}
+.tree-popup-close{
+position:absolute;
+top:12px;right:12px;
+background:none;
+border:none;
+color:var(--text-muted);
+font-size:24px;
+cursor:pointer;
+line-height:1;
+padding:0 4px;
+}
+.tree-popup-close:hover{color:var(--text)}
+
+.tree-popup-header{
+display:flex;
+align-items:center;
+gap:12px;
+margin-bottom:20px;
+}
+.tree-popup-avatar{
+width:48px;height:48px;
+border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-size:24px;
+flex-shrink:0;
+}
+.tree-popup-avatar.male{background:linear-gradient(135deg,#1e3a5f,#3b82f6)}
+.tree-popup-avatar.female{background:linear-gradient(135deg,#5f1e4a,#ec4899)}
+.tree-popup-title{
+flex:1;
+min-width:0;
+}
+.tree-popup-title h3{
+font-size:18px;
+font-weight:700;
+color:var(--text);
+}
+.tree-popup-alias{
+display:block;
+font-size:14px;
+color:var(--primary-light);
+margin-top:2px;
+}
+.tree-popup-gen-badge{
+padding:4px 12px;
+border-radius:var(--radius-full);
+font-size:11px;
+font-weight:700;
+color:white;
+flex-shrink:0;
+}
+
+.tree-popup-body{
+display:flex;
+flex-direction:column;
+gap:0;
+}
+.tree-popup-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 0;
+border-bottom:1px solid var(--border);
+font-size:14px;
+}
+.tree-popup-row:last-child{border-bottom:none}
+.tree-popup-label{
+color:var(--text-muted);
+font-weight:500;
+}
+
+.tree-popup-footer{
+margin-top:16px;
+padding-top:16px;
+border-top:1px solid var(--border);
+}
+.tree-popup-edit-btn{
+width:100%;
+padding:12px;
+background:linear-gradient(135deg,var(--primary),var(--secondary));
+border:none;
+border-radius:var(--radius);
+color:white;
+font-size:14px;
+font-weight:600;
+cursor:pointer;
+transition:all 0.2s;
+font-family:inherit;
+}
+.tree-popup-edit-btn:active{
+transform:scale(0.98);
+opacity:0.9;
+}
+
+/* ========== INFO ICON BUTTON ========== */
+.info-icon-btn{
+position:absolute;
+top:6px;right:6px;
+width:24px;height:24px;
+border-radius:50%;
+background:rgba(99,102,241,0.5);
+color:white;
+border:none;
+font-size:13px;
+font-weight:700;
+display:flex;align-items:center;justify-content:center;
+cursor:pointer;
+z-index:2;
+transition:all 0.15s;
+line-height:1;
+padding:0;
+}
+.info-icon-btn:hover{
+background:rgba(99,102,241,0.8);
+}
+.info-icon-btn:active{
+transform:scale(0.9);
+}
+
+/* ========== MEMBER PHOTOS ========== */
+.person-photo{
+width:100%;
+height:100%;
+border-radius:50%;
+object-fit:cover;
+}
+.tree-popup-photo{
+width:100%;
+height:100%;
+border-radius:50%;
+object-fit:cover;
+}
+.photo-preview{
+width:80px;
+height:80px;
+border-radius:50%;
+object-fit:cover;
+border:3px solid var(--border);
+display:block;
+margin:0 auto;
+}
+.photo-input{
+width:100%;
+padding:8px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+color:var(--text);
+font-size:13px;
+}
+.photo-input::file-selector-button{
+padding:6px 14px;
+border-radius:8px;
+border:none;
+background:var(--primary);
+color:white;
+font-size:12px;
+font-weight:500;
+cursor:pointer;
+margin-right:8px;
+}
+.photo-input::file-selector-button:hover{
+background:var(--primary-light);
 }

@@ -12,7 +12,11 @@ export default function PersonCard({ person }: Props) {
     <div className={`person-card ${genClass}`}>
       <div className="gen-badge">G{person.generation}</div>
       <div className={`person-avatar ${person.gender === 'M' ? 'male' : 'female'}`}>
-        {person.gender === 'M' ? '\u{1F468}' : '\u{1F469}'}
+        {person.photo_url ? (
+          <img src={person.photo_url} alt={person.name} className="person-photo" />
+        ) : (
+          person.gender === 'M' ? '\u{1F468}' : '\u{1F469}'
+        )}
       </div>
       <div className="person-name">
         {person.name}

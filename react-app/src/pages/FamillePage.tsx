@@ -9,6 +9,9 @@ import ChildrenByMother from '../components/family/ChildrenByMother';
 import Breadcrumb from '../components/family/Breadcrumb';
 import GenerationLegend from '../components/family/GenerationLegend';
 import ExtendedFamily from '../components/family/ExtendedFamily';
+import TreeView from '../components/tree/TreeView';
+import TreePopup from '../components/tree/TreePopup';
+import type { Member } from '../lib/types';
 
 export default function FamillePage() {
   const { members, loading } = useMembersContext();
@@ -18,6 +21,8 @@ export default function FamillePage() {
   );
   const [history, setHistory] = useState<string[]>([]);
   const [animClass, setAnimClass] = useState('');
+  const [viewMode, setViewMode] = useState<'card' | 'tree'>('card');
+  const [popupMember, setPopupMember] = useState<Member | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Handle query param navigation from search page
@@ -119,51 +124,83 @@ export default function FamillePage() {
           )}
         </select>
 
-        <Breadcrumb
-          currentPersonId={currentPersonId}
-          members={members}
-          historyLength={history.length}
-          onNavigate={navigateTo}
-          onGoBack={goBack}
-        />
-
-        <div className={`person-view-container ${animClass}`} key={currentPersonId}>
-          <PersonCard person={person} />
-
-          <ParentCard
-            person={person}
-            members={members}
-            onNavigate={navigateTo}
-          />
-
-          <SpouseCard
-            person={person}
-            members={members}
-            onNavigate={navigateTo}
-          />
-
-          {kids.length > 0 ? (
-            <ChildrenByMother
-              person={person}
-              kids={kids}
-              members={members}
-              onNavigate={navigateTo}
-            />
-          ) : person.children && person.children.length === 0 ? (
-            <>
-              <div className="section-title">Enfants</div>
-              <div className="no-data">Pas d&apos;enfants enregistr&eacute;s</div>
-            </>
-          ) : null}
-
-          <ExtendedFamily
-            person={person}
-            members={members}
-            onNavigate={navigateTo}
-          />
-
-          <GenerationLegend />
+        <div className="view-toggle">
+          <button
+            className={`view-toggle-btn ${viewMode === 'card' ? 'active' : ''}`}
+            onClick={() => setViewMode('card')}
+          >
+            Fiche
+          </button>
+          <button
+            className={`view-toggle-btn ${viewMode === 'tree' ? 'active' : ''}`}
+            onClick={() => setViewMode('tree')}
+          >
+            Arbre
+          </button>
         </div>
+
+        {viewMode === 'tree' ? (
+          <TreeView rootId={currentPersonId} members={members} />
+        ) : (
+          <>
+            <Breadcrumb
+              currentPersonId={currentPersonId}
+              members={members}
+              historyLength={history.length}
+              onNavigate={navigateTo}
+              onGoBack={goBack}
+            />
+
+            <div className={`person-view-container ${animClass}`} key={currentPersonId}>
+              <PersonCard person={person} />
+
+              <ParentCard
+                person={person}
+                members={members}
+                onNavigate={navigateTo}
+                onInfo={setPopupMember}
+              />
+
+              <SpouseCard
+                person={person}
+                members={members}
+                onNavigate={navigateTo}
+                onInfo={setPopupMember}
+              />
+
+              {kids.length > 0 ? (
+                <ChildrenByMother
+                  person={person}
+                  kids={kids}
+                  members={members}
+                  onNavigate={navigateTo}
+                  onInfo={setPopupMember}
+                />
+              ) : person.children && person.children.length === 0 ? (
+                <>
+                  <div className="section-title">Enfants</div>
+                  <div className="no-data">Pas d&apos;enfants enregistr&eacute;s</div>
+                </>
+              ) : null}
+
+              <ExtendedFamily
+                person={person}
+                members={members}
+                onNavigate={navigateTo}
+              />
+
+              <GenerationLegend />
+            </div>
+
+            {popupMember && (
+              <TreePopup
+                member={popupMember}
+                members={members}
+                onClose={() => setPopupMember(null)}
+              />
+            )}
+          </>
+        )}
       </div>
     </div>
   );

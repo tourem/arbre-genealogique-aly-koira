@@ -6,9 +6,10 @@ interface Props {
   kids: Member[];
   members: MemberDict;
   onNavigate: (id: string) => void;
+  onInfo?: (member: Member) => void;
 }
 
-export default function ChildrenByMother({ person, kids, members, onNavigate }: Props) {
+export default function ChildrenByMother({ person, kids, members, onNavigate, onInfo }: Props) {
   const spouses = person.spouses || [];
 
   // Group by mother when male with multiple spouses
@@ -33,7 +34,7 @@ export default function ChildrenByMother({ person, kids, members, onNavigate }: 
             <div className="mother-label">{'\u{1F469}'} {motherKey}</div>
             <div className="children-grid">
               {children.map((c) => (
-                <ChildCard key={c.id} child={c} members={members} onNavigate={onNavigate} />
+                <ChildCard key={c.id} child={c} members={members} onNavigate={onNavigate} onInfo={onInfo} />
               ))}
             </div>
           </div>
@@ -50,7 +51,7 @@ export default function ChildrenByMother({ person, kids, members, onNavigate }: 
       </div>
       <div className="children-grid">
         {kids.map((c) => (
-          <ChildCard key={c.id} child={c} members={members} onNavigate={onNavigate} />
+          <ChildCard key={c.id} child={c} members={members} onNavigate={onNavigate} onInfo={onInfo} />
         ))}
       </div>
     </>

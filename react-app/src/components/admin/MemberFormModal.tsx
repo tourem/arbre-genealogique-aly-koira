@@ -20,6 +20,8 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
   const [motherRef, setMotherRef] = useState('');
   const [spousesStr, setSpousesStr] = useState('');
   const [childrenStr, setChildrenStr] = useState('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -34,8 +36,20 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
       setMotherRef(member.mother_ref || '');
       setSpousesStr(member.spouses.join(', '));
       setChildrenStr(member.children.join(', '));
+      setPhotoPreview(member.photo_url || null);
     }
   }, [member]);
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      setError('La photo ne doit pas d\u00E9passer 2 Mo');
+      return;
+    }
+    setPhotoFile(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
 
   const parseList = (str: string): string[] =>
     str.split(',').map((s) => s.trim()).filter(Boolean);
@@ -49,6 +63,25 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
     setSaving(true);
     setError('');
 
+    let photoUrl: string | null = member?.photo_url ?? null;
+
+    if (photoFile) {
+      const ext = photoFile.name.split('.').pop() || 'jpg';
+      const filePath = `${id.trim()}.${ext}`;
+      const { error: uploadErr } = await supabase.storage
+        .from('photos')
+        .upload(filePath, photoFile, { upsert: true });
+      if (uploadErr) {
+        setError(uploadErr.message);
+        setSaving(false);
+        return;
+      }
+      const { data: urlData } = supabase.storage
+        .from('photos')
+        .getPublicUrl(filePath);
+      photoUrl = urlData.publicUrl;
+    }
+
     const payload = {
       id: id.trim(),
       name: name.trim(),
@@ -59,6 +92,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
       mother_ref: motherRef.trim() || null,
       spouses: parseList(spousesStr),
       children: parseList(childrenStr),
+      photo_url: photoUrl,
     };
 
     if (isEdit) {
@@ -184,6 +218,19 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
               value={childrenStr}
               onChange={(e) => setChildrenStr(e.target.value)}
               placeholder="id1, id2, id3"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Photo</label>
+            {photoPreview && (
+              <img src={photoPreview} alt="Preview" className="photo-preview" />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              className="photo-input"
             />
           </div>
 

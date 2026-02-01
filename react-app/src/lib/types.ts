@@ -8,6 +8,7 @@ export interface Member {
   mother_ref: string | null;
   spouses: string[];
   children: string[];
+  photo_url: string | null;
 }
 
 export type MemberDict = Record<string, Member>;
