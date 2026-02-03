@@ -35,8 +35,7 @@ export default function PersonCard({ person, spouseCount = 0, childrenCount = 0 
           </div>
           <div className="fiche-portrait-meta">
             <span className="fiche-portrait-sex">{sexSymbol}</span>
-            {genNames[person.generation]}
-            {person.generation > 0 ? '\u00E8me' : ''} g\u00E9n\u00E9ration
+            {genNames[person.generation]} génération
           </div>
           {person.note && (
             <div className="fiche-portrait-note">{person.note}</div>
@@ -45,7 +44,7 @@ export default function PersonCard({ person, spouseCount = 0, childrenCount = 0 
         <div className="fiche-portrait-stats">
           <div className="fiche-ps sp">
             <div className="fiche-ps-n">{spouseCount}</div>
-            <div className="fiche-ps-l">\u00C9pouses</div>
+            <div className="fiche-ps-l">Épouses</div>
           </div>
           <div className="fiche-ps ch">
             <div className="fiche-ps-n">{childrenCount}</div>
