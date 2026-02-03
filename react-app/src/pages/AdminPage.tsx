@@ -3,8 +3,9 @@ import { supabase } from '../lib/supabase';
 import { useMembersContext } from '../context/MembersContext';
 import type { Suggestion, UserProfile, Member } from '../lib/types';
 import MemberFormModal from '../components/admin/MemberFormModal';
+import TermsManagementSection from '../components/admin/TermsManagementSection';
 
-type AdminTab = 'suggestions' | 'members' | 'users';
+type AdminTab = 'suggestions' | 'members' | 'users' | 'terms';
 
 export default function AdminPage() {
   const { members, refetchMembers } = useMembersContext();
@@ -37,6 +38,13 @@ export default function AdminPage() {
           >
             Utilisateurs
           </button>
+          <button
+            className={`admin-tab${tab === 'terms' ? ' active' : ''}`}
+            onClick={() => setTab('terms')}
+            type="button"
+          >
+            Termes
+          </button>
         </div>
 
         {tab === 'suggestions' && <SuggestionsSection />}
@@ -44,6 +52,7 @@ export default function AdminPage() {
           <MembersSection members={members} refetch={refetchMembers} />
         )}
         {tab === 'users' && <UsersSection />}
+        {tab === 'terms' && <TermsManagementSection />}
       </div>
     </div>
   );

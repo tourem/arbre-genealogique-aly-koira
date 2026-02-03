@@ -1,0 +1,287 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# TERMINOLOGIE DE PARENTÉ EN SONGHOY / ZARMA
+# Famille Aly Koïra - Gao, Mali
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## SOURCES
+- Peace Corps Niger - Introduction to the Zarma Language
+- Jeffrey Heath (1999) - Grammar of Koyraboro Senni, the Songhay of Gao
+- Études linguistiques sur le système familial songhai-zarma (Bisilliat & Laya, 1992)
+- Wikipedia Zarma language
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECTION 1 : FAMILLE NUCLÉAIRE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## PARENTS
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Français              │  Songhoy/Zarma        │  Prononciation            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Père                  │  BAABA                │  baa-ba                   │
+│  Mère                  │  ÑA (ɲa)              │  gna                      │
+│  Parents (père+mère)   │  BAABA NDA ÑA         │  baa-ba nda gna           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+## ENFANTS
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Français              │  Songhoy/Zarma        │  Prononciation            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Enfant                │  IZE                  │  i-zé                     │
+│  Enfants (pluriel)     │  IZEY                 │  i-zey                    │
+│  Fils                  │  IZE ALU / IZE ÇAW    │  i-zé a-lou               │
+│  Fille                 │  IZE WAY              │  i-zé oua-i               │
+│  Premier-né            │  IZE JINAA            │  i-zé dji-naa             │
+│  Dernier-né            │  IZE KORFO            │  i-zé kor-fo              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+## FRÈRES ET SŒURS (FRATRIE)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Français              │  Songhoy/Zarma        │  Prononciation            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Frère/Sœur aîné(e)    │  BEERE                │  béé-ré                   │
+│  Frère/Sœur cadet(te)  │  KAYNE                │  ka-i-né                  │
+│  Frère (général)       │  ARMA / ARMAA         │  ar-ma                    │
+│  Sœur (général)        │  WAYE / WAYBORO       │  oua-yé                   │
+│  Demi-frère (même père)│  BAABA FO IZE         │  même père, enfant        │
+│  Demi-frère (même mère)│  ÑA FO IZE            │  même mère, enfant        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Note importante : En Songhoy, on distingue l'aîné (BEERE) du cadet (KAYNE), 
+mais pas toujours le sexe. Le contexte ou l'ajout de ALU (homme) ou WAY (femme) 
+précise le genre.
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECTION 2 : GRANDS-PARENTS ET PETITS-ENFANTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## GRANDS-PARENTS
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Français              │  Songhoy/Zarma        │  Prononciation            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Grand-père            │  KAAKU / KAAKOO       │  kaa-kou                  │
+│  Grand-mère            │  ÑAŊGA / NYAŊA        │  gnan-ga                  │
+│  Grands-parents        │  KAAKOO NDA ÑAŊGA     │                           │
+│  Ancêtre               │  KURI / KARI          │  kou-ri                   │
+│  Aïeul                 │  BON KURI             │  bon kou-ri               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+## PETITS-ENFANTS
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Français              │  Songhoy/Zarma        │  Prononciation            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Petit-fils/fille      │  ÑAŊGA IZE            │  gnan-ga i-zé             │
+│  Petits-enfants        │  ÑAŊGA IZEY           │  gnan-ga i-zey            │
+│  Arrière-petit-enfant  │  ÑAŊGA ÑAŊGA IZE      │                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECTION 3 : ONCLES ET TANTES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## CÔTÉ PATERNEL (famille du père)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Français                    │  Songhoy/Zarma        │  Littéralement       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Oncle paternel (frère père) │  BAABA BEERE / KAYNE  │  père aîné/cadet     │
+│  Oncle paternel aîné         │  BAABA BEERE          │  grand père (frère)  │
+│  Oncle paternel cadet        │  BAABA KAYNE          │  petit père (frère)  │
+│  Tante paternelle (sœur père)│  BAABA WAYE           │  père femme          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+## CÔTÉ MATERNEL (famille de la mère)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Français                    │  Songhoy/Zarma        │  Littéralement       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Oncle maternel (frère mère) │  ÑA ARMA              │  mère frère          │
+│  Tante maternelle (sœur mère)│  ÑA BEERE / KAYNE     │  mère aînée/cadette  │
+│  Tante maternelle aînée      │  ÑA BEERE             │  grande mère (sœur)  │
+│  Tante maternelle cadette    │  ÑA KAYNE             │  petite mère (sœur)  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Note culturelle : Dans la société Songhoy patrilinéaire, l'oncle paternel 
+(surtout l'aîné) a une autorité importante sur les neveux. L'oncle maternel
+a un rôle protecteur particulier.
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECTION 4 : COUSINS - TERMINOLOGIE SPÉCIALE SONGHOY
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## TERMES SPÉCIFIQUES (À CONFIRMER AVEC TA FAMILLE)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Relation                              │  Terme Songhoy      │  Notes      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Cousin (fils oncle paternel)          │  ARROU HINKAY IZE   │  À vérifier │
+│  = pères sont frères                   │                     │             │
+│                                        │                     │             │
+│  Cousin croisé (BASSEY)                │  BASSEY             │  Confirmé   │
+│  = père de A et mère de B frère/sœur   │                     │  par toi    │
+│                                        │                     │             │
+│  Cousin (général)                      │  BAABA/ÑA ARMA IZE  │  Descriptif │
+│                                        │                     │             │
+│  Cousin parallèle paternel             │  BAABA ARMA IZE     │  Descriptif │
+│  = fils du frère du père               │                     │             │
+│                                        │                     │             │
+│  Cousin parallèle maternel             │  ÑA WAYE IZE        │  Descriptif │
+│  = fils de la sœur de la mère          │                     │             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+## EXPLICATION DES TERMES SPÉCIAUX
+
+### BASSEY (باسي)
+Relation croisée où le père de l'un est le frère de la mère de l'autre.
+Exemple : Mon père et la mère de Mamadou sont frère et sœur directs
+         → Mamadou et moi sommes BASSEY
+
+### ARROU HINKAY IZE (أرو هنكي ايزي)
+Littéralement "enfants de deux hommes" - cousins dont les pères sont frères.
+C'est la relation de cousin parallèle patrilatéral.
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECTION 5 : NEVEUX ET NIÈCES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Français              │  Songhoy/Zarma        │  Littéralement            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Neveu (fils du frère) │  ARMA IZE ALU         │  frère-enfant-homme       │
+│  Nièce (fille du frère)│  ARMA IZE WAY         │  frère-enfant-femme       │
+│  Neveu (fils de sœur)  │  WAYE IZE ALU         │  sœur-enfant-homme        │
+│  Nièce (fille de sœur) │  WAYE IZE WAY         │  sœur-enfant-femme        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECTION 6 : MARIAGE ET ALLIANCE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## ÉPOUX
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Français              │  Songhoy/Zarma        │  Prononciation            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Mari/Époux            │  KURÑA / ALO          │  kour-gna / a-lo          │
+│  Femme/Épouse          │  WANDO                │  wan-do                   │
+│  Co-épouse             │  WAYBORA              │  ouai-bo-ra               │
+│  Mariage               │  HIIJA / HIJA         │  hi-dja                   │
+│  Fiancé(e)             │  HIJA BORO            │  hi-dja bo-ro             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+## BEAUX-PARENTS
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Français              │  Songhoy/Zarma        │  Notes                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Beau-père             │  KURÑA BAABA          │  père du mari/femme       │
+│  Belle-mère            │  KURÑA ÑA             │  mère du mari/femme       │
+│  Gendre                │  WANDO ALO            │  mari de la fille         │
+│  Belle-fille/Bru       │  IZE WANDO            │  femme du fils            │
+│  Beau-frère            │  KURÑA ARMA           │  frère du conjoint        │
+│  Belle-sœur            │  KURÑA WAYE           │  sœur du conjoint         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECTION 7 : TERMES D'ADRESSE ET DE RESPECT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Contexte              │  Terme                │  Usage                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Aîné respecté         │  BEERO                │  Terme de respect         │
+│  Ancien/Vieillard      │  BORGU / CERKO        │  Personne âgée            │
+│  Ancienne/Vieille      │  CERKU WAY            │  Femme âgée               │
+│  Chef de famille       │  FU KOY               │  Maître de maison         │
+│  Famille (maison)      │  FU                   │  La maisonnée             │
+│  Lignée/Clan           │  WARIYA               │  Descendance              │
+│  Descendance           │  IZEY                 │  Les enfants/descendants  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECTION 8 : MOTS UTILES POUR LA GÉNÉALOGIE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Français              │  Songhoy/Zarma        │  Notes                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Homme                 │  ALU / ALO            │                           │
+│  Femme                 │  WAY / WAYBORO        │                           │
+│  Personne              │  BORO                 │                           │
+│  Famille               │  FU / WINDI           │  Maisonnée                │
+│  Naissance             │  HAYYAN               │                           │
+│  Mort/Décès            │  BUYAN                │                           │
+│  Vivant                │  HUNDI                │                           │
+│  Décédé                │  BU                   │                           │
+│  Jeune                 │  KAYNA                │                           │
+│  Vieux                 │  ZENU / CERKO         │                           │
+│  Génération            │  ZAMANA               │                           │
+│  Ancêtre               │  KURI                 │                           │
+│  Descendant            │  IZE                  │                           │
+│  Aîné                  │  BEERE                │                           │
+│  Cadet                 │  KAYNE                │                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECTION 9 : RÉCAPITULATIF - TERMES LES PLUS IMPORTANTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+FAMILLE IMMÉDIATE:
+- Père: BAABA
+- Mère: ÑA
+- Fils: IZE (ALU)
+- Fille: IZE WAY
+- Frère/Sœur aîné(e): BEERE
+- Frère/Sœur cadet(te): KAYNE
+
+GRANDS-PARENTS:
+- Grand-père: KAAKU
+- Grand-mère: ÑAŊGA
+
+ONCLES/TANTES:
+- Oncle paternel aîné: BAABA BEERE
+- Oncle paternel cadet: BAABA KAYNE
+- Tante paternelle: BAABA WAYE
+- Oncle maternel: ÑA ARMA
+- Tante maternelle aînée: ÑA BEERE
+- Tante maternelle cadette: ÑA KAYNE
+
+COUSINS (TERMES SPÉCIAUX):
+- BASSEY: cousin croisé (père de A = frère de mère de B)
+- ARROU HINKAY IZE: cousins dont les pères sont frères
+
+MARIAGE:
+- Mari: KURÑA / ALO
+- Femme: WANDO
+- Co-épouse: WAYBORA
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECTION 10 : À COMPLÉTER AVEC TA FAMILLE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+Les termes ci-dessus sont basés sur des recherches linguistiques. 
+Cependant, le dialecte de Gao (Koyraboro Senni) peut avoir des variations locales.
+
+JE TE RECOMMANDE DE:
+1. Vérifier ces termes avec les anciens de ta famille
+2. Compléter les termes spécifiques de cousinage:
+   - BASSEY (confirmé par toi) ✅
+   - ARROU HINKAY IZE (mentionné par toi) ✅
+   - Autres termes locaux ?
+
+3. Ajouter les termes spécifiques à Gao qui pourraient différer du Zarma
+
+QUESTIONS POUR LES ANCIENS:
+- Comment appelle-t-on le cousin dont les mères sont sœurs ?
+- Y a-t-il un terme pour les cousins éloignés (3ème génération+) ?
+- Comment distingue-t-on les demi-frères/sœurs ?
+- Y a-t-il des termes pour les relations par alliance (beau-frère, etc.) ?
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# FIN DU DOCUMENT
+# ═══════════════════════════════════════════════════════════════════════════════

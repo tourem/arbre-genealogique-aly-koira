@@ -1,41 +1,44 @@
-import type { RelationResult } from '../../lib/types';
+import type { SonghoyRelationResult } from '../../lib/types';
+import RelationCard from './RelationCard';
 
 interface Props {
-  result: RelationResult;
-  relationType: string;
+  results: SonghoyRelationResult[];
+  personAName: string;
+  personBName: string;
 }
 
-export default function RelationshipResult({ result, relationType }: Props) {
-  const p1 = result.path1[0];
-  const p2 = result.path2[0];
+export default function RelationshipResult({
+  results,
+  personAName,
+  personBName,
+}: Props) {
+  if (results.length === 0) {
+    return (
+      <div className="empty">
+        <div className="empty-icon">{'\u2753'}</div>
+        <div className="empty-text">
+          Aucun lien de parente trouve entre {personAName} et {personBName}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="relation-result">
-      <div style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
-        {p1.name}
-        <br />
-        &amp;
-        <br />
-        {p2.name}
+    <div className="relation-results">
+      <div className="relation-results-header">
+        <span className="relation-results-count">
+          {results.length} relation{results.length > 1 ? 's' : ''} trouvee
+          {results.length > 1 ? 's' : ''}
+        </span>
       </div>
-      <div className="relation-badge">{relationType}</div>
-      <div style={{ color: 'var(--text-muted)', fontSize: '12px' }}>
-        Anc&ecirc;tre commun : {result.anc.name}
-      </div>
-      <div className="relation-detail">
-        {result.path1.slice(0, -1).map((step, i) => (
-          <div className="relation-step" key={`p1-${step.id}`}>
-            <div className="dot" />
-            {step.name} est {step.gender === 'M' ? 'fils' : 'fille'} de{' '}
-            {result.path1[i + 1].name}
-          </div>
-        ))}
-        {result.path2.slice(0, -1).map((step, i) => (
-          <div className="relation-step" key={`p2-${step.id}`}>
-            <div className="dot" />
-            {step.name} est {step.gender === 'M' ? 'fils' : 'fille'} de{' '}
-            {result.path2[i + 1].name}
-          </div>
+      <div className="relation-results-list">
+        {results.map((r, i) => (
+          <RelationCard
+            key={`${r.commonAncestor.id}-${i}`}
+            result={r}
+            personAName={personAName}
+            personBName={personBName}
+          />
         ))}
       </div>
     </div>

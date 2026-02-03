@@ -1,48 +1,22 @@
 import { useState, useMemo } from 'react';
 import { useMembersContext } from '../context/MembersContext';
-import { findAncestor, getRelationType } from '../lib/relationship';
-import PersonSelect from '../components/relationship/PersonSelect';
-import RelationshipResultComponent from '../components/relationship/RelationshipResult';
-import type { RelationResult } from '../lib/types';
+import { useRelationTerms } from '../hooks/useRelationTerms';
+import { findSonghoyRelations } from '../lib/songhoyRelationship';
+import MemberAutocomplete from '../components/relationship/MemberAutocomplete';
+import RelationshipResult from '../components/relationship/RelationshipResult';
 
 export default function ParentePage() {
-  const { members, loading } = useMembersContext();
+  const { members, loading: membersLoading } = useMembersContext();
+  const { terms, categories, loading: termsLoading } = useRelationTerms();
   const [person1, setPerson1] = useState('');
   const [person2, setPerson2] = useState('');
-  const [result, setResult] = useState<{
-    relation: RelationResult;
-    type: string;
-  } | null>(null);
-  const [notFound, setNotFound] = useState(false);
 
-  const sortedMembers = useMemo(
-    () =>
-      Object.values(members).sort((a, b) =>
-        a.name.localeCompare(b.name, 'fr'),
-      ),
-    [members],
-  );
+  const loading = membersLoading || termsLoading;
 
-  const handleFind = () => {
-    setResult(null);
-    setNotFound(false);
-
-    if (!person1 || !person2) return;
-
-    if (person1 === person2) {
-      setResult(null);
-      return;
-    }
-
-    const r = findAncestor(person1, person2, members);
-    if (!r) {
-      setNotFound(true);
-      return;
-    }
-
-    const rel = getRelationType(r.d1, r.d2, members[person1], members[person2]);
-    setResult({ relation: r, type: rel });
-  };
+  const results = useMemo(() => {
+    if (!person1 || !person2 || person1 === person2) return null;
+    return findSonghoyRelations(person1, person2, members, terms, categories);
+  }, [person1, person2, members, terms, categories]);
 
   if (loading) {
     return (
@@ -58,53 +32,44 @@ export default function ParentePage() {
   return (
     <div className="page active">
       <div className="scroll">
-        <h2 className="page-title">
-          {'\u{1F517}'} Trouver un lien de parent&eacute;
-        </h2>
+        <h2 className="page-title">Trouver un lien de parente</h2>
         <p className="page-subtitle">
-          S&eacute;lectionnez deux personnes pour d&eacute;couvrir leur lien familial
+          Selectionnez deux personnes pour decouvrir leur lien familial avec les
+          termes Songhoy
         </p>
 
         <div className="parente-form">
-          <PersonSelect
-            label="Premi&egrave;re personne"
+          <MemberAutocomplete
+            label="Premiere personne"
             value={person1}
-            members={sortedMembers}
+            members={members}
             onChange={setPerson1}
           />
 
           <div className="parente-vs">{'\u2194\uFE0F'}</div>
 
-          <PersonSelect
-            label="Deuxi&egrave;me personne"
+          <MemberAutocomplete
+            label="Deuxieme personne"
             value={person2}
-            members={sortedMembers}
+            members={members}
             onChange={setPerson2}
           />
-
-          <button className="parente-btn" onClick={handleFind}>
-            Trouver le lien
-          </button>
         </div>
 
         {!person1 || !person2 ? (
           <div className="empty">
             <div className="empty-icon">{'\u{1F446}'}</div>
-            <div className="empty-text">S&eacute;lectionnez deux personnes</div>
+            <div className="empty-text">Selectionnez deux personnes</div>
           </div>
         ) : person1 === person2 ? (
           <div className="relation-result">
-            <div className="relation-badge">M&ecirc;me personne!</div>
+            <div className="relation-badge">Meme personne !</div>
           </div>
-        ) : notFound ? (
-          <div className="empty">
-            <div className="empty-icon">{'\u2753'}</div>
-            <div className="empty-text">Lien non trouv&eacute;</div>
-          </div>
-        ) : result ? (
-          <RelationshipResultComponent
-            result={result.relation}
-            relationType={result.type}
+        ) : results !== null ? (
+          <RelationshipResult
+            results={results}
+            personAName={members[person1]?.name || ''}
+            personBName={members[person2]?.name || ''}
           />
         ) : null}
       </div>

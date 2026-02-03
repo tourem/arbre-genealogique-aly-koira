@@ -440,6 +440,17 @@ animation:pulseRing 2s ease infinite;
 .person-name{font-size:22px;font-weight:700;margin-bottom:4px}
 .person-name .alias-inline{font-weight:500;color:var(--primary);font-size:18px}
 .person-gen{font-size:13px;color:var(--text-secondary);margin-top:12px}
+.person-note{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:10px 14px;
+margin-top:12px;
+font-size:13px;
+font-style:italic;
+color:var(--text-secondary);
+line-height:1.5;
+}
 
 /* Parents section */
 .section-title{
@@ -727,20 +738,129 @@ flex-shrink:0;
 .tree-nav-item svg{width:16px;height:16px}
 
 /* Racine selector */
-.root-select{
-width:100%;
-padding:14px 16px;
+/* ========== RECHERCHE MEMBRE (autocomplete) ========== */
+.member-search{
+position:relative;
+margin-bottom:16px;
+z-index:50;
+}
+.member-search-input-wrap{
+display:flex;
+align-items:center;
 background:var(--card);
 border:1px solid var(--border);
 border-radius:var(--radius);
+padding:0 14px;
+gap:10px;
+transition:border-color 0.2s;
+}
+.member-search-input-wrap:focus-within{
+border-color:var(--primary);
+box-shadow:0 0 0 3px rgba(99,102,241,0.15);
+}
+.member-search-icon{
+font-size:16px;
+flex-shrink:0;
+opacity:0.6;
+}
+.member-search-input{
+flex:1;
+background:transparent;
+border:none;
+outline:none;
 color:var(--text);
 font-size:15px;
 font-family:inherit;
-margin-bottom:16px;
--webkit-appearance:none;
-background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-background-repeat:no-repeat;
-background-position:right 12px center;
+padding:14px 0;
+min-width:0;
+}
+.member-search-input::placeholder{
+color:var(--text-muted);
+}
+.member-search-clear{
+background:none;
+border:none;
+color:var(--text-muted);
+font-size:22px;
+cursor:pointer;
+padding:0 2px;
+line-height:1;
+flex-shrink:0;
+}
+.member-search-clear:hover{
+color:var(--text);
+}
+.member-search-dropdown{
+position:absolute;
+top:calc(100% + 4px);
+left:0;
+right:0;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius);
+max-height:320px;
+overflow-y:auto;
+box-shadow:var(--shadow);
+animation:searchDropIn 0.15s ease;
+z-index:50;
+}
+@keyframes searchDropIn{
+from{opacity:0;transform:translateY(-6px)}
+to{opacity:1;transform:translateY(0)}
+}
+.member-search-item{
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px 14px;
+cursor:pointer;
+transition:background 0.15s;
+border-bottom:1px solid var(--border);
+}
+.member-search-item:last-child{
+border-bottom:none;
+}
+.member-search-item:hover,
+.member-search-item.active{
+background:var(--card-hover);
+}
+.member-search-item.active{
+border-left:3px solid var(--primary);
+}
+.member-search-gen{
+font-size:11px;
+font-weight:700;
+color:#fff;
+padding:2px 6px;
+border-radius:6px;
+flex-shrink:0;
+min-width:28px;
+text-align:center;
+}
+.member-search-name{
+flex:1;
+font-size:14px;
+color:var(--text);
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+min-width:0;
+}
+.member-search-alias{
+color:var(--text-muted);
+font-size:13px;
+}
+.member-search-gender{
+font-size:14px;
+flex-shrink:0;
+opacity:0.5;
+}
+.member-search-empty,
+.member-search-hint{
+padding:14px;
+text-align:center;
+color:var(--text-muted);
+font-size:13px;
 }
 
 /* === PAGE RECHERCHE === */
@@ -1602,6 +1722,13 @@ gap:12px;
 .tree-view-toolbar{
 display:flex;
 gap:8px;
+flex-wrap:wrap;
+align-items:center;
+justify-content:space-between;
+}
+.tree-toolbar-group{
+display:flex;
+gap:8px;
 }
 .tree-toolbar-btn{
 padding:8px 16px;
@@ -1620,92 +1747,133 @@ background:var(--primary);
 color:white;
 border-color:var(--primary);
 }
+
+/* ========== ZOOM CONTROLS ========== */
+.tree-zoom-controls{
+display:flex;
+align-items:center;
+gap:2px;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius-full);
+padding:3px;
+}
+.tree-zoom-btn{
+width:32px;
+height:32px;
+border-radius:50%;
+border:none;
+background:transparent;
+color:var(--text-secondary);
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+transition:all 0.15s;
+font-family:inherit;
+line-height:1;
+}
+.tree-zoom-btn:active{
+background:var(--primary);
+color:white;
+}
+.tree-zoom-level{
+font-size:11px;
+color:var(--text-secondary);
+font-weight:600;
+min-width:38px;
+text-align:center;
+font-variant-numeric:tabular-nums;
+}
+.tree-zoom-fit{
+border-radius:var(--radius-full);
+width:auto;
+padding:0 10px;
+font-size:11px;
+font-weight:600;
+}
+
+/* ========== SCROLL VIEWPORT ========== */
 .tree-view-scroll{
 position:relative;
-overflow-x:auto;
-overflow-y:visible;
+overflow:auto;
 -webkit-overflow-scrolling:touch;
-padding-bottom:16px;
+min-height:60vh;
+border:1px solid var(--border);
+border-radius:12px;
+background:rgba(0,0,0,0.12);
 }
 .tree-view-scroll::-webkit-scrollbar{display:none}
 .tree-view-canvas{
 display:inline-flex;
 min-width:max-content;
-padding:8px 32px 8px 0;
-}
-.tree-scroll-fade{
-position:sticky;
-right:0;
-top:0;
-bottom:0;
-width:32px;
-pointer-events:none;
-background:linear-gradient(to right,transparent,var(--bg));
-position:absolute;
-right:0;top:0;bottom:0;
+padding:16px 32px 16px 16px;
 }
 
-/* ========== TREE NODE ========== */
+/* ========== TREE NODE (vertical) ========== */
 .tree-node{
 display:flex;
-flex-direction:row;
+flex-direction:column;
 align-items:center;
 }
 .tree-node-content{
 display:flex;
-flex-direction:row;
+flex-direction:column;
 align-items:center;
 flex-shrink:0;
 }
 .tree-node-bridge{
-width:24px;
-height:2px;
+width:2px;
+height:20px;
 background:var(--border);
 flex-shrink:0;
 }
 .tree-node-children{
 display:flex;
-flex-direction:column;
+flex-direction:row;
+align-items:flex-start;
 }
 
-/* ========== CHILD ROW BRANCHES ========== */
+/* ========== CHILD COLUMN BRANCHES ========== */
 .tree-child-row{
 display:flex;
-flex-direction:row;
+flex-direction:column;
 align-items:center;
 position:relative;
-padding-left:24px;
+padding-top:20px;
 }
-/* Vertical bus line */
+/* Horizontal bus line */
 .tree-child-row::before{
 content:'';
 position:absolute;
-left:0;
 top:0;
-bottom:0;
-width:2px;
+left:0;
+right:0;
+height:2px;
 background:var(--border);
 }
-/* First child: cut top half */
+/* First child: cut left half */
 .tree-child-row:first-child::before{
-top:50%;
+left:50%;
 }
-/* Last child: cut bottom half */
+/* Last child: cut right half */
 .tree-child-row:last-child::before{
-bottom:50%;
+right:50%;
 }
-/* Only child: no vertical bus */
+/* Only child: no horizontal bus */
 .tree-child-row.only-child::before{
 display:none;
 }
-/* Horizontal stub from bus to child card */
+/* Vertical stub from bus down to child card */
 .tree-child-row::after{
 content:'';
 position:absolute;
-left:0;
-top:50%;
-width:24px;
-height:2px;
+top:0;
+left:50%;
+width:2px;
+height:20px;
 background:var(--border);
 }
 
@@ -1723,7 +1891,7 @@ transition:all 0.2s ease;
 position:relative;
 min-width:120px;
 max-width:180px;
-margin:4px 0;
+margin:0 6px;
 flex-shrink:0;
 }
 .tree-card:hover{
@@ -1798,9 +1966,9 @@ margin-top:2px;
 /* Toggle +/- button */
 .tree-card-toggle{
 position:absolute;
-right:-12px;
-top:50%;
-transform:translateY(-50%);
+bottom:-12px;
+left:50%;
+transform:translateX(-50%);
 width:24px;height:24px;
 border-radius:50%;
 background:var(--primary);
@@ -1816,7 +1984,7 @@ line-height:1;
 }
 .tree-card-toggle:hover{
 background:var(--primary-light);
-transform:translateY(-50%) scale(1.1);
+transform:translateX(-50%) scale(1.1);
 }
 
 /* ========== TREE POPUP ========== */
@@ -1915,6 +2083,17 @@ border-bottom:1px solid var(--border);
 font-size:14px;
 }
 .tree-popup-row:last-child{border-bottom:none}
+.tree-popup-note{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:10px 14px;
+margin-top:10px;
+font-size:13px;
+font-style:italic;
+color:var(--text-secondary);
+line-height:1.5;
+}
 .tree-popup-label{
 color:var(--text-muted);
 font-weight:500;
@@ -1941,6 +2120,90 @@ font-family:inherit;
 .tree-popup-edit-btn:active{
 transform:scale(0.98);
 opacity:0.9;
+}
+.tree-popup-delete-btn{
+width:100%;
+padding:12px;
+background:rgba(239,68,68,0.15);
+border:1px solid rgba(239,68,68,0.3);
+border-radius:var(--radius);
+color:#ef4444;
+font-size:14px;
+font-weight:600;
+cursor:pointer;
+transition:all 0.2s;
+font-family:inherit;
+margin-top:8px;
+}
+.tree-popup-delete-btn:disabled{
+background:rgba(100,116,139,0.1);
+border-color:var(--border);
+color:var(--text-muted);
+cursor:not-allowed;
+opacity:0.6;
+}
+.tree-popup-delete-btn:hover:not(:disabled){
+background:rgba(239,68,68,0.25);
+border-color:rgba(239,68,68,0.5);
+}
+.tree-popup-confirm{
+display:flex;
+flex-direction:column;
+gap:16px;
+padding:8px 0;
+}
+.tree-popup-confirm-msg{
+font-size:15px;
+color:var(--text);
+line-height:1.5;
+text-align:center;
+}
+.tree-popup-confirm-actions{
+display:flex;
+gap:10px;
+}
+.tree-popup-confirm-actions .btn-cancel{
+flex:1;
+padding:12px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+color:var(--text);
+font-size:14px;
+font-weight:600;
+cursor:pointer;
+transition:all 0.2s;
+font-family:inherit;
+}
+.tree-popup-confirm-actions .btn-cancel:hover{
+background:var(--card-hover);
+}
+.tree-popup-confirm-actions .btn-confirm-delete{
+flex:1;
+padding:12px;
+background:#ef4444;
+border:none;
+border-radius:var(--radius);
+color:white;
+font-size:14px;
+font-weight:600;
+cursor:pointer;
+transition:all 0.2s;
+font-family:inherit;
+}
+.tree-popup-confirm-actions .btn-confirm-delete:hover{
+background:#dc2626;
+}
+.tree-popup-confirm-actions .btn-confirm-delete:disabled{
+opacity:0.6;
+cursor:not-allowed;
+}
+.tree-popup-disabled-hint{
+font-size:12px;
+color:var(--text-muted);
+text-align:center;
+margin-top:6px;
+font-style:italic;
 }
 
 /* ========== INFO ICON BUTTON ========== */
@@ -2012,4 +2275,1042 @@ margin-right:8px;
 }
 .photo-input::file-selector-button:hover{
 background:var(--primary-light);
+}
+
+/* ========== ADD MEMBER CARD (dashed "+") ========== */
+.add-member-card{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:6px;
+padding:14px 16px;
+border:2px dashed var(--border);
+border-radius:var(--radius);
+cursor:pointer;
+transition:all 0.2s;
+color:var(--text-muted);
+background:transparent;
+min-height:60px;
+}
+.add-member-card:hover{
+border-color:var(--primary);
+color:var(--primary-light);
+background:rgba(99,102,241,0.08);
+}
+.add-member-card:active{
+transform:scale(0.97);
+}
+.add-member-card--grid{
+padding:14px 8px;
+text-align:center;
+}
+.add-member-icon{
+font-size:24px;
+font-weight:300;
+line-height:1;
+}
+.add-member-label{
+font-size:12px;
+font-weight:500;
+}
+
+/* ========== ADD MODAL CONTEXT BANNER ========== */
+.add-modal-context{
+display:flex;
+align-items:center;
+gap:10px;
+padding:12px 16px;
+background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(236,72,153,0.10));
+border:1px solid rgba(99,102,241,0.25);
+border-radius:var(--radius);
+font-size:14px;
+font-weight:500;
+color:var(--text);
+}
+.add-modal-context-icon{
+font-size:20px;
+flex-shrink:0;
+}
+
+/* ==========================================================
+   RESPONSIVE — Tablet / Desktop / Wide / Hover
+   ========================================================== */
+
+/* ---------- Tablet (768px+) ---------- */
+@media (min-width: 768px) {
+  .app {
+    max-width: 768px;
+  }
+  .nav {
+    max-width: 768px;
+  }
+  .children-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ---------- Desktop (1024px+) ---------- */
+@media (min-width: 1024px) {
+
+  /* 18. Unlock body scroll */
+  html, body {
+    overflow: auto;
+  }
+
+  /* 1. App container — CSS Grid with sidebar */
+  .app {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 240px 1fr;
+    max-width: none;
+    width: 100%;
+    height: 100dvh;
+  }
+
+  /* 2. Header — spans full width, horizontal layout */
+  .header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 32px;
+  }
+  .header-top {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+  .header-stats {
+    flex: 1;
+    max-width: 480px;
+  }
+  .header-user {
+    flex-shrink: 0;
+  }
+
+  /* 3. Nav — sidebar instead of bottom bar */
+  .nav {
+    position: static;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    width: auto;
+    max-width: none;
+    grid-column: 1;
+    grid-row: 2;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 16px 12px;
+    padding-bottom: 16px;
+    background: var(--card);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-top: none;
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: auto;
+  }
+  .nav-item {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    font-size: 14px;
+    border-radius: 12px;
+    width: 100%;
+  }
+  .nav-item svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* 4. Main + scroll area */
+  main {
+    grid-column: 2;
+    grid-row: 2;
+    overflow: hidden;
+  }
+  .scroll {
+    padding-bottom: 32px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* 5. Person card — wider, larger avatar */
+  .person-card {
+    max-width: 640px;
+    margin: 0 auto 20px;
+  }
+  .person-avatar {
+    width: 100px;
+    height: 100px;
+    font-size: 44px;
+  }
+  .person-name {
+    font-size: clamp(20px, 2.5vw, 28px);
+  }
+
+  /* 6. Parent cards — wider, bigger avatars */
+  .parent-cards {
+    max-width: 640px;
+    margin: 0 auto 8px;
+    gap: 16px;
+  }
+  .parent-card {
+    padding: 20px;
+  }
+  .parent-card .mini-avatar {
+    width: 52px;
+    height: 52px;
+    font-size: 24px;
+  }
+
+  /* 7. Children grid — auto-fill */
+  .children-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  /* 8. Spouses — horizontal row */
+  .spouses-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .spouse-card {
+    min-width: 280px;
+    flex: 1;
+  }
+
+  /* 9. Person list (search) — multi-column grid */
+  .person-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 8px;
+  }
+
+  /* 10. Parente form — side by side selects */
+  .parente-form {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: end;
+  }
+  .parente-vs {
+    align-self: center;
+    padding-top: 20px;
+  }
+  .parente-btn {
+    grid-column: 1 / -1;
+  }
+  .relation-result {
+    grid-column: 1 / -1;
+  }
+
+  /* 11. Forms (contribuer) — centered */
+  .form-section {
+    max-width: 700px;
+    margin: 0 auto 16px;
+  }
+  .form-intro {
+    max-width: 700px;
+    margin: 0 auto 16px;
+  }
+  .form-actions {
+    max-width: 700px;
+    margin: 24px auto;
+  }
+  .form-note {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  /* 12. Suggestions — multi-column grid */
+  .suggestions-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 12px;
+  }
+
+  /* 13. Admin — wider padding, contained tabs */
+  .admin-tabs {
+    max-width: 500px;
+  }
+  .admin-section {
+    padding: 0 8px;
+  }
+
+  /* 14. Login — wider card, larger logo */
+  .login-container {
+    max-width: 460px;
+  }
+  .login-box {
+    padding: 36px 32px;
+  }
+  .login-logo-icon {
+    width: 96px;
+    height: 96px;
+    font-size: 48px;
+    border-radius: 28px;
+  }
+
+  /* 15. Modals — wider */
+  .modal-content {
+    max-width: 640px;
+  }
+  .tree-popup {
+    max-width: 420px;
+  }
+
+  /* 16. Tree view — wider cards & bridges (vertical) */
+  .tree-card {
+    min-width: 150px;
+    max-width: 220px;
+    padding: 10px 14px;
+    margin: 0 8px;
+  }
+  .tree-node-bridge {
+    height: 28px;
+  }
+  .tree-child-row {
+    padding-top: 28px;
+  }
+  .tree-child-row::after {
+    height: 28px;
+  }
+  .tree-view-scroll {
+    min-height: 65vh;
+  }
+  .tree-zoom-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Toast — reposition without bottom nav */
+  .toast {
+    bottom: 40px;
+  }
+
+  /* Section title spacing */
+  .section-title {
+    max-width: 640px;
+    margin: 24px auto 12px;
+  }
+
+  /* Children groups — center */
+  .children-mother-group {
+    max-width: 640px;
+    margin: 0 auto 16px;
+  }
+
+  /* Gen legend — center */
+  .gen-legend {
+    max-width: 640px;
+    margin: 24px auto 0;
+  }
+}
+
+/* ---------- Wide (1440px+) ---------- */
+@media (min-width: 1440px) {
+  .app {
+    grid-template-columns: 260px 1fr;
+  }
+  .scroll {
+    max-width: 1000px;
+  }
+  .children-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+  .person-list {
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  }
+  .suggestions-list {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+  .nav-item {
+    padding: 14px 20px;
+  }
+}
+
+/* ---------- Hover effects (non-touch) ---------- */
+@media (hover: hover) {
+  .person-item:hover {
+    background: var(--card-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  .child-card:hover {
+    background: var(--card-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  .parent-card:hover {
+    background: var(--card-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  .spouse-card.clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  .nav-item:hover {
+    color: var(--primary-light);
+    background: rgba(99, 102, 241, 0.1);
+  }
+  .suggestion-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  .tree-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .tree-nav-item:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+  }
+  .tree-toolbar-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .tree-zoom-btn:hover {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--text);
+  }
+  .tree-zoom-fit:hover {
+    background: var(--primary);
+    color: white;
+  }
+  .view-toggle-btn:hover:not(.active) {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--text-secondary);
+  }
+  .admin-tab:hover:not(.active) {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--text-secondary);
+  }
+  .parente-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+  }
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  .relation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  .terms-category-header:hover {
+    background: var(--card-hover);
+  }
+  .term-card:hover:not(.editing) {
+    background: var(--card-hover);
+  }
+}
+
+/* ================================================================
+   Relation system - Autocomplete
+   ================================================================ */
+
+.member-autocomplete {
+  width: 100%;
+  position: relative;
+}
+
+.member-autocomplete-label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.member-autocomplete-selected {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 6px 10px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+/* ================================================================
+   Relation system - Results list
+   ================================================================ */
+
+.relation-results {
+  margin-top: 20px;
+}
+
+.relation-results-header {
+  margin-bottom: 16px;
+}
+
+.relation-results-count {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.relation-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ================================================================
+   Relation system - Card
+   ================================================================ */
+
+.relation-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.relation-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.relation-card-category-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.relation-card-category-songhoy {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+.relation-card-category {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--primary-light);
+  background: rgba(99, 102, 241, 0.15);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  align-self: flex-start;
+}
+
+.relation-card-distance {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Terms display */
+.relation-card-terms {
+  margin-bottom: 16px;
+}
+
+.relation-card-term-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.relation-card-term-row + .relation-card-term-row {
+  border-top: 1px solid var(--border);
+}
+
+.relation-card-person {
+  font-size: 13px;
+  color: var(--text-secondary);
+  min-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.relation-card-arrow {
+  color: var(--text-muted);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.relation-card-term-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.relation-songhoy-term {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+.relation-songhoy-term.additional {
+  font-size: 18px;
+  color: var(--primary-light);
+}
+
+.relation-card-additional {
+  margin-bottom: 12px;
+  padding: 10px;
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 8px;
+  border: 1px dashed var(--border);
+}
+
+.relation-card-additional-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.relation-card-label-fr {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Footer */
+.relation-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.relation-card-ancestor {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.relation-card-distances {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ================================================================
+   Relation system - Path Graph
+   ================================================================ */
+
+.relation-graph {
+  padding: 12px 0;
+}
+
+.relation-graph-ancestor {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.relation-graph-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.relation-graph-node.ancestor-node {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--primary);
+}
+
+.relation-graph-node.endpoint {
+  background: rgba(34, 211, 238, 0.1);
+  border-color: var(--accent);
+}
+
+.relation-graph-icon {
+  font-size: 14px;
+}
+
+.relation-graph-name {
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.relation-graph-direct {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Fork */
+.relation-graph-fork {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  height: 24px;
+}
+
+.relation-graph-vline {
+  width: 2px;
+  height: 12px;
+  background: var(--border);
+}
+
+.relation-graph-hline {
+  width: 60%;
+  max-width: 300px;
+  height: 2px;
+  background: var(--border);
+}
+
+/* Branches */
+.relation-graph-branches {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.relation-graph-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+  max-width: 180px;
+}
+
+.relation-graph-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.relation-graph-vline-branch {
+  width: 2px;
+  height: 12px;
+  background: var(--border);
+}
+
+/* ================================================================
+   Admin - Terms Management
+   ================================================================ */
+
+.terms-management {
+  padding-top: 8px;
+}
+
+.terms-intro {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.terms-categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.terms-category-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.terms-category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.terms-category-header.expanded {
+  border-bottom: 1px solid var(--border);
+}
+
+.terms-category-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.terms-category-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.terms-category-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.terms-category-chevron {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.terms-category-body {
+  padding: 12px 16px;
+}
+
+.terms-category-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.terms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Term card */
+.term-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  transition: background 0.2s;
+}
+
+.term-card.inactive {
+  opacity: 0.5;
+}
+
+.term-card.editing {
+  border-color: var(--primary);
+}
+
+.term-card-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.term-card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.term-card-code {
+  font-size: 11px;
+  font-family: monospace;
+  color: var(--text-muted);
+}
+
+.term-card-songhoy {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.term-card-prononciation {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.term-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.term-card-label-fr {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.term-card-gender-info {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.term-card-context {
+  font-size: 10px;
+  color: var(--accent);
+  background: rgba(34, 211, 238, 0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.terms-category-songhoy-label {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.term-card-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Term edit form */
+.term-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.term-edit-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.term-edit-row label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.term-edit-input {
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.term-edit-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.term-edit-input.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.term-edit-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+.term-edit-row-inline {
+  display: flex;
+  gap: 12px;
+}
+.term-edit-row-inline .term-edit-row {
+  flex: 1;
+}
+.btn-add-term {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-add-term:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.term-card.adding {
+  border: 1px solid var(--success);
+}
+.terms-error {
+  color: #ef4444;
+  font-size: 13px;
+  padding: 8px 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+/* Toggle active button */
+.btn-toggle-active {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-toggle-active.activate {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+/* ================================================================
+   Responsive - Relation system
+   ================================================================ */
+
+@media (max-width: 480px) {
+  .relation-songhoy-term {
+    font-size: 20px;
+  }
+
+  .relation-card {
+    padding: 14px;
+  }
+
+  .relation-card-person {
+    min-width: 60px;
+    font-size: 12px;
+  }
+
+  .relation-graph-branches {
+    gap: 12px;
+  }
+
+  .relation-graph-branch {
+    min-width: 80px;
+  }
+
+  .relation-graph-name {
+    max-width: 80px;
+    font-size: 11px;
+  }
+
+  .term-card-main {
+    flex-direction: column;
+  }
+
+  .term-card-right {
+    align-items: flex-start;
+  }
+
+  .term-card-actions {
+    flex-wrap: wrap;
+  }
+
+  .term-edit-actions {
+    flex-direction: column;
+  }
 }

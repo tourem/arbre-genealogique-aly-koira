@@ -9,6 +9,7 @@ export interface Member {
   spouses: string[];
   children: string[];
   photo_url: string | null;
+  note: string | null;
 }
 
 export type MemberDict = Record<string, Member>;
@@ -51,4 +52,54 @@ export interface Suggestion {
   admin_note: string | null;
   created_at: string;
   reviewed_at: string | null;
+}
+
+// --- Systeme de relations Songhoy ---
+
+export interface RelationCategory {
+  code: string;
+  label_songhoy: string | null;
+  label_fr: string;
+  description: string | null;
+  sort_order: number;
+}
+
+export interface RelationTerm {
+  id: string;
+  category_code: string;
+  term_code: string;
+  term_songhoy: string;
+  prononciation: string | null;
+  label_fr: string;
+  description: string | null;
+  speaker_gender: 'M' | 'F' | 'ANY';
+  target_gender: 'M' | 'F' | 'ANY';
+  context_condition: string | null;
+  is_active: boolean;
+  display_order: number;
+}
+
+export type TermsDict = Record<string, RelationTerm>;
+export type CategoriesDict = Record<string, RelationCategory>;
+
+export interface AncestorInfo {
+  ancestor: Member;
+  path: Member[];
+  level: number;
+}
+
+export interface SonghoyRelationResult {
+  commonAncestor: Member;
+  category: RelationCategory;
+  termAtoB: RelationTerm | null;
+  termBtoA: RelationTerm | null;
+  additionalTermAtoB?: RelationTerm | null;
+  additionalTermBtoA?: RelationTerm | null;
+  pathA: Member[];
+  pathB: Member[];
+  details: {
+    distanceA: number;
+    distanceB: number;
+    labelFr: string;
+  };
 }
