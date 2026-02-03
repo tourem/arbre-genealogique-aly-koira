@@ -7,6 +7,7 @@ interface Props {
   value: string;
   members: MemberDict;
   onChange: (id: string) => void;
+  side: 'a' | 'b';
 }
 
 function normalize(str: string): string {
@@ -16,11 +17,18 @@ function normalize(str: string): string {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
+function getInitials(name: string): string {
+  const words = name.trim().split(/\s+/);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+}
+
 export default function MemberAutocomplete({
   label,
   value,
   members,
   onChange,
+  side,
 }: Props) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
@@ -41,7 +49,6 @@ export default function MemberAutocomplete({
     const q = normalize(query.trim());
     const termsArr = q.split(/\s+/);
 
-    // Score-based search: higher score = better match
     const scored = allMembers
       .map((m) => {
         const nameNorm = normalize(m.name);
@@ -51,7 +58,6 @@ export default function MemberAutocomplete({
         const matches = termsArr.every((t) => haystack.includes(t));
         if (!matches) return null;
 
-        // Prioritize: starts-with on name/alias > includes
         let score = 0;
         for (const t of termsArr) {
           if (nameNorm.startsWith(t) || aliasNorm.startsWith(t)) {
@@ -69,7 +75,10 @@ export default function MemberAutocomplete({
       })
       .filter(Boolean) as { member: (typeof allMembers)[0]; score: number }[];
 
-    scored.sort((a, b) => b.score - a.score || a.member.name.localeCompare(b.member.name, 'fr'));
+    scored.sort(
+      (a, b) =>
+        b.score - a.score || a.member.name.localeCompare(b.member.name, 'fr'),
+    );
     return scored.map((s) => s.member);
   }, [query, allMembers]);
 
@@ -93,55 +102,73 @@ export default function MemberAutocomplete({
     onChange(id);
   };
 
-  const handleClear = () => {
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setQuery('');
     onChange('');
-    inputRef.current?.focus();
+    setOpen(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
+  const handleCardClick = () => {
+    setQuery('');
+    setOpen(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   const selected = value ? members[value] : null;
-  const placeholder = selected
-    ? `${selected.name}${selected.alias ? ` (${selected.alias})` : ''}`
-    : 'Rechercher un membre...';
 
   return (
-    <div className="member-autocomplete" ref={containerRef}>
-      <label className="member-autocomplete-label">{label}</label>
-      <div className="member-search-input-wrap">
-        <span className="member-search-icon">{'\uD83D\uDD0D'}</span>
-        <input
-          ref={inputRef}
-          type="text"
-          className="member-search-input"
-          placeholder={placeholder}
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => setOpen(true)}
-        />
-        {(query || value) && (
-          <button className="member-search-clear" onClick={handleClear}>
+    <div className={`parente-pc ${side}`} ref={containerRef}>
+      <div className="parente-pc-l">{label}</div>
+
+      {selected && !open ? (
+        <div className="parente-pc-r" onClick={handleCardClick}>
+          <div
+            className={`parente-av ${selected.gender === 'F' ? 'f' : 'm'}`}
+          >
+            {getInitials(selected.name)}
+            <span className="parente-av-g">G{selected.generation}</span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="parente-pc-nm" title={selected.name}>
+              {selected.name}
+            </div>
+            <div className="parente-pc-mt">
+              <span>{selected.gender === 'F' ? '\u2640' : '\u2642'}</span>
+              {' '}Generation {selected.generation}
+            </div>
+          </div>
+          <button className="parente-pc-clear" onClick={handleClear}>
             &times;
           </button>
-        )}
-      </div>
-
-      {selected && !open && (
-        <div className="member-autocomplete-selected">
-          <span
-            className="member-search-gen"
-            style={{
-              background: genColors[selected.generation] || '#6366f1',
+        </div>
+      ) : (
+        <div className="member-search-input-wrap">
+          <span className="member-search-icon">{'\uD83D\uDD0D'}</span>
+          <input
+            ref={inputRef}
+            type="text"
+            className="member-search-input"
+            placeholder="Rechercher un membre..."
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setOpen(true);
             }}
-          >
-            G{selected.generation}
-          </span>
-          <span>{selected.name}</span>
-          <span className="member-search-gender">
-            {selected.gender === 'F' ? '\u2640' : '\u2642'}
-          </span>
+            onFocus={() => setOpen(true)}
+          />
+          {(query || value) && (
+            <button
+              className="member-search-clear"
+              onClick={() => {
+                setQuery('');
+                if (!value) onChange('');
+              }}
+            >
+              &times;
+            </button>
+          )}
         </div>
       )}
 

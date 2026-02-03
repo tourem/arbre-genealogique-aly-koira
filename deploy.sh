@@ -5,18 +5,21 @@ set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "$0")/react-app" && pwd)"
 PROD=false
 SETUP_ENV=false
+LOCAL=false
 
 for arg in "$@"; do
   case "$arg" in
     --prod)      PROD=true ;;
     --setup-env) SETUP_ENV=true ;;
+    --local)     LOCAL=true ;;
   esac
 done
 
 # ─── Prerequis ───────────────────────────────────────────────
-if [ -z "${VERCEL_TOKEN:-}" ]; then
+if [ "$LOCAL" = false ] && [ -z "${VERCEL_TOKEN:-}" ]; then
   echo "Erreur : la variable VERCEL_TOKEN n'est pas definie."
   echo "  export VERCEL_TOKEN=votre_token"
+  echo "  (ou utilisez --local pour deployer en local)"
   exit 1
 fi
 
@@ -70,6 +73,17 @@ npm ci --silent
 npm run build
 
 echo "Build OK (dist/ pret)"
+
+# ─── Deploy local (--local) ──────────────────────────────────
+if [ "$LOCAL" = true ]; then
+  echo ""
+  echo "== Deploiement LOCAL =="
+  echo "  Supabase cloud : $SUPABASE_URL"
+  echo "  Lancement du serveur de preview..."
+  echo ""
+  npx vite preview --host
+  exit 0
+fi
 
 # ─── Deploy via Vercel CLI ───────────────────────────────────
 VERCEL_FLAGS=(

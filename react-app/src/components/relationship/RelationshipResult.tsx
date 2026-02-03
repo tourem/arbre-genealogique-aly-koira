@@ -7,6 +7,11 @@ interface Props {
   personBName: string;
 }
 
+function getShortName(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  return parts.length > 1 ? parts.slice(0, 2).join(' ') : parts[0];
+}
+
 export default function RelationshipResult({
   results,
   personAName,
@@ -23,24 +28,32 @@ export default function RelationshipResult({
     );
   }
 
+  const firstTerm =
+    results[0].termAtoB?.term_songhoy || results[0].category.label_fr;
+  const otherCount = results.length - 1;
+
   return (
-    <div className="relation-results">
-      <div className="relation-results-header">
-        <span className="relation-results-count">
-          {results.length} relation{results.length > 1 ? 's' : ''} trouvee
-          {results.length > 1 ? 's' : ''}
-        </span>
+    <>
+      <div className="parente-flash">
+        <div className="parente-flash-n">{results.length}</div>
+        <div className="parente-flash-t">
+          <em>{getShortName(personAName)}</em> est{' '}
+          <strong>{firstTerm}</strong> pour{' '}
+          <em>{getShortName(personBName)}</em>
+          {otherCount > 0 &&
+            ` \u2014 et ${otherCount} autre${otherCount > 1 ? 's' : ''} relation${otherCount > 1 ? 's' : ''} trouvee${otherCount > 1 ? 's' : ''}`}
+        </div>
       </div>
-      <div className="relation-results-list">
-        {results.map((r, i) => (
-          <RelationCard
-            key={`${r.commonAncestor.id}-${i}`}
-            result={r}
-            personAName={personAName}
-            personBName={personBName}
-          />
-        ))}
-      </div>
-    </div>
+
+      {results.map((r, i) => (
+        <RelationCard
+          key={`${r.commonAncestor.id}-${i}`}
+          result={r}
+          personAName={personAName}
+          personBName={personBName}
+          index={i}
+        />
+      ))}
+    </>
   );
 }

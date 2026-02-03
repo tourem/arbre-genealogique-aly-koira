@@ -4,6 +4,7 @@ import { MembersProvider } from './context/MembersContext';
 import LoginScreen from './components/layout/LoginScreen';
 import Header from './components/layout/Header';
 import BottomNav from './components/layout/BottomNav';
+import ConnStatus from './components/layout/ConnStatus';
 import AdminRoute from './components/admin/AdminRoute';
 import FamillePage from './pages/FamillePage';
 import RecherchePage from './pages/RecherchePage';
@@ -37,6 +38,7 @@ function AppContent() {
       <BrowserRouter>
         <div className="app">
           <Header />
+          <ConnStatus />
           <main>
             <Routes>
               <Route path="/" element={<FamillePage />} />

@@ -6,90 +6,53 @@ interface Props {
   ancestor: Member;
 }
 
-export default function RelationPathGraph({ pathA, pathB, ancestor }: Props) {
-  // pathA goes from personA up to ancestor
-  // pathB goes from personB up to ancestor
-  const nodesA = [...pathA].reverse(); // ancestor first
-  const nodesB = [...pathB].reverse();
+function getInitials(name: string): string {
+  const words = name.trim().split(/\s+/);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+}
 
-  // Remove ancestor duplicate from branches (it's shown at the top)
-  const branchA = nodesA.slice(1);
-  const branchB = nodesB.slice(1);
+export default function RelationPathGraph({ pathA, pathB }: Props) {
+  // pathA = [personA, ..., ancestor] (person going up to ancestor)
+  // pathB = [personB, ..., ancestor] (person going up to ancestor)
+  // Linear horizontal path: personA → ... → ancestor → ... → personB
+  const afterAncestor = [...pathB].slice(0, -1).reverse();
+  const linearPath = [...pathA, ...afterAncestor];
+  const ancestorIndex = pathA.length - 1;
+
+  if (linearPath.length < 2) return null;
+
+  const elements: React.ReactNode[] = [];
+
+  linearPath.forEach((m, i) => {
+    const isSource = i === 0;
+    const isTarget = i === linearPath.length - 1;
+    const isAncestor = i === ancestorIndex;
+
+    let nodeClass = 'parente-nd';
+    if (isSource) nodeClass += ' src';
+    if (isTarget) nodeClass += ' tgt';
+    if (isAncestor) nodeClass += ' anc';
+
+    if (i > 0) {
+      elements.push(<div key={`co-${i}`} className="parente-co" />);
+    }
+
+    elements.push(
+      <div key={`nd-${m.id}-${i}`} className={nodeClass}>
+        <div className="parente-nc">{getInitials(m.name)}</div>
+        <div className="parente-nn">{m.name.split(/\s+/)[0]}</div>
+        <div className="parente-ng">
+          {m.gender === 'F' ? '\u2640' : '\u2642'} G{m.generation}
+        </div>
+      </div>,
+    );
+  });
 
   return (
-    <div className="relation-graph">
-      {/* Ancestor at top center */}
-      <div className="relation-graph-ancestor">
-        <div className="relation-graph-node ancestor-node">
-          <span className="relation-graph-icon">
-            {ancestor.gender === 'F' ? '\u2640' : '\u2642'}
-          </span>
-          <span className="relation-graph-name">{ancestor.name}</span>
-        </div>
-      </div>
-
-      {/* Fork line */}
-      {(branchA.length > 0 || branchB.length > 0) && (
-        <div className="relation-graph-fork">
-          <div className="relation-graph-vline" />
-          <div className="relation-graph-hline" />
-        </div>
-      )}
-
-      {/* Two branches */}
-      <div className="relation-graph-branches">
-        {/* Left branch (A) */}
-        <div className="relation-graph-branch">
-          {branchA.map((m, i) => (
-            <div key={m.id} className="relation-graph-step">
-              {i > 0 && <div className="relation-graph-vline-branch" />}
-              <div
-                className={`relation-graph-node${i === branchA.length - 1 ? ' endpoint' : ''}`}
-              >
-                <span className="relation-graph-icon">
-                  {m.gender === 'F' ? '\u2640' : '\u2642'}
-                </span>
-                <span className="relation-graph-name">{m.name}</span>
-              </div>
-            </div>
-          ))}
-          {branchA.length === 0 && (
-            <div className="relation-graph-step">
-              <div className="relation-graph-node endpoint">
-                <span className="relation-graph-name relation-graph-direct">
-                  (direct)
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Right branch (B) */}
-        <div className="relation-graph-branch">
-          {branchB.map((m, i) => (
-            <div key={m.id} className="relation-graph-step">
-              {i > 0 && <div className="relation-graph-vline-branch" />}
-              <div
-                className={`relation-graph-node${i === branchB.length - 1 ? ' endpoint' : ''}`}
-              >
-                <span className="relation-graph-icon">
-                  {m.gender === 'F' ? '\u2640' : '\u2642'}
-                </span>
-                <span className="relation-graph-name">{m.name}</span>
-              </div>
-            </div>
-          ))}
-          {branchB.length === 0 && (
-            <div className="relation-graph-step">
-              <div className="relation-graph-node endpoint">
-                <span className="relation-graph-name relation-graph-direct">
-                  (direct)
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+    <div className="parente-hp">
+      <div className="parente-hp-l">Chemin dans l&apos;arbre</div>
+      <div className="parente-hp-t">{elements}</div>
     </div>
   );
 }

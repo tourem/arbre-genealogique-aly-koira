@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import EmailInput from '../ui/EmailInput';
 
 type Tab = 'login' | 'signup';
 
@@ -43,12 +44,17 @@ export default function LoginScreen() {
     }
     setSubmitting(true);
     setError('');
-    const result = await login(email.trim(), password);
-    if (result.error) {
-      setError(result.error);
-      setPassword('');
+    try {
+      const result = await login(email.trim(), password);
+      if (result.error) {
+        setError(result.error);
+        setPassword('');
+      }
+    } catch {
+      setError('Erreur de connexion. Vérifiez votre réseau.');
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   const handleSignup = async () => {
@@ -114,11 +120,10 @@ export default function LoginScreen() {
             <div className="login-input-group">
               <label>Email</label>
               <div className="login-input-wrapper">
-                <input
+                <EmailInput
                   ref={emailRef}
-                  type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={setEmail}
                   onKeyDown={handleKeyPress}
                   placeholder="votre@email.com"
                 />

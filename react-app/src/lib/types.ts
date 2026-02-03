@@ -1,6 +1,7 @@
 export interface Member {
   id: string;
   name: string;
+  first_name: string | null;
   alias: string | null;
   gender: 'M' | 'F';
   generation: number;
@@ -10,6 +11,9 @@ export interface Member {
   children: string[];
   photo_url: string | null;
   note: string | null;
+  birth_city: string | null;
+  birth_country: string | null;
+  village: string | null;
 }
 
 export type MemberDict = Record<string, Member>;

@@ -20,6 +20,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
   const [motherRef, setMotherRef] = useState('');
   const [spousesStr, setSpousesStr] = useState('');
   const [childrenStr, setChildrenStr] = useState('');
+  const [note, setNote] = useState('');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -37,6 +38,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
       setSpousesStr(member.spouses.join(', '));
       setChildrenStr(member.children.join(', '));
       setPhotoPreview(member.photo_url || null);
+      setNote(member.note || '');
     }
   }, [member]);
 
@@ -93,6 +95,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
       spouses: parseList(spousesStr),
       children: parseList(childrenStr),
       photo_url: photoUrl,
+      note: note.trim() || null,
     };
 
     if (isEdit) {
@@ -218,6 +221,16 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
               value={childrenStr}
               onChange={(e) => setChildrenStr(e.target.value)}
               placeholder="id1, id2, id3"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Note</label>
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="ex: Premier fils de la famille"
+              rows={3}
             />
           </div>
 

@@ -1,20 +1,24 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useMembersContext } from '../context/MembersContext';
-import { roots, DEFAULT_PERSON, genColors } from '../lib/constants';
+import { useAuth } from '../context/AuthContext';
+import { DEFAULT_PERSON, genColors } from '../lib/constants';
 import PersonCard from '../components/family/PersonCard';
 import ParentCard from '../components/family/ParentCard';
 import SpouseCard from '../components/family/SpouseCard';
 import ChildrenByMother from '../components/family/ChildrenByMother';
 import Breadcrumb from '../components/family/Breadcrumb';
-import GenerationLegend from '../components/family/GenerationLegend';
 import ExtendedFamily from '../components/family/ExtendedFamily';
+import MemberSearch from '../components/family/MemberSearch';
 import TreeView from '../components/tree/TreeView';
 import TreePopup from '../components/tree/TreePopup';
+import AddMemberModal from '../components/family/AddMemberModal';
+import FicheSkeleton from '../components/layout/FicheSkeleton';
 import type { Member } from '../lib/types';
 
 export default function FamillePage() {
-  const { members, loading } = useMembersContext();
+  const { members, loading, refetchMembers } = useMembersContext();
+  const { isAdmin } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPersonId, setCurrentPersonId] = useState(
     searchParams.get('person') || DEFAULT_PERSON,
@@ -23,6 +27,7 @@ export default function FamillePage() {
   const [animClass, setAnimClass] = useState('');
   const [viewMode, setViewMode] = useState<'card' | 'tree'>('card');
   const [popupMember, setPopupMember] = useState<Member | null>(null);
+  const [addModal, setAddModal] = useState<{ mode: 'child' | 'spouse' | 'parent' } | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Handle query param navigation from search page
@@ -74,23 +79,11 @@ export default function FamillePage() {
     }
   }, [history]);
 
-  const changeRoot = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const id = e.target.value;
-      if (id && members[id]) {
-        setHistory([]);
-        navigateTo(id);
-      }
-    },
-    [members, navigateTo],
-  );
-
   if (loading) {
     return (
-      <div className="page active">
-        <div className="loading-screen">
-          <div className="loading-spinner" />
-          <div>Chargement des donn&eacute;es...</div>
+      <div className="page active fiche-sh">
+        <div className="scroll">
+          <FicheSkeleton />
         </div>
       </div>
     );
@@ -103,40 +96,36 @@ export default function FamillePage() {
     .filter((c) => members[c])
     .map((c) => members[c]);
 
-  return (
-    <div className="page active">
-      <div className="scroll" ref={scrollRef}>
-        <select
-          className="root-select"
-          value={currentPersonId}
-          onChange={changeRoot}
-        >
-          <option value="">
-            {'\u{1F4CD}'} Choisir un point de d&eacute;part...
-          </option>
-          {roots.map((id) =>
-            members[id] ? (
-              <option key={id} value={id}>
-                {members[id].name}
-                {members[id].alias ? ` (${members[id].alias})` : ''}
-              </option>
-            ) : null,
-          )}
-        </select>
+  const spouseCount = (person.spouses || []).length;
+  const childrenCount = kids.length;
 
-        <div className="view-toggle">
-          <button
-            className={`view-toggle-btn ${viewMode === 'card' ? 'active' : ''}`}
+  const handleAddSaved = async () => {
+    setAddModal(null);
+    await refetchMembers();
+  };
+
+  return (
+    <div className="page active fiche-sh">
+      <div className="scroll" ref={scrollRef}>
+        <MemberSearch
+          members={members}
+          currentPersonId={currentPersonId}
+          onSelect={navigateTo}
+        />
+
+        <div className="fiche-tabs">
+          <div
+            className={`fiche-tab${viewMode === 'card' ? ' on' : ''}`}
             onClick={() => setViewMode('card')}
           >
-            Fiche
-          </button>
-          <button
-            className={`view-toggle-btn ${viewMode === 'tree' ? 'active' : ''}`}
+            <span className="fiche-tab-ico">{'\uD83D\uDCCB'}</span> Fiche
+          </div>
+          <div
+            className={`fiche-tab${viewMode === 'tree' ? ' on' : ''}`}
             onClick={() => setViewMode('tree')}
           >
-            Arbre
-          </button>
+            <span className="fiche-tab-ico">{'\uD83C\uDF33'}</span> Arbre
+          </div>
         </div>
 
         {viewMode === 'tree' ? (
@@ -152,13 +141,18 @@ export default function FamillePage() {
             />
 
             <div className={`person-view-container ${animClass}`} key={currentPersonId}>
-              <PersonCard person={person} />
+              <PersonCard
+                person={person}
+                spouseCount={spouseCount}
+                childrenCount={childrenCount}
+              />
 
               <ParentCard
                 person={person}
                 members={members}
                 onNavigate={navigateTo}
                 onInfo={setPopupMember}
+                onAddParent={isAdmin ? () => setAddModal({ mode: 'parent' }) : undefined}
               />
 
               <SpouseCard
@@ -166,6 +160,7 @@ export default function FamillePage() {
                 members={members}
                 onNavigate={navigateTo}
                 onInfo={setPopupMember}
+                onAddSpouse={isAdmin ? () => setAddModal({ mode: 'spouse' }) : undefined}
               />
 
               {kids.length > 0 ? (
@@ -175,21 +170,36 @@ export default function FamillePage() {
                   members={members}
                   onNavigate={navigateTo}
                   onInfo={setPopupMember}
+                  onAddChild={isAdmin ? () => setAddModal({ mode: 'child' }) : undefined}
                 />
-              ) : person.children && person.children.length === 0 ? (
-                <>
-                  <div className="section-title">Enfants</div>
-                  <div className="no-data">Pas d&apos;enfants enregistr&eacute;s</div>
-                </>
-              ) : null}
+              ) : (
+                <div className="fiche-section">
+                  <div className="fiche-conn c-green"></div>
+                  <div className="fiche-sh-header children">
+                    <div className="fiche-sh-txt">
+                      <span className="fiche-sh-ico">{'\u25BC'}</span> Enfants
+                    </div>
+                  </div>
+                  {isAdmin ? (
+                    <button
+                      className="fiche-add-btn"
+                      onClick={() => setAddModal({ mode: 'child' })}
+                      type="button"
+                    >
+                      <span className="fiche-add-ico">+</span>
+                      Ajouter un enfant
+                    </button>
+                  ) : (
+                    <div className="no-data">Pas d&apos;enfants enregistr&eacute;s</div>
+                  )}
+                </div>
+              )}
 
               <ExtendedFamily
                 person={person}
                 members={members}
                 onNavigate={navigateTo}
               />
-
-              <GenerationLegend />
             </div>
 
             {popupMember && (
@@ -197,6 +207,16 @@ export default function FamillePage() {
                 member={popupMember}
                 members={members}
                 onClose={() => setPopupMember(null)}
+              />
+            )}
+
+            {addModal && (
+              <AddMemberModal
+                mode={addModal.mode}
+                person={person}
+                members={members}
+                onClose={() => setAddModal(null)}
+                onSaved={handleAddSaved}
               />
             )}
           </>
