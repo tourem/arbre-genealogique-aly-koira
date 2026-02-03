@@ -5303,3 +5303,187 @@ flex-shrink:0;
     font-family: system-ui, -apple-system, sans-serif !important;
   }
 }
+
+/* ================================================================
+   LIGHT THEME — Sahel-inspired warm palette
+   Applied via html[data-theme="light"]
+   ================================================================ */
+
+html[data-theme="light"] {
+  --bg: #F5F2EC;
+  --card: #FFFFFF;
+  --card-hover: #F8F6F1;
+  --surface: #FAF8F4;
+  --text: #1C1C28;
+  --text-secondary: #5A5F7A;
+  --text-muted: #8A8FA5;
+  --border: rgba(0,0,0,0.08);
+  --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  --gen1-bg: rgba(245,158,11,0.22);
+  --gen2-bg: rgba(16,185,129,0.22);
+  --gen3-bg: rgba(99,102,241,0.22);
+  --gen4-bg: rgba(236,72,153,0.22);
+  --gen5-bg: rgba(139,92,246,0.22);
+  --gen6-bg: rgba(20,184,166,0.22);
+  --gen7-bg: rgba(249,115,22,0.22);
+  --gen0-bg: rgba(147,51,234,0.22);
+}
+
+/* Fiche Sahel Heritage — light overrides */
+html[data-theme="light"] .fiche-sh {
+  --sh-void: #EDE9E0;
+  --sh-deep: #F5F2EC;
+  --sh-card: #FFFFFF;
+  --sh-card-h: #F8F6F1;
+  --sh-elev: #FAF8F4;
+  --sh-gold-d: rgba(212,168,83,.12);
+  --sh-gold-g: rgba(212,168,83,.28);
+  --sh-terra-d: rgba(224,132,90,.10);
+  --sh-cyan-d: rgba(72,232,212,.10);
+  --sh-cyan-g: rgba(72,232,212,.22);
+  --sh-blue-d: rgba(112,144,255,.12);
+  --sh-green-d: rgba(90,205,138,.12);
+  --sh-violet-d: rgba(204,160,238,.12);
+  --sh-txt: #1C1C28;
+  --sh-t2: #5A5F7A;
+  --sh-t3: #8A8FA5;
+  --sh-bdr: rgba(0,0,0,0.06);
+  --sh-bdr2: rgba(0,0,0,0.10);
+}
+
+/* Parenté page — light overrides */
+html[data-theme="light"] .parente-page {
+  --sh-void: #EDE9E0;
+  --sh-deep: #F5F2EC;
+  --sh-card: #FFFFFF;
+  --sh-card-h: #F8F6F1;
+  --sh-elev: #FAF8F4;
+  --sh-gold-d: rgba(212,168,83,.12);
+  --sh-gold-g: rgba(212,168,83,.28);
+  --sh-terra-d: rgba(224,132,90,.10);
+  --sh-cyan-d: rgba(72,232,212,.10);
+  --sh-cyan-g: rgba(72,232,212,.22);
+  --sh-txt: #1C1C28;
+  --sh-t2: #5A5F7A;
+  --sh-t3: #8A8FA5;
+  --sh-bdr: rgba(0,0,0,0.06);
+  --sh-bdr2: rgba(0,0,0,0.10);
+}
+
+/* ---- Hardcoded color fixes for light theme ---- */
+
+html[data-theme="light"] .login-screen {
+  background: linear-gradient(135deg, #F5F2EC 0%, #EDE9E0 50%, #E8E4DB 100%);
+}
+html[data-theme="light"] .login-logo h1 {
+  background: linear-gradient(135deg, #1C1C28, var(--primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html[data-theme="light"] .header {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FAF8F4 100%);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+html[data-theme="light"] .nav {
+  background: rgba(245,242,236,0.95);
+}
+html[data-theme="light"] .modal-content {
+  background: #FFFFFF;
+}
+html[data-theme="light"] .person-card {
+  background: linear-gradient(145deg, #FFFFFF, #FAF8F4);
+}
+
+/* ---- Add buttons — increase visibility on light bg ---- */
+
+html[data-theme="light"] .fiche-sh .fiche-add-btn {
+  border: 1px dashed rgba(180,140,50,.55);
+  background: rgba(212,168,83,.10);
+  color: #9A7B2E;
+}
+html[data-theme="light"] .fiche-sh .fiche-add-btn:hover {
+  border-color: rgba(180,140,50,.8);
+  background: rgba(212,168,83,.18);
+  color: #7A6020;
+}
+html[data-theme="light"] .add-member-card {
+  border-color: rgba(0,0,0,0.18);
+  color: var(--text-secondary);
+}
+html[data-theme="light"] .add-member-card:hover {
+  border-color: var(--primary);
+  background: rgba(99,102,241,0.10);
+}
+html[data-theme="light"] .add-first-child {
+  border-color: rgba(0,0,0,0.18);
+}
+html[data-theme="light"] .modal-body .fiche-add-btn {
+  border: 1px dashed rgba(99,102,241,.45);
+  background: rgba(99,102,241,.08);
+  color: #4F46E5;
+}
+html[data-theme="light"] .modal-body .fiche-add-btn:hover {
+  border-color: rgba(99,102,241,.7);
+  background: rgba(99,102,241,.14);
+  color: #4338CA;
+}
+html[data-theme="light"] .btn-add-term {
+  border-color: rgba(0,0,0,0.18);
+}
+html[data-theme="light"] .btn-add-term:hover {
+  border-color: var(--primary);
+}
+html[data-theme="light"] .add-child-btn {
+  box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+}
+
+/* ---- Gender icons — darken for light bg contrast ---- */
+
+html[data-theme="light"] .fiche-sh .fiche-gender-tag.m,
+html[data-theme="light"] .fiche-sh .fiche-gender-ico.m {
+  color: #2563EB;
+}
+html[data-theme="light"] .fiche-sh .fiche-gender-tag.f,
+html[data-theme="light"] .fiche-sh .fiche-gender-ico.f {
+  color: #9333EA;
+}
+html[data-theme="light"] .parent-card .mini-avatar.male,
+html[data-theme="light"] .child-card .mini-avatar.male {
+  background: rgba(59,130,246,0.35);
+}
+html[data-theme="light"] .parent-card .mini-avatar.female,
+html[data-theme="light"] .child-card .mini-avatar.female {
+  background: rgba(236,72,153,0.35);
+}
+html[data-theme="light"] .tree-card.male .tree-card-avatar {
+  background: rgba(59,130,246,0.35);
+}
+html[data-theme="light"] .tree-card.female .tree-card-avatar {
+  background: rgba(236,72,153,0.35);
+}
+
+/* ---- Theme toggle button ---- */
+
+.theme-toggle-btn {
+  background: rgba(255,255,255,0.08);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-secondary);
+}
+.theme-toggle-btn svg {
+  width: 20px;
+  height: 20px;
+}
+.theme-toggle-btn:active {
+  transform: scale(0.95);
+}
+html[data-theme="light"] .theme-toggle-btn {
+  background: rgba(0,0,0,0.06);
+}
