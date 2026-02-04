@@ -193,7 +193,7 @@ function MembersSection({
 
   const handleSaved = () => {
     setShowModal(false);
-    refetch();
+    void refetch();
   };
 
   return (

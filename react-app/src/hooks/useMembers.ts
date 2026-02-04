@@ -68,7 +68,6 @@ export function useMembers() {
   }, [fetchFromNetwork]);
 
   const refetchMembers = useCallback(async () => {
-    setLoading(true);
     try {
       const fresh = await fetchFromNetwork();
       if (fresh && Object.keys(fresh).length > 0) {
@@ -78,8 +77,14 @@ export function useMembers() {
     } catch {
       setError('Synchronisation \u00E9chou\u00E9e. Les donn\u00E9es locales sont affich\u00E9es.');
     }
-    setLoading(false);
   }, [fetchFromNetwork]);
 
-  return { members, loading, error, refetchMembers };
+  const updateMember = useCallback((id: string, data: Partial<Member>) => {
+    setMembers((prev) => {
+      if (!prev[id]) return prev;
+      return { ...prev, [id]: { ...prev[id], ...data } };
+    });
+  }, []);
+
+  return { members, loading, error, refetchMembers, updateMember };
 }

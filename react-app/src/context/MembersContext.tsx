@@ -1,12 +1,13 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { useMembers } from '../hooks/useMembers';
-import type { MemberDict } from '../lib/types';
+import type { Member, MemberDict } from '../lib/types';
 
 interface MembersContextType {
   members: MemberDict;
   loading: boolean;
   error: string | null;
   refetchMembers: () => Promise<void>;
+  updateMember: (id: string, data: Partial<Member>) => void;
   stats: {
     total: number;
     males: number;
@@ -18,7 +19,7 @@ interface MembersContextType {
 const MembersContext = createContext<MembersContextType | null>(null);
 
 export function MembersProvider({ children }: { children: ReactNode }) {
-  const { members, loading, error, refetchMembers } = useMembers();
+  const { members, loading, error, refetchMembers, updateMember } = useMembers();
 
   const stats = useMemo(() => {
     const list = Object.values(members);
@@ -35,7 +36,7 @@ export function MembersProvider({ children }: { children: ReactNode }) {
   }, [members]);
 
   return (
-    <MembersContext.Provider value={{ members, loading, error, refetchMembers, stats }}>
+    <MembersContext.Provider value={{ members, loading, error, refetchMembers, updateMember, stats }}>
       {children}
     </MembersContext.Provider>
   );

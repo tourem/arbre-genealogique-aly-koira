@@ -14,7 +14,7 @@ interface Props {
 
 export default function TreePopup({ member, members, onClose }: Props) {
   const { isAdmin } = useAuth();
-  const { refetchMembers } = useMembersContext();
+  const { refetchMembers, updateMember } = useMembersContext();
   const [showEdit, setShowEdit] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -29,10 +29,13 @@ export default function TreePopup({ member, members, onClose }: Props) {
     .map((s) => members[s]);
   const genColor = genColors[member.generation] || '#6366f1';
 
-  const handleSaved = async () => {
+  const handleSaved = (updatedPayload?: Partial<Member>) => {
+    if (updatedPayload && member.id) {
+      updateMember(member.id, updatedPayload);
+    }
     setShowEdit(false);
-    await refetchMembers();
     onClose();
+    refetchMembers();
   };
 
   const handleDelete = async () => {
