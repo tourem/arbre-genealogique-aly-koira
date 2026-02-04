@@ -2746,6 +2746,7 @@ flex-shrink:0;
   .header-top {
     margin-bottom: 0;
     flex-shrink: 0;
+    gap: 16px;
   }
   .header-stats {
     flex: 1;
@@ -4472,6 +4473,11 @@ flex-shrink:0;
   --sh-bdr2: rgba(255,255,255,0.09);
   --sh-serif: 'Playfair Display', Georgia, serif;
   --sh-sans: 'Nunito Sans', system-ui, sans-serif;
+  --sh-shadow: 0 2px 12px rgba(0,0,0,.3);
+  --sh-shadow-h: 0 8px 30px rgba(0,0,0,.4);
+  --sh-note-bg: rgba(212,168,83,.06);
+  --sh-note-bdr: rgba(212,168,83,.18);
+  --sh-bar-track: rgba(255,255,255,.08);
 }
 
 /* ── Fiche Tabs ── */
@@ -4485,8 +4491,7 @@ flex-shrink:0;
 
 .fiche-sh .fiche-tab {
   flex: 1;
-  text-align: center;
-  padding: 10px 0;
+  padding: 11px 0;
   font-size: .78rem;
   font-weight: 600;
   letter-spacing: .5px;
@@ -4495,6 +4500,10 @@ flex-shrink:0;
   position: relative;
   transition: color .3s;
   border-bottom: 2px solid var(--sh-bdr);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
 }
 
 .fiche-sh .fiche-tab.on {
@@ -4507,8 +4516,11 @@ flex-shrink:0;
 }
 
 .fiche-sh .fiche-tab-ico {
-  margin-right: 6px;
-  font-size: .85rem;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
 }
 
 /* ── Fiche Breadcrumb ── */
@@ -4558,11 +4570,13 @@ flex-shrink:0;
   background: var(--sh-card);
   border: 1px solid var(--sh-bdr2);
   border-radius: 18px;
-  padding: 20px 24px;
+  padding: 20px 22px 16px;
   position: relative;
   overflow: hidden;
   margin-bottom: 10px;
+  box-shadow: var(--sh-shadow);
   animation: fiche-rise .5s ease-out both;
+  transition: background .4s, border .4s, box-shadow .4s;
 }
 
 .fiche-sh .fiche-portrait::before {
@@ -4673,6 +4687,104 @@ flex-shrink:0;
   font-style: italic;
 }
 
+/* Generation gauge */
+.fiche-sh .fiche-gen-gauge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 7px;
+}
+
+.fiche-sh .fiche-gen-bar {
+  width: 100px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--sh-bar-track);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: background .4s;
+}
+
+.fiche-sh .fiche-gen-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--sh-terra), var(--sh-gold));
+  transition: width .6s ease-out;
+}
+
+.fiche-sh .fiche-gen-label {
+  font-size: .6rem;
+  color: var(--sh-t3);
+  white-space: nowrap;
+}
+
+.fiche-sh .fiche-gen-label strong {
+  color: var(--sh-t2);
+  font-weight: 700;
+}
+
+/* ── Note callout (PersonCard + TreePopup) ── */
+.note-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--sh-note-bg, rgba(212,168,83,.06));
+  border: 1px solid var(--sh-note-bdr, rgba(212,168,83,.18));
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: background .4s, border .4s;
+}
+
+.note-callout::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--sh-gold, #D4A853);
+}
+
+.note-callout-ico {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--sh-gold-d, rgba(212,168,83,.10));
+  color: var(--sh-gold, #D4A853);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.note-callout-txt {
+  font-size: 0.76rem;
+  color: var(--sh-t2, #969AB2);
+  line-height: 1.55;
+  margin: 0;
+  padding-top: 2px;
+}
+
+/* ── Note hint (petites cartes : parent, épouse, enfant) ── */
+.note-hint {
+  width: 100%;
+  font-size: 0.7rem;
+  color: var(--sh-gold, #D4A853);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 3px;
+  opacity: 0.85;
+  line-height: 1.4;
+}
+
 /* Portrait stats */
 .fiche-sh .fiche-portrait-stats {
   display: flex;
@@ -4735,11 +4847,12 @@ flex-shrink:0;
 .fiche-sh .fiche-conn::after {
   content: '';
   position: absolute;
-  bottom: -3px;
-  left: -4px;
-  width: 6px;
-  height: 6px;
+  bottom: -4px;
+  left: -5px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
+  transition: background .4s;
 }
 
 .fiche-sh .fiche-conn.c-terra::after { background: var(--sh-terra); }
@@ -4805,14 +4918,15 @@ flex-shrink:0;
   background: var(--sh-card);
   border: 1px solid var(--sh-bdr2);
   border-radius: 14px;
-  padding: 14px 16px;
+  padding: 14px 14px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 11px;
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  transition: all .25s;
+  box-shadow: var(--sh-shadow);
+  transition: all .3s;
 }
 
 .fiche-sh .fiche-p-card.static {
@@ -4822,7 +4936,7 @@ flex-shrink:0;
 .fiche-sh .fiche-p-card:not(.static):hover {
   background: var(--sh-card-h);
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0,0,0,.3);
+  box-shadow: var(--sh-shadow-h);
 }
 
 .fiche-sh .fiche-p-card::before {
@@ -4893,11 +5007,9 @@ flex-shrink:0;
 
 .fiche-sh .fiche-p-name {
   font-family: var(--sh-serif);
-  font-size: .92rem;
+  font-size: .85rem;
   font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.3;
   color: var(--sh-txt);
 }
 
@@ -4934,14 +5046,15 @@ flex-shrink:0;
   background: var(--sh-card);
   border: 1px solid var(--sh-bdr2);
   border-radius: 14px;
-  padding: 12px 16px;
+  padding: 12px 14px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  transition: all .25s;
+  box-shadow: var(--sh-shadow);
+  transition: all .3s;
 }
 
 .fiche-sh .fiche-sp-card.static {
@@ -4951,7 +5064,7 @@ flex-shrink:0;
 .fiche-sh .fiche-sp-card:not(.static):hover {
   background: var(--sh-card-h);
   transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(0,0,0,.25);
+  box-shadow: var(--sh-shadow-h);
 }
 
 .fiche-sh .fiche-sp-card::before {
@@ -5017,14 +5130,21 @@ flex-shrink:0;
 }
 
 .fiche-sh .fiche-sp-children {
-  font-size: .6rem;
+  font-size: .56rem;
   color: var(--sh-green);
   background: var(--sh-green-d);
+  border: 1px solid rgba(90,205,138,.15);
   padding: 3px 9px;
   border-radius: 6px;
   font-weight: 600;
   flex-shrink: 0;
   white-space: nowrap;
+}
+
+.fiche-sh .fiche-sp-children.zero {
+  color: var(--sh-t3);
+  background: var(--sh-elev, #1A2344);
+  border: 1px solid var(--sh-bdr2);
 }
 
 .fiche-sh .fiche-sp-arrow {
@@ -5077,13 +5197,14 @@ flex-shrink:0;
 .fiche-sh .fiche-wg-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   padding: 8px 12px;
   border-radius: 10px;
   background: var(--sh-card);
   border: 1px solid var(--sh-bdr);
   cursor: pointer;
-  transition: .2s;
+  box-shadow: var(--sh-shadow);
+  transition: all .2s;
   margin-bottom: 8px;
 }
 
@@ -5144,12 +5265,13 @@ flex-shrink:0;
   background: var(--sh-card);
   border: 1px solid var(--sh-bdr2);
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 9px 10px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   cursor: pointer;
-  transition: .2s;
+  box-shadow: var(--sh-shadow);
+  transition: all .2s;
   position: relative;
   overflow: hidden;
 }
@@ -5267,8 +5389,49 @@ flex-shrink:0;
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Responsive ── */
+/* ── Responsive — Tablet ── */
+@media (max-width: 960px) {
+  .fiche-sh .fiche-portrait-stats {
+    gap: 12px;
+  }
+
+  .fiche-sh .fiche-ps-n {
+    font-size: 1rem;
+  }
+}
+
+/* ── Responsive — Mobile ── */
 @media (max-width: 640px) {
+  .fiche-sh .fiche-portrait {
+    padding: 16px 14px 12px;
+  }
+
+  .fiche-sh .fiche-portrait-inner {
+    flex-wrap: wrap;
+  }
+
+  .fiche-sh .fiche-portrait-stats {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 20px;
+    margin-left: 0;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--sh-bdr2);
+  }
+
+  .fiche-sh .fiche-portrait-name {
+    font-size: 1.15rem;
+  }
+
+  .fiche-sh .fiche-clan {
+    font-size: .78rem;
+  }
+
+  .fiche-sh .fiche-gen-bar {
+    width: 80px;
+  }
+
   .fiche-sh .fiche-parents-grid {
     grid-template-columns: 1fr;
   }
@@ -5277,15 +5440,20 @@ flex-shrink:0;
     grid-template-columns: 1fr 1fr;
   }
 
-  .fiche-sh .fiche-portrait-stats {
-    display: none;
+  .fiche-sh .fiche-av {
+    width: 48px;
+    height: 48px;
+    font-size: .95rem;
   }
 
-  .fiche-sh .fiche-portrait-name {
-    font-size: 1.2rem;
+  .fiche-sh .fiche-bc {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .fiche-sh .fiche-sp-children {
+  .fiche-sh .fiche-bc::-webkit-scrollbar {
     display: none;
   }
 }
@@ -5523,27 +5691,34 @@ html[data-theme="light"] {
 /* Fiche Sahel Heritage — light overrides */
 html[data-theme="light"] .fiche-sh {
   --sh-void: #EDE9E0;
-  --sh-deep: #F5F2EC;
+  --sh-deep: #F5F0E6;
   --sh-card: #FFFFFF;
-  --sh-card-h: #F8F6F1;
+  --sh-card-h: #FFFCF6;
   --sh-elev: #FAF8F4;
-  --sh-gold: #92700C;
-  --sh-gold-d: rgba(146,112,12,.12);
-  --sh-gold-g: rgba(146,112,12,.28);
-  --sh-terra: #B5572A;
-  --sh-terra-d: rgba(181,87,42,.10);
-  --sh-cyan: #0E7C6B;
-  --sh-cyan-d: rgba(14,124,107,.10);
-  --sh-cyan-g: rgba(14,124,107,.22);
-  --sh-blue-d: rgba(112,144,255,.12);
-  --sh-green: #16A34A;
-  --sh-green-d: rgba(22,163,74,.12);
-  --sh-violet-d: rgba(204,160,238,.12);
-  --sh-txt: #1C1C28;
-  --sh-t2: #5A5F7A;
-  --sh-t3: #8A8FA5;
-  --sh-bdr: rgba(0,0,0,0.06);
-  --sh-bdr2: rgba(0,0,0,0.10);
+  --sh-gold: #B08830;
+  --sh-gold-d: rgba(176,136,48,.08);
+  --sh-gold-g: rgba(176,136,48,.28);
+  --sh-terra: #B85A3A;
+  --sh-terra-d: rgba(184,90,58,.06);
+  --sh-cyan: #18887A;
+  --sh-cyan-d: rgba(24,136,122,.06);
+  --sh-cyan-g: rgba(24,136,122,.22);
+  --sh-blue: #2E6EB5;
+  --sh-blue-d: rgba(46,110,181,.08);
+  --sh-green: #2E8550;
+  --sh-green-d: rgba(46,133,80,.07);
+  --sh-violet: #8B5EA6;
+  --sh-violet-d: rgba(139,94,166,.08);
+  --sh-txt: #2C2416;
+  --sh-t2: #6B6050;
+  --sh-t3: #A09880;
+  --sh-bdr: #E4DCD0;
+  --sh-bdr2: #EDE6DA;
+  --sh-shadow: 0 2px 16px rgba(100,80,40,.08);
+  --sh-shadow-h: 0 6px 28px rgba(100,80,40,.13);
+  --sh-note-bg: #FEF4DE;
+  --sh-note-bdr: #E8D5A0;
+  --sh-bar-track: #E4DCD0;
 }
 
 /* Parenté page — light overrides */
@@ -5641,11 +5816,60 @@ html[data-theme="light"] .add-child-btn {
 
 html[data-theme="light"] .fiche-sh .fiche-gender-tag.m,
 html[data-theme="light"] .fiche-sh .fiche-gender-ico.m {
-  color: #2563EB;
+  color: #2E6EB5;
 }
 html[data-theme="light"] .fiche-sh .fiche-gender-tag.f,
 html[data-theme="light"] .fiche-sh .fiche-gender-ico.f {
-  color: #9333EA;
+  color: #8B5EA6;
+}
+
+/* ---- Avatars — blue/violet for light ---- */
+
+html[data-theme="light"] .fiche-sh .fiche-av.m {
+  background: linear-gradient(140deg, #D8E8F8, #C0D8F0);
+  color: #2E6EB5;
+  border-color: rgba(46,110,181,.2);
+}
+html[data-theme="light"] .fiche-sh .fiche-av.f {
+  background: linear-gradient(140deg, #ECD8F0, #DCC0E8);
+  color: #8B5EA6;
+  border-color: rgba(139,94,166,.2);
+}
+html[data-theme="light"] .fiche-sh .fiche-av-sm.m {
+  background: rgba(46,110,181,.1);
+  color: #2E6EB5;
+  box-shadow: 0 0 0 1.5px rgba(46,110,181,.15);
+}
+html[data-theme="light"] .fiche-sh .fiche-av-sm.f {
+  background: rgba(139,94,166,.1);
+  color: #8B5EA6;
+  box-shadow: 0 0 0 1.5px rgba(139,94,166,.15);
+}
+html[data-theme="light"] .fiche-sh .fiche-av-kid.m {
+  background: rgba(46,110,181,.1);
+  color: #2E6EB5;
+  box-shadow: 0 0 0 1.5px rgba(46,110,181,.15);
+}
+html[data-theme="light"] .fiche-sh .fiche-av-kid.f {
+  background: rgba(139,94,166,.1);
+  color: #8B5EA6;
+  box-shadow: 0 0 0 1.5px rgba(139,94,166,.15);
+}
+html[data-theme="light"] .fiche-sh .fiche-av-sp.f {
+  background: rgba(139,94,166,.1);
+  color: #8B5EA6;
+  box-shadow: 0 0 0 1.5px rgba(139,94,166,.12);
+}
+html[data-theme="light"] .fiche-sh .fiche-av-sp.m {
+  background: rgba(46,110,181,.1);
+  color: #2E6EB5;
+  box-shadow: 0 0 0 1.5px rgba(46,110,181,.12);
+}
+
+/* ---- Zero badge — grey on light ---- */
+html[data-theme="light"] .fiche-sh .fiche-sp-children.zero {
+  background: var(--sh-elev);
+  border-color: var(--sh-bdr);
 }
 html[data-theme="light"] .parent-card .mini-avatar.male,
 html[data-theme="light"] .child-card .mini-avatar.male {

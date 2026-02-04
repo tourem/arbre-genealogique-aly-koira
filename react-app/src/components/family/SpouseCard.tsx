@@ -82,10 +82,13 @@ export default function SpouseCard({ person, members, onNavigate, onInfo, onAddS
                     {idx + 1}{idx === 0 ? 'ère' : 'ème'} épouse
                   </div>
                 )}
+                {spouseInTree?.note && (
+                  <div className="note-hint">{'★'} {spouseInTree.note}</div>
+                )}
               </div>
-              {childCount > 0 && (
-                <div className="fiche-sp-children">
-                  {childCount} enfant{childCount > 1 ? 's' : ''}
+              {person.gender === 'M' && (
+                <div className={`fiche-sp-children${childCount === 0 ? ' zero' : ''}`}>
+                  {childCount} enfant{childCount !== 1 ? 's' : ''}
                 </div>
               )}
               {spouseInTree && <div className="fiche-sp-arrow">{'\u203A'}</div>}

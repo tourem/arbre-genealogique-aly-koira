@@ -5,6 +5,7 @@ interface Props {
   person: Member;
   spouseCount?: number;
   childrenCount?: number;
+  maxGeneration?: number;
 }
 
 function getInitials(name: string): string {
@@ -13,9 +14,11 @@ function getInitials(name: string): string {
   return name.slice(0, 2).toUpperCase();
 }
 
-export default function PersonCard({ person, spouseCount = 0, childrenCount = 0 }: Props) {
+export default function PersonCard({ person, spouseCount = 0, childrenCount = 0, maxGeneration = 7 }: Props) {
   const isMale = person.gender === 'M';
   const sexSymbol = isMale ? '\u2642' : '\u2640';
+  const totalGens = maxGeneration + 1;
+  const genPercent = totalGens > 1 ? (person.generation / (totalGens - 1)) * 100 : 0;
 
   return (
     <div className="fiche-portrait">
@@ -37,9 +40,14 @@ export default function PersonCard({ person, spouseCount = 0, childrenCount = 0 
             <span className="fiche-portrait-sex">{sexSymbol}</span>
             {genNames[person.generation]} génération
           </div>
-          {person.note && (
-            <div className="fiche-portrait-note">{person.note}</div>
-          )}
+          <div className="fiche-gen-gauge">
+            <div className="fiche-gen-bar">
+              <div className="fiche-gen-fill" style={{ width: `${genPercent}%` }} />
+            </div>
+            <div className="fiche-gen-label">
+              <strong>{genNames[person.generation]}</strong> sur {totalGens} générations
+            </div>
+          </div>
         </div>
         <div className="fiche-portrait-stats">
           <div className="fiche-ps sp">
@@ -52,6 +60,12 @@ export default function PersonCard({ person, spouseCount = 0, childrenCount = 0 
           </div>
         </div>
       </div>
+      {person.note && (
+        <div className="note-callout">
+          <span className="note-callout-ico" aria-hidden="true">★</span>
+          <p className="note-callout-txt">{person.note}</p>
+        </div>
+      )}
     </div>
   );
 }

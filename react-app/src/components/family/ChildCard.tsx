@@ -40,6 +40,9 @@ export default function ChildCard({ child, onNavigate, onInfo }: Props) {
         <span className={`fiche-gender-tag ${isMale ? 'm' : 'f'}`}>
           {isMale ? '\u2642' : '\u2640'}
         </span>
+        {child.note && (
+          <div className="note-hint">{'★'} {child.note}</div>
+        )}
       </div>
     </div>
   );

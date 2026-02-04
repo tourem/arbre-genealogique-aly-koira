@@ -209,7 +209,10 @@ export default function TreePopup({ member, members, onClose }: Props) {
           </div>
 
           {member.note && (
-            <div className="tree-popup-note">{member.note}</div>
+            <div className="note-callout">
+              <span className="note-callout-ico" aria-hidden="true">★</span>
+              <p className="note-callout-txt">{member.note}</p>
+            </div>
           )}
         </div>
 

@@ -55,6 +55,9 @@ export default function ParentCard({ person, members, onNavigate, onInfo, onAddP
               <div className="fiche-p-role">
                 <span className="fiche-gender-ico m">{'\u2642'}</span> Père
               </div>
+              {father.note && (
+                <div className="note-hint">{'★'} {father.note}</div>
+              )}
             </div>
             <div className="fiche-p-arrow">{'\u203A'}</div>
           </div>
@@ -82,6 +85,9 @@ export default function ParentCard({ person, members, onNavigate, onInfo, onAddP
               <div className="fiche-p-role">
                 <span className="fiche-gender-ico f">{'\u2640'}</span> Mère
               </div>
+              {mother.note && (
+                <div className="note-hint">{'★'} {mother.note}</div>
+              )}
             </div>
             <div className="fiche-p-arrow">{'\u203A'}</div>
           </div>
