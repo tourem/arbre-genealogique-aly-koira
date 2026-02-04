@@ -67,7 +67,7 @@ export default function ChildrenByMother({ person, kids, members, onNavigate, on
   if (spouses.length > 1 && person.gender === 'M') {
     const childrenByMother: Record<string, { name: string; children: Member[] }> = {};
     kids.forEach((c) => {
-      const motherRef = c.mother_ref || 'M\u00E8re inconnue';
+      const motherRef = c.mother_ref || 'Mère inconnue';
       const motherMember = members[motherRef];
       const motherName = motherMember ? motherMember.name : motherRef;
       if (!childrenByMother[motherRef]) {

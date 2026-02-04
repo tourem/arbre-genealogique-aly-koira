@@ -64,7 +64,7 @@ export default function ChildFieldGroup({
                   <label>Pr&eacute;nom</label>
                   <input
                     type="text"
-                    placeholder="Pr\u00E9nom"
+                    placeholder="Prénom"
                     value={child.prenom}
                     onChange={(e) =>
                       onChildChange(idx, 'prenom', e.target.value)

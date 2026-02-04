@@ -5,8 +5,8 @@ import type { Suggestion } from '../lib/types';
 
 const statusLabels: Record<string, string> = {
   pending: 'En attente',
-  approved: 'Approuv\u00e9e',
-  rejected: 'Refus\u00e9e',
+  approved: 'Approuvée',
+  rejected: 'Refusée',
 };
 
 const statusClasses: Record<string, string> = {

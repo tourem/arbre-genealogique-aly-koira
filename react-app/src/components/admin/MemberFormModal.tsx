@@ -5,7 +5,7 @@ import type { Member } from '../../lib/types';
 interface Props {
   member: Member | null;
   onClose: () => void;
-  onSaved: () => void;
+  onSaved: (updatedPayload?: Partial<Member>) => void;
 }
 
 export default function MemberFormModal({ member, onClose, onSaved }: Props) {
@@ -21,6 +21,9 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
   const [spousesStr, setSpousesStr] = useState('');
   const [childrenStr, setChildrenStr] = useState('');
   const [note, setNote] = useState('');
+  const [birthCity, setBirthCity] = useState('');
+  const [birthCountry, setBirthCountry] = useState('');
+  const [village, setVillage] = useState('');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -39,6 +42,9 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
       setChildrenStr(member.children.join(', '));
       setPhotoPreview(member.photo_url || null);
       setNote(member.note || '');
+      setBirthCity(member.birth_city || '');
+      setBirthCountry(member.birth_country || '');
+      setVillage(member.village || '');
     }
   }, [member]);
 
@@ -46,7 +52,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
-      setError('La photo ne doit pas d\u00E9passer 2 Mo');
+      setError('La photo ne doit pas dépasser 2 Mo');
       return;
     }
     setPhotoFile(file);
@@ -96,6 +102,9 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
       children: parseList(childrenStr),
       photo_url: photoUrl,
       note: note.trim() || null,
+      birth_city: birthCity.trim() || null,
+      birth_country: birthCountry.trim() || null,
+      village: village.trim() || null,
     };
 
     if (isEdit) {
@@ -120,7 +129,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
     }
 
     setSaving(false);
-    onSaved();
+    onSaved(isEdit ? payload : undefined);
   };
 
   return (
@@ -161,7 +170,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
                 type="text"
                 value={alias}
                 onChange={(e) => setAlias(e.target.value)}
-                placeholder="ex: Ko\u00EFra"
+                placeholder="ex: Koïra"
               />
             </div>
             <div className="form-group">
@@ -189,7 +198,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
                 type="text"
                 value={fatherId}
                 onChange={(e) => setFatherId(e.target.value)}
-                placeholder="ID du p\u00E8re"
+                placeholder="ID du père"
               />
             </div>
           </div>
@@ -200,7 +209,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
               type="text"
               value={motherRef}
               onChange={(e) => setMotherRef(e.target.value)}
-              placeholder="R\u00E9f\u00E9rence de la m\u00E8re"
+              placeholder="Référence de la mère"
             />
           </div>
 
@@ -232,6 +241,37 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
               placeholder="ex: Premier fils de la famille"
               rows={3}
             />
+          </div>
+
+          <div className="form-group">
+            <label>Village</label>
+            <input
+              type="text"
+              value={village}
+              onChange={(e) => setVillage(e.target.value)}
+              placeholder="ex: Koira Tegui"
+            />
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label>Ville de naissance</label>
+              <input
+                type="text"
+                value={birthCity}
+                onChange={(e) => setBirthCity(e.target.value)}
+                placeholder="ex: Gao"
+              />
+            </div>
+            <div className="form-group">
+              <label>Pays</label>
+              <input
+                type="text"
+                value={birthCountry}
+                onChange={(e) => setBirthCountry(e.target.value)}
+                placeholder="ex: Mali"
+              />
+            </div>
           </div>
 
           <div className="form-group">

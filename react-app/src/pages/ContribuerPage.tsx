@@ -123,7 +123,7 @@ export default function ContribuerPage() {
     if (error) {
       setToast({ message: 'Erreur lors de l\'envoi : ' + error.message, type: 'error' });
     } else {
-      setToast({ message: 'Suggestion envoy\u00e9e ! Un admin la validera.', type: 'success' });
+      setToast({ message: 'Suggestion envoyée ! Un admin la validera.', type: 'success' });
       resetForm();
     }
     setSubmitting(false);
@@ -133,7 +133,7 @@ export default function ContribuerPage() {
     <div className="page active">
       <div className="scroll">
         <h2 className="page-title">
-          Contribuer \u00e0 l&apos;arbre
+          Contribuer à l&apos;arbre
         </h2>
         <p className="page-subtitle">
           Proposez un ajout &agrave; l&apos;arbre familial. Un administrateur validera votre suggestion.
@@ -158,7 +158,7 @@ export default function ContribuerPage() {
               <label>Surnom</label>
               <input
                 type="text"
-                placeholder="Ex: Ko\u00EFra"
+                placeholder="Ex: Koïra"
                 value={prenom}
                 onChange={(e) => setPrenom(e.target.value)}
               />
@@ -190,7 +190,7 @@ export default function ContribuerPage() {
               <label>Pr&eacute;nom du p&egrave;re</label>
               <input
                 type="text"
-                placeholder="Pr\u00E9nom"
+                placeholder="Prénom"
                 value={perePrenom}
                 onChange={(e) => setPerePrenom(e.target.value)}
               />
@@ -210,7 +210,7 @@ export default function ContribuerPage() {
               <label>Pr&eacute;nom de la m&egrave;re</label>
               <input
                 type="text"
-                placeholder="Pr\u00E9nom"
+                placeholder="Prénom"
                 value={merePrenom}
                 onChange={(e) => setMerePrenom(e.target.value)}
               />

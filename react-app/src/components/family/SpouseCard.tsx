@@ -27,7 +27,7 @@ export default function SpouseCard({ person, members, onNavigate, onInfo, onAddS
 
   if (spouses.length === 0 && !onAddSpouse) return null;
 
-  const spouseLabel = person.gender === 'M' ? '\u00C9pouses' : '\u00C9poux';
+  const spouseLabel = person.gender === 'M' ? 'Épouses' : 'Époux';
   // Spouse gender is opposite of the person
   const spouseGender = person.gender === 'M' ? 'f' : 'm';
 
@@ -79,7 +79,7 @@ export default function SpouseCard({ person, members, onNavigate, onInfo, onAddS
                 </div>
                 {spouses.length > 1 && (
                   <div className="fiche-sp-sub">
-                    {idx + 1}{idx === 0 ? '\u00E8re' : '\u00E8me'} \u00E9pouse
+                    {idx + 1}{idx === 0 ? 'ère' : 'ème'} épouse
                   </div>
                 )}
               </div>
@@ -95,7 +95,7 @@ export default function SpouseCard({ person, members, onNavigate, onInfo, onAddS
         {onAddSpouse && (
           <button className="fiche-add-btn" onClick={onAddSpouse} type="button">
             <span className="fiche-add-ico">+</span>
-            Ajouter {person.gender === 'M' ? 'une \u00E9pouse' : 'un \u00E9poux'}
+            Ajouter {person.gender === 'M' ? 'une épouse' : 'un époux'}
           </button>
         )}
       </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 function formatAgo(ts: number): string {
   const diff = Math.floor((Date.now() - ts) / 1000);
-  if (diff < 60) return 'à l\u0027instant';
+  if (diff < 60) return "à l'instant";
   if (diff < 3600) return `il y a ${Math.floor(diff / 60)} min`;
   if (diff < 86400) return `il y a ${Math.floor(diff / 3600)}h`;
   return `il y a ${Math.floor(diff / 86400)}j`;
@@ -28,7 +28,7 @@ export default function ConnStatus() {
   if (!online) {
     className += ' offline';
     label = 'Hors ligne';
-    if (lastSync) label += ` \u00B7 sync ${formatAgo(lastSync)}`;
+    if (lastSync) label += ` · sync ${formatAgo(lastSync)}`;
   } else if (quality === '2g') {
     className += ' slow';
     label = 'Connexion faible (2G)';

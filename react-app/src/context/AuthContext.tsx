@@ -122,10 +122,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
         if (error) {
           if (error.message.includes('already registered')) {
-            return { error: 'Cet email est d\u00E9j\u00E0 utilis\u00E9' };
+            return { error: 'Cet email est déjà utilisé' };
           }
           if (error.message.includes('Database error')) {
-            return { error: 'Erreur serveur lors de la cr\u00E9ation du compte. Contactez un administrateur.' };
+            return { error: 'Erreur serveur lors de la création du compte. Contactez un administrateur.' };
           }
           return { error: error.message };
         }

@@ -28,14 +28,14 @@ export default function SpouseFieldGroup({
     return (
       <>
         <div className="form-section-title">
-          <span>{'\u{1F491}'} Votre \u00E9poux</span>
+          <span>{'\u{1F491}'} Votre époux</span>
         </div>
         <div className="form-row">
           <div className="form-group">
             <label>Nom</label>
             <input
               type="text"
-              placeholder="Nom de l'\u00E9poux"
+              placeholder="Nom de l'époux"
               value={epoux.nom}
               onChange={(e) => onEpouxChange('nom', e.target.value)}
             />
@@ -44,7 +44,7 @@ export default function SpouseFieldGroup({
             <label>Pr&eacute;nom</label>
             <input
               type="text"
-              placeholder="Pr\u00E9nom de l'\u00E9poux"
+              placeholder="Prénom de l'époux"
               value={epoux.prenom}
               onChange={(e) => onEpouxChange('prenom', e.target.value)}
             />
@@ -57,16 +57,16 @@ export default function SpouseFieldGroup({
   return (
     <>
       <div className="form-section-title">
-        <span>{'\u{1F491}'} Vos \u00E9pouse(s)</span>
+        <span>{'\u{1F491}'} Vos épouse(s)</span>
         <button className="add-child-btn" onClick={onAddSpouse} type="button">
           + Ajouter
         </button>
       </div>
       {spouses.length === 0 ? (
         <div className="no-children">
-          <p>Aucune \u00E9pouse ajout\u00E9e</p>
+          <p>Aucune épouse ajoutée</p>
           <button className="add-first-child" onClick={onAddSpouse} type="button">
-            + Ajouter une \u00E9pouse
+            + Ajouter une épouse
           </button>
         </div>
       ) : (
@@ -97,7 +97,7 @@ export default function SpouseFieldGroup({
                   <label>Pr&eacute;nom</label>
                   <input
                     type="text"
-                    placeholder="Pr\u00E9nom"
+                    placeholder="Prénom"
                     value={sp.prenom}
                     onChange={(e) =>
                       onSpouseChange(idx, 'prenom', e.target.value)
