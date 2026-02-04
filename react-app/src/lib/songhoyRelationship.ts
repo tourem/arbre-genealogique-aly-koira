@@ -4,7 +4,7 @@
  *
  * ÉTAPE 0 : Relation directe (distA = 0) — BABA / NIA / KAAGA
  * CAS 1 : Fratrie (niveauA = niveauB = 1) — ARMA / WAYMA / WEYMA
- * CAS 2 : Cousins (niveauA = niveauB > 1) — PA/PB sex determines type
+ * CAS 2 : Cousins (niveauA = niveauB > 1) — parents directs de A/B determines type
  * CAS 3a: Oncle/Tante (diff = 1) — A.sex + NB.sex determines term
  * CAS 3b: Grand-parent (diff >= 2) — KAAGA levels
  */
@@ -148,9 +148,32 @@ export function findSonghoyRelations(
     }
   }
 
-  if (commonIds.size === 0) return [];
-
   const results: SonghoyRelationResult[] = [];
+
+  // ═══════════════════════════════════════════════
+  // Détection époux / épouse AVANT les ancêtres
+  // ═══════════════════════════════════════════════
+  const spousesA = origA.spouses || [];
+  if (spousesA.includes(personBId)) {
+    const cat = categories['SPOUSE'];
+    if (cat) {
+      const termAtoB = origA.gender === 'M'
+        ? terms['KOURNIO'] || null
+        : terms['ALAA_YANO'] || null;
+      const termBtoA = origB.gender === 'M'
+        ? terms['KOURNIO'] || null
+        : terms['ALAA_YANO'] || null;
+      results.push({
+        commonAncestor: origA,
+        category: cat,
+        termAtoB, termBtoA,
+        pathA: [origA], pathB: [origB],
+        details: { distanceA: 0, distanceB: 0, labelFr: 'Époux' },
+      });
+    }
+  }
+
+  if (commonIds.size === 0) return results;
 
   for (const ancestorId of commonIds) {
     const ancestor = dict[ancestorId];
@@ -278,26 +301,35 @@ export function findSonghoyRelations(
     else if (distA === distB && distA > 1) {
       if (!pa || !pb) continue;
 
-      const sexPA = pa.gender;
-      const sexPB = pb.gender;
+      // Parent direct de A et B sur le chemin (pas l'enfant de l'ancêtre)
+      const parentA = dict[pathA[1]];
+      const parentB = dict[pathB[1]];
+      const sexParentA = parentA?.gender || pa.gender;
+      const sexParentB = parentB?.gender || pb.gender;
 
-      // 2a. PA ♂ et PB ♂ → ARROUHINKAYE IZAY (peres freres)
-      if (sexPA === 'M' && sexPB === 'M') {
+      // 2a. Parents directs ♂♂ → ARROUHINKAYE IZAY (pères frères)
+      // Même niveau = termes de fratrie (BABA est réservé au CAS 3a oncle/neveu)
+      if (sexParentA === 'M' && sexParentB === 'M') {
         catCode = 'COUSINS_PATRI';
         labelFr = 'Cousins patrilateraux — ARROUHINKAYE IZAY';
 
-        const paIsElder = isBranchAElder(pathA, pathB, ancestor);
-        if (paIsElder) {
-          termCodeAtoB = 'BABA_BERO';
-          termCodeBtoA = 'BABA_KATCHA';
+        if (personA.gender === 'M' && personB.gender === 'F') {
+          termCodeAtoB = 'ARMA';
+          termCodeBtoA = 'WAYMA';
+        } else if (personA.gender === 'F' && personB.gender === 'M') {
+          termCodeAtoB = 'WAYMA';
+          termCodeBtoA = 'ARMA';
+        } else if (personA.gender === 'F' && personB.gender === 'F') {
+          termCodeAtoB = 'WEYMA';
+          termCodeBtoA = 'WEYMA';
         } else {
-          termCodeAtoB = 'BABA_KATCHA';
-          termCodeBtoA = 'BABA_BERO';
+          termCodeAtoB = 'ARMA';
+          termCodeBtoA = 'ARMA';
         }
       }
 
-      // 2b. PA ♀ et PB ♀ → WAYUHINKAYE IZAY (meres soeurs)
-      else if (sexPA === 'F' && sexPB === 'F') {
+      // 2b. Parents directs ♀♀ → WAYUHINKAYE IZAY (mères sœurs)
+      else if (sexParentA === 'F' && sexParentB === 'F') {
         catCode = 'COUSINS_MATRI';
         labelFr = 'Cousins matrilateraux — WAYUHINKAYE IZAY';
 
