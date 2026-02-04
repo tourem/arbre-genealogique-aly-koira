@@ -44,7 +44,7 @@ export default function RecherchePage() {
 
   return (
     <div className="page active">
-      <div className="scroll">
+      <div className="scroll" tabIndex={0}>
         <SearchBar value={query} onChange={setQuery} />
         <div className="person-list">
           {filteredMembers.map((p) => (

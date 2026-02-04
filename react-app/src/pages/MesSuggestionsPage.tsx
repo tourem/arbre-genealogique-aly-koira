@@ -40,7 +40,7 @@ export default function MesSuggestionsPage() {
   if (loading) {
     return (
       <div className="page active">
-        <div className="scroll">
+        <div className="scroll" tabIndex={0}>
           <p>Chargement...</p>
         </div>
       </div>

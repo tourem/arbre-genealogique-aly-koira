@@ -131,7 +131,7 @@ export default function ContribuerPage() {
 
   return (
     <div className="page active">
-      <div className="scroll">
+      <div className="scroll" tabIndex={0}>
         <h2 className="page-title">
           Contribuer à l&apos;arbre
         </h2>

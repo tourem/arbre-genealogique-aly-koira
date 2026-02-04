@@ -82,7 +82,7 @@ export default function FamillePage() {
   if (loading) {
     return (
       <div className="page active fiche-sh">
-        <div className="scroll">
+        <div className="scroll" tabIndex={0}>
           <FicheSkeleton />
         </div>
       </div>
@@ -107,7 +107,7 @@ export default function FamillePage() {
 
   return (
     <div className="page active fiche-sh">
-      <div className="scroll" ref={scrollRef}>
+      <div className="scroll" ref={scrollRef} tabIndex={0}>
         <MemberSearch
           members={members}
           currentPersonId={currentPersonId}

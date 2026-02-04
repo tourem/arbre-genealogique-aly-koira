@@ -39,6 +39,45 @@ function emptyNewTerm(categoryCode: string): NewTerm {
   };
 }
 
+/* --- Category color/icon palette (assigned by index) --- */
+const colorPalette = ['gold', 'green', 'terra', 'blue', 'violet'] as const;
+const iconPalette = ['\u25B2', '\u25C6', '\u2550', '\u2295', '\u25CF', '\u25C8', '\u2726', '\u25A0', '\u2666', '\u2740', '\u2605'];
+
+function getCatStyle(index: number) {
+  return {
+    color: colorPalette[index % colorPalette.length],
+    icon: iconPalette[index % iconPalette.length],
+  };
+}
+
+/* --- Direction formatting --- */
+function formatDirection(
+  speaker: string,
+  target: string,
+): { from: string; to: string } | null {
+  if (speaker === 'ANY' && target === 'ANY') return null;
+  const from =
+    speaker === 'M' ? 'Homme' : speaker === 'F' ? 'Femme' : 'Tous';
+  const to = target === 'M' ? 'Homme' : target === 'F' ? 'Femme' : 'Tous';
+  return { from, to };
+}
+
+/* --- Arrow SVG (inline) --- */
+function ArrowSvg() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14M12 5l7 7-7 7" />
+    </svg>
+  );
+}
+
 export default function TermsManagementSection() {
   const [categories, setCategories] = useState<RelationCategory[]>([]);
   const [terms, setTerms] = useState<RelationTerm[]>([]);
@@ -48,6 +87,7 @@ export default function TermsManagementSection() {
   const [adding, setAdding] = useState<NewTerm | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -72,7 +112,18 @@ export default function TermsManagementSection() {
   }, [loadData]);
 
   const termsForCategory = (code: string) =>
-    terms.filter((t) => t.category_code === code);
+    terms.filter((t) => {
+      if (t.category_code !== code) return false;
+      if (search) {
+        const q = search.toLowerCase();
+        return (
+          t.term_songhoy.toLowerCase().includes(q) ||
+          t.label_fr.toLowerCase().includes(q) ||
+          (t.prononciation?.toLowerCase().includes(q) ?? false)
+        );
+      }
+      return true;
+    });
 
   const toggleCategory = (code: string) => {
     setExpandedCat(expandedCat === code ? null : code);
@@ -173,7 +224,11 @@ export default function TermsManagementSection() {
   const saveNewTerm = async () => {
     if (!adding) return;
 
-    if (!adding.term_code.trim() || !adding.term_songhoy.trim() || !adding.label_fr.trim()) {
+    if (
+      !adding.term_code.trim() ||
+      !adding.term_songhoy.trim() ||
+      !adding.label_fr.trim()
+    ) {
       setError('Code, terme Songhoy et traduction FR sont obligatoires.');
       return;
     }
@@ -181,8 +236,13 @@ export default function TermsManagementSection() {
     setSaving(true);
     setError(null);
 
-    const catTerms = termsForCategory(adding.category_code);
-    const maxOrder = catTerms.reduce((max, t) => Math.max(max, t.display_order), 0);
+    const catTerms = terms.filter(
+      (t) => t.category_code === adding.category_code,
+    );
+    const maxOrder = catTerms.reduce(
+      (max, t) => Math.max(max, t.display_order),
+      0,
+    );
 
     const { data, error: insertErr } = await supabase
       .from('relation_terms')
@@ -205,7 +265,7 @@ export default function TermsManagementSection() {
     if (insertErr) {
       setError(
         insertErr.message.includes('unique')
-          ? `Le code "${adding.term_code.toUpperCase()}" existe deja.`
+          ? `Le code "${adding.term_code.toUpperCase()}" existe déjà.`
           : insertErr.message,
       );
       setSaving(false);
@@ -273,175 +333,198 @@ export default function TermsManagementSection() {
 
   if (loading) return <p>Chargement des termes...</p>;
 
+  /* KPIs */
+  const totalTerms = terms.length;
+  const totalCats = categories.length;
+
   return (
-    <div className="admin-section terms-management">
-      <p className="terms-intro">
-        Gerez les termes de parente Songhoy utilises dans le calcul des
-        relations familiales.
-      </p>
+    <div className="admin-section">
+      {/* KPIs */}
+      <div className="adm-kpis">
+        <div className="adm-kpi gold">
+          <strong>{totalTerms}</strong> termes
+        </div>
+        <div className="adm-kpi blue">
+          <strong>{totalCats}</strong> cat&eacute;gories
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className="adm-toolbar">
+        <input
+          type="text"
+          className="adm-search"
+          placeholder="Rechercher un terme..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
 
       {error && <p className="terms-error">{error}</p>}
 
-      <div className="terms-categories-list">
-        {categories.map((cat) => {
+      {/* Categories */}
+      <div className="adm-rows">
+        {categories.map((cat, catIndex) => {
+          const style = getCatStyle(catIndex);
           const catTerms = termsForCategory(cat.code);
+          const allCatTerms = terms.filter(
+            (t) => t.category_code === cat.code,
+          );
           const isExpanded = expandedCat === cat.code;
 
           return (
-            <div key={cat.code} className="terms-category-block">
+            <div key={cat.code}>
               <button
-                className={`terms-category-header${isExpanded ? ' expanded' : ''}`}
+                className={`adm-cat-header ${style.color}${isExpanded ? ' expanded' : ''}`}
                 onClick={() => toggleCategory(cat.code)}
                 type="button"
               >
-                <div className="terms-category-info">
-                  <span className="terms-category-label">
-                    {cat.label_songhoy && (
-                      <span className="terms-category-songhoy-label">
-                        {cat.label_songhoy}
-                        {' — '}
-                      </span>
-                    )}
-                    {cat.label_fr}
+                <span className="adm-cat-icon">{style.icon}</span>
+                <div className="adm-cat-info">
+                  <span className={`adm-cat-title ${style.color}`}>
+                    {cat.label_songhoy || cat.label_fr}
                   </span>
-                  <span className="terms-category-count">
-                    {catTerms.length} terme{catTerms.length > 1 ? 's' : ''}
-                  </span>
+                  {cat.label_songhoy && (
+                    <span className="adm-cat-sub">{cat.label_fr}</span>
+                  )}
                 </div>
-                <span className="terms-category-chevron">
-                  {isExpanded ? '\u25B2' : '\u25BC'}
+                <span className={`adm-cat-count ${style.color}`}>
+                  {allCatTerms.length}
                 </span>
+                <span className="adm-cat-chevron">&#x25BC;</span>
               </button>
 
               {isExpanded && (
-                <div className="terms-category-body">
+                <div className="adm-cat-body">
                   {cat.description && (
-                    <p className="terms-category-desc">{cat.description}</p>
+                    <p className="adm-cat-desc">{cat.description}</p>
                   )}
 
-                  <div className="terms-list">
-                    {catTerms.map((term) => {
-                      const isEditing = editing?.id === term.id;
+                  {catTerms.map((term) => {
+                    const isEditing = editing?.id === term.id;
 
-                      if (isEditing && editing) {
-                        return (
-                          <div key={term.id} className="term-card editing">
-                            <TermForm
-                              mode="edit"
-                              values={{
-                                term_code: term.term_code,
-                                term_songhoy: editing.term_songhoy,
-                                prononciation: editing.prononciation,
-                                label_fr: editing.label_fr,
-                                description: editing.description,
-                                speaker_gender: editing.speaker_gender,
-                                target_gender: editing.target_gender,
-                                context_condition: editing.context_condition,
-                              }}
-                              onChange={(field, value) =>
-                                setEditing({ ...editing, [field]: value })
-                              }
-                              onSave={saveEdit}
-                              onCancel={cancelEdit}
-                              saving={saving}
-                            />
-                          </div>
-                        );
-                      }
-
+                    if (isEditing && editing) {
                       return (
-                        <div
-                          key={term.id}
-                          className={`term-card${!term.is_active ? ' inactive' : ''}`}
-                        >
-                          <div className="term-card-main">
-                            <div className="term-card-left">
-                              <span className="term-card-code">
-                                {term.term_code}
-                              </span>
-                              <span className="term-card-songhoy">
-                                {term.term_songhoy}
-                              </span>
-                              {term.prononciation && (
-                                <span className="term-card-prononciation">
-                                  [{term.prononciation}]
-                                </span>
-                              )}
-                            </div>
-                            <div className="term-card-right">
-                              <span className="term-card-label-fr">
-                                {term.label_fr}
-                              </span>
-                              <span className="term-card-gender-info">
-                                {term.speaker_gender !== 'ANY'
-                                  ? term.speaker_gender === 'M'
-                                    ? 'Loc: H'
-                                    : 'Loc: F'
-                                  : ''}
-                                {term.target_gender !== 'ANY'
-                                  ? ` \u2192 ${term.target_gender === 'M' ? 'H' : 'F'}`
-                                  : ''}
-                              </span>
-                              {term.context_condition && (
-                                <span className="term-card-context">
-                                  {term.context_condition}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <div className="term-card-actions">
-                            <button
-                              className="btn-edit"
-                              onClick={() => startEdit(term)}
-                              type="button"
-                            >
-                              Modifier
-                            </button>
-                            <button
-                              className={`btn-toggle-active${term.is_active ? '' : ' activate'}`}
-                              onClick={() => toggleActive(term)}
-                              type="button"
-                            >
-                              {term.is_active ? 'Desactiver' : 'Activer'}
-                            </button>
-                          </div>
+                        <div key={term.id} className="term-card editing">
+                          <TermForm
+                            mode="edit"
+                            values={{
+                              term_code: term.term_code,
+                              term_songhoy: editing.term_songhoy,
+                              prononciation: editing.prononciation,
+                              label_fr: editing.label_fr,
+                              description: editing.description,
+                              speaker_gender: editing.speaker_gender,
+                              target_gender: editing.target_gender,
+                              context_condition: editing.context_condition,
+                            }}
+                            onChange={(field, value) =>
+                              setEditing({ ...editing, [field]: value })
+                            }
+                            onSave={saveEdit}
+                            onCancel={cancelEdit}
+                            saving={saving}
+                          />
                         </div>
                       );
-                    })}
+                    }
 
-                    {/* Add new term form */}
-                    {adding && adding.category_code === cat.code ? (
-                      <div className="term-card editing adding">
-                        <TermForm
-                          mode="add"
-                          values={{
-                            term_code: adding.term_code,
-                            term_songhoy: adding.term_songhoy,
-                            prononciation: adding.prononciation,
-                            label_fr: adding.label_fr,
-                            description: adding.description,
-                            speaker_gender: adding.speaker_gender,
-                            target_gender: adding.target_gender,
-                            context_condition: adding.context_condition,
-                          }}
-                          onChange={(field, value) =>
-                            setAdding({ ...adding, [field]: value })
-                          }
-                          onSave={saveNewTerm}
-                          onCancel={cancelAdd}
-                          saving={saving}
-                        />
-                      </div>
-                    ) : (
-                      <button
-                        className="btn-add-term"
-                        onClick={() => startAdd(cat.code)}
-                        type="button"
+                    const dir = formatDirection(
+                      term.speaker_gender,
+                      term.target_gender,
+                    );
+
+                    return (
+                      <div
+                        key={term.id}
+                        className={`adm-term ${style.color}${!term.is_active ? ' inactive' : ''}`}
                       >
-                        + Ajouter un terme
-                      </button>
-                    )}
-                  </div>
+                        <div className="adm-term-main">
+                          <span
+                            className={`adm-term-songhoy ${style.color}`}
+                          >
+                            {term.term_songhoy}
+                          </span>
+                          {term.prononciation && (
+                            <span className="adm-term-prononciation">
+                              [{term.prononciation}]
+                            </span>
+                          )}
+                          <span className="adm-term-fr">
+                            {term.label_fr}
+                          </span>
+                          {dir && (
+                            <span className="adm-term-dir">
+                              {dir.from} <ArrowSvg /> {dir.to}
+                            </span>
+                          )}
+                          {term.context_condition && (
+                            <span className="adm-term-context">
+                              {term.context_condition}
+                            </span>
+                          )}
+                          {term.description && (
+                            <p className="adm-term-desc">
+                              {term.description}
+                            </p>
+                          )}
+                        </div>
+                        <div className="adm-acts">
+                          <button
+                            onClick={() => startEdit(term)}
+                            title="Modifier"
+                            type="button"
+                          >
+                            &#x270E;
+                          </button>
+                          <button
+                            onClick={() => toggleActive(term)}
+                            title={
+                              term.is_active
+                                ? 'Désactiver'
+                                : 'Activer'
+                            }
+                            type="button"
+                          >
+                            {term.is_active ? '\u25CF' : '\u25CB'}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Add new term form */}
+                  {adding && adding.category_code === cat.code ? (
+                    <div className="term-card editing adding">
+                      <TermForm
+                        mode="add"
+                        values={{
+                          term_code: adding.term_code,
+                          term_songhoy: adding.term_songhoy,
+                          prononciation: adding.prononciation,
+                          label_fr: adding.label_fr,
+                          description: adding.description,
+                          speaker_gender: adding.speaker_gender,
+                          target_gender: adding.target_gender,
+                          context_condition: adding.context_condition,
+                        }}
+                        onChange={(field, value) =>
+                          setAdding({ ...adding, [field]: value })
+                        }
+                        onSave={saveNewTerm}
+                        onCancel={cancelAdd}
+                        saving={saving}
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      className="btn-add-term"
+                      onClick={() => startAdd(cat.code)}
+                      type="button"
+                    >
+                      + Ajouter un terme
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -520,7 +603,7 @@ function TermForm({
           value={values.label_fr}
           onChange={(e) => onChange('label_fr', e.target.value)}
           className="term-edit-input"
-          placeholder="Ex: Grand-pere"
+          placeholder="Ex: Grand-père"
         />
       </div>
       <div className="term-edit-row">
@@ -551,7 +634,7 @@ function TermForm({
             onChange={(e) => onChange('speaker_gender', e.target.value)}
             className="term-edit-input"
           >
-            <option value="ANY">Indifferent</option>
+            <option value="ANY">Indiff&eacute;rent</option>
             <option value="M">Homme</option>
             <option value="F">Femme</option>
           </select>
@@ -563,7 +646,7 @@ function TermForm({
             onChange={(e) => onChange('target_gender', e.target.value)}
             className="term-edit-input"
           >
-            <option value="ANY">Indifferent</option>
+            <option value="ANY">Indiff&eacute;rent</option>
             <option value="M">Homme</option>
             <option value="F">Femme</option>
           </select>
@@ -579,14 +662,10 @@ function TermForm({
           {saving
             ? 'Enregistrement...'
             : mode === 'add'
-              ? 'Creer'
+              ? 'Créer'
               : 'Enregistrer'}
         </button>
-        <button
-          className="btn-reject"
-          onClick={onCancel}
-          type="button"
-        >
+        <button className="btn-reject" onClick={onCancel} type="button">
           Annuler
         </button>
       </div>

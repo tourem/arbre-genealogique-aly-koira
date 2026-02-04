@@ -37,7 +37,7 @@ export default function ParentePage() {
 
   return (
     <div className="page active parente-page">
-      <div className="scroll">
+      <div className="scroll" tabIndex={0}>
         <div className="parente-hdr">
           <div className="parente-hdr-i">{'\uD83C\uDF33'}</div>
           <div>
