@@ -92,11 +92,11 @@ export default function FamillePage() {
   const person = members[currentPersonId];
   if (!person) return null;
 
-  const kids = (person.children || [])
+  const kids = [...new Set(person.children || [])]
     .filter((c) => members[c])
     .map((c) => members[c]);
 
-  const spouseCount = (person.spouses || []).length;
+  const spouseCount = new Set(person.spouses || []).size;
   const childrenCount = kids.length;
 
   const handleAddSaved = async () => {

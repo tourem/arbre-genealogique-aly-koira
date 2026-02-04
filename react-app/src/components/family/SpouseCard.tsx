@@ -15,7 +15,7 @@ function getInitials(name: string): string {
 }
 
 function countChildrenForSpouse(person: Member, spouseId: string, members: MemberDict): number {
-  const kids = (person.children || []).filter((c) => members[c]);
+  const kids = [...new Set(person.children || [])].filter((c) => members[c]);
   return kids.filter((c) => {
     const child = members[c];
     return child.mother_ref === spouseId;
@@ -23,7 +23,7 @@ function countChildrenForSpouse(person: Member, spouseId: string, members: Membe
 }
 
 export default function SpouseCard({ person, members, onNavigate, onInfo, onAddSpouse }: Props) {
-  const spouses = person.spouses || [];
+  const spouses = [...new Set(person.spouses || [])];
 
   if (spouses.length === 0 && !onAddSpouse) return null;
 

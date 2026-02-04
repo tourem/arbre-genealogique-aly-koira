@@ -61,7 +61,7 @@ function WifeGroup({ motherName, children, members, onNavigate, onInfo }: WifeGr
 }
 
 export default function ChildrenByMother({ person, kids, members, onNavigate, onInfo, onAddChild }: Props) {
-  const spouses = person.spouses || [];
+  const spouses = [...new Set(person.spouses || [])];
 
   // Group by mother when male with multiple spouses
   if (spouses.length > 1 && person.gender === 'M') {

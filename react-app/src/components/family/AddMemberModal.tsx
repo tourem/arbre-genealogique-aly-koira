@@ -287,7 +287,7 @@ export default function AddMemberModal({ mode, person, members, onClose, onSaved
       if (mode === 'child') {
         await supabase
           .from('members')
-          .update({ children: [...(person.children || []), newId] })
+          .update({ children: [...new Set([...(person.children || []), newId])] })
           .eq('id', person.id);
 
         const otherParentId = person.gender === 'M'
@@ -297,13 +297,13 @@ export default function AddMemberModal({ mode, person, members, onClose, onSaved
           const otherParent = members[otherParentId];
           await supabase
             .from('members')
-            .update({ children: [...(otherParent.children || []), newId] })
+            .update({ children: [...new Set([...(otherParent.children || []), newId])] })
             .eq('id', otherParentId);
         }
       } else if (mode === 'spouse') {
         await supabase
           .from('members')
-          .update({ spouses: [...(person.spouses || []), newId] })
+          .update({ spouses: [...new Set([...(person.spouses || []), newId])] })
           .eq('id', person.id);
 
         // Assign selected children to the new spouse
@@ -386,7 +386,7 @@ export default function AddMemberModal({ mode, person, members, onClose, onSaved
         // Append to person.children
         await supabase
           .from('members')
-          .update({ children: [...(person.children || []), selectedExistingId] })
+          .update({ children: [...new Set([...(person.children || []), selectedExistingId])] })
           .eq('id', person.id);
 
         // Append to other parent's children too
@@ -397,14 +397,14 @@ export default function AddMemberModal({ mode, person, members, onClose, onSaved
           const otherParent = members[otherParentId];
           await supabase
             .from('members')
-            .update({ children: [...(otherParent.children || []), selectedExistingId] })
+            .update({ children: [...new Set([...(otherParent.children || []), selectedExistingId])] })
             .eq('id', otherParentId);
         }
       } else if (mode === 'spouse') {
         // Mutual append in spouses arrays
         await supabase
           .from('members')
-          .update({ spouses: [...(person.spouses || []), selectedExistingId] })
+          .update({ spouses: [...new Set([...(person.spouses || []), selectedExistingId])] })
           .eq('id', person.id);
 
         await supabase
