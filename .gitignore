@@ -2,13 +2,16 @@ node_modules/
 dist/
 .env
 .pid
+.DS_Store
 
 # IDE
 .idea/
 
 # Fichiers sensibles
 donnes-sensibles-a-ne-pas-commiter.txt
-react-app/scripts/create-users.sql
+
+# Donnees sensibles (credentials, donnees familiales)
+scripts/sql/data/
 
 # Debug
 react-app/debug/
@@ -18,4 +21,3 @@ react-app/node_modules/
 react-app/dist/
 react-app/.env
 react-app/.vite-dev.pid
-react-app/scripts/members-extracted.json
