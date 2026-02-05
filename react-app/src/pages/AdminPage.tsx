@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useMembersContext } from '../context/MembersContext';
 import type { Suggestion, UserProfile, Member } from '../lib/types';
 import MemberFormModal from '../components/admin/MemberFormModal';
+import MergeModal from '../components/admin/MergeModal';
 import TermsManagementSection from '../components/admin/TermsManagementSection';
 
 type AdminTab = 'suggestions' | 'members' | 'users' | 'terms';
@@ -156,11 +157,13 @@ function MembersSection({
 }) {
   const [editMember, setEditMember] = useState<Member | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showMergeModal, setShowMergeModal] = useState(false);
   const [search, setSearch] = useState('');
   const [genderFilter, setGenderFilter] = useState<'all' | 'M' | 'F'>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [confirmDelete, setConfirmDelete] = useState<Member | null>(null);
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
+  const [toolbarMenuOpen, setToolbarMenuOpen] = useState(false);
   const PAGE_SIZE = 20;
 
   const memberList = Object.values(members);
@@ -226,9 +229,9 @@ function MembersSection({
     setEditMember(m);
     setShowModal(true);
   };
-  const handleSaved = () => {
+  const handleSaved = async () => {
+    await refetch();
     setShowModal(false);
-    void refetch();
   };
 
   /* Helpers */
@@ -292,6 +295,28 @@ function MembersSection({
               {l}
             </button>
           ))}
+        </div>
+        <div className="adm-toolbar-actions">
+          <button
+            className="adm-btn-more"
+            onClick={() => setToolbarMenuOpen(!toolbarMenuOpen)}
+            type="button"
+            title="Actions avancées"
+          >
+            &hellip;
+          </button>
+          {toolbarMenuOpen && (
+            <div className="adm-toolbar-menu">
+              <button
+                onClick={() => {
+                  setToolbarMenuOpen(false);
+                  setShowMergeModal(true);
+                }}
+              >
+                &#x1F517; Fusionner deux membres
+              </button>
+            </div>
+          )}
         </div>
         <button className="adm-btn-add" onClick={openAdd} type="button">
           + Ajouter
@@ -441,6 +466,17 @@ function MembersSection({
           member={editMember}
           onClose={() => setShowModal(false)}
           onSaved={handleSaved}
+        />
+      )}
+
+      {showMergeModal && (
+        <MergeModal
+          members={members}
+          onClose={() => setShowMergeModal(false)}
+          onMerged={async () => {
+            await refetch();
+            setShowMergeModal(false);
+          }}
         />
       )}
     </div>
