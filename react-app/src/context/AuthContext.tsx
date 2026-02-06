@@ -9,13 +9,39 @@ import {
 import { supabase } from '../lib/supabase';
 import type { UserProfile } from '../lib/types';
 
+interface LoginResult {
+  error?: string;
+  notActivated?: boolean;
+  email?: string;
+  displayName?: string;
+}
+
+interface SignupResult {
+  error?: string;
+  needsActivation?: boolean;
+}
+
+interface ResetPasswordResult {
+  error?: string;
+  success?: boolean;
+}
+
+interface UpdatePasswordResult {
+  error?: string;
+  success?: boolean;
+}
+
 interface AuthContextType {
   user: UserProfile | null;
   loading: boolean;
   isAdmin: boolean;
-  login: (email: string, password: string) => Promise<{ error?: string }>;
-  signup: (email: string, password: string, displayName: string) => Promise<{ error?: string }>;
+  isActive: boolean;
+  isRecoveryMode: boolean;
+  login: (email: string, password: string) => Promise<LoginResult>;
+  signup: (email: string, password: string, displayName: string) => Promise<SignupResult>;
   logout: () => Promise<void>;
+  resetPassword: (email: string) => Promise<ResetPasswordResult>;
+  updatePassword: (newPassword: string) => Promise<UpdatePasswordResult>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -24,7 +50,7 @@ async function fetchProfile(userId: string): Promise<UserProfile | null> {
   try {
     const { data, error } = await supabase
       .from('profiles')
-      .select('id, email, display_name, role')
+      .select('id, email, display_name, role, is_active')
       .eq('id', userId)
       .single();
 
@@ -38,19 +64,36 @@ async function fetchProfile(userId: string): Promise<UserProfile | null> {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
 
   // --- Demarrage : verifier la session existante ---
   useEffect(() => {
     let cancelled = false;
 
+    // Vérifier si on est en mode recovery via le hash de l'URL
+    const checkRecoveryFromUrl = () => {
+      const hash = window.location.hash;
+      if (hash && hash.includes('type=recovery')) {
+        setIsRecoveryMode(true);
+        return true;
+      }
+      return false;
+    };
+
     async function init() {
+      // Vérifier le mode recovery en premier
+      const isRecovery = checkRecoveryFromUrl();
+
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (cancelled) return;
 
         if (session?.user) {
-          const profile = await fetchProfile(session.user.id);
-          if (!cancelled) setUser(profile);
+          // Si on est en mode recovery, ne pas charger le profil complet
+          if (!isRecovery) {
+            const profile = await fetchProfile(session.user.id);
+            if (!cancelled) setUser(profile);
+          }
         }
       } catch {
         // Session corrompue/expiree — on la nettoie
@@ -62,12 +105,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     init();
 
-    // Ecouter logout et refresh token (pas utilise pour le login)
+    // Ecouter logout, refresh token et password recovery
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         if (cancelled) return;
+        if (event === 'PASSWORD_RECOVERY') {
+          // L'utilisateur a cliqué sur le lien de réinitialisation
+          setIsRecoveryMode(true);
+        }
         if (!session) {
           setUser(null);
+          setIsRecoveryMode(false);
         }
       },
     );
@@ -80,7 +128,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // --- Login : signIn + fetch profil dans le meme appel ---
   const login = useCallback(
-    async (email: string, password: string): Promise<{ error?: string }> => {
+    async (email: string, password: string): Promise<LoginResult> => {
       try {
         // Nettoyer toute session perimee avant de se connecter
         await supabase.auth.signOut().catch(() => {});
@@ -88,7 +136,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
-          if (error.message === 'Invalid login credentials') {
+          // Si erreur d'authentification, vérifier si c'est un compte non activé
+          if (error.message === 'Invalid login credentials' || error.message === 'Email not confirmed') {
+            try {
+              // Vérifier si un profil existe avec cet email et n'est pas activé
+              const { data: activationData, error: rpcError } = await supabase
+                .rpc('check_account_activation', { user_email: email });
+
+              console.log('Activation check:', { email, activationData, rpcError });
+
+              if (!rpcError && activationData) {
+                // Le résultat peut être un tableau ou un objet unique
+                const result = Array.isArray(activationData) ? activationData[0] : activationData;
+                if (result && result.is_inactive === true) {
+                  return {
+                    notActivated: true,
+                    email: email,
+                    displayName: result.display_name || '',
+                  };
+                }
+              }
+            } catch (rpcErr) {
+              console.error('RPC error:', rpcErr);
+            }
+
             return { error: 'Email ou mot de passe incorrect' };
           }
           return { error: error.message };
@@ -98,6 +169,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (data.user) {
           const profile = await fetchProfile(data.user.id);
           if (profile) {
+            // Vérifier si le compte est activé
+            if (!profile.is_active) {
+              // Déconnecter l'utilisateur car son compte n'est pas activé
+              await supabase.auth.signOut().catch(() => {});
+              return {
+                notActivated: true,
+                email: profile.email,
+                displayName: profile.display_name,
+              };
+            }
             setUser(profile);
           } else {
             return { error: 'Profil introuvable. Contactez un administrateur.' };
@@ -113,7 +194,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const signup = useCallback(
-    async (email: string, password: string, displayName: string): Promise<{ error?: string }> => {
+    async (email: string, password: string, displayName: string): Promise<SignupResult> => {
       try {
         const { error } = await supabase.auth.signUp({
           email,
@@ -122,16 +203,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
         if (error) {
           if (error.message.includes('already registered')) {
-            return { error: 'Cet email est déjà utilisé' };
+            return { error: 'Un compte existe déjà avec cette adresse email. Essayez de vous connecter.' };
           }
           if (error.message.includes('Database error')) {
             return { error: 'Erreur serveur lors de la création du compte. Contactez un administrateur.' };
           }
           return { error: error.message };
         }
-        return {};
+        // Inscription réussie - le compte doit être activé par un admin
+        return { needsActivation: true };
       } catch (err) {
         return { error: err instanceof Error ? err.message : 'Erreur lors de l\'inscription' };
+      }
+    },
+    [],
+  );
+
+  const resetPassword = useCallback(
+    async (email: string): Promise<ResetPasswordResult> => {
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}`,
+        });
+        if (error) {
+          return { error: error.message };
+        }
+        return { success: true };
+      } catch (err) {
+        return { error: err instanceof Error ? err.message : 'Erreur lors de l\'envoi' };
+      }
+    },
+    [],
+  );
+
+  const updatePassword = useCallback(
+    async (newPassword: string): Promise<UpdatePasswordResult> => {
+      try {
+        const { error } = await supabase.auth.updateUser({ password: newPassword });
+        if (error) {
+          return { error: error.message };
+        }
+        setIsRecoveryMode(false);
+        return { success: true };
+      } catch (err) {
+        return { error: err instanceof Error ? err.message : 'Erreur lors de la mise à jour' };
       }
     },
     [],
@@ -142,12 +257,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await supabase.auth.signOut();
     } catch { /* ignore */ }
     setUser(null);
+    setIsRecoveryMode(false);
   }, []);
 
   const isAdmin = user?.role === 'admin';
+  const isActive = user?.is_active ?? false;
 
   return (
-    <AuthContext.Provider value={{ user, loading, isAdmin, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin, isActive, isRecoveryMode, login, signup, logout, resetPassword, updatePassword }}>
       {children}
     </AuthContext.Provider>
   );

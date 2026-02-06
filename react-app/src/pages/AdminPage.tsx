@@ -4,13 +4,15 @@ import { useMembersContext } from '../context/MembersContext';
 import type { Suggestion, UserProfile, Member } from '../lib/types';
 import MemberFormModal from '../components/admin/MemberFormModal';
 import MergeModal from '../components/admin/MergeModal';
+import MergeHistorySection from '../components/admin/MergeHistorySection';
 import TermsManagementSection from '../components/admin/TermsManagementSection';
 
-type AdminTab = 'suggestions' | 'members' | 'users' | 'terms';
+type AdminTab = 'suggestions' | 'members' | 'history' | 'users' | 'terms';
 
 const TAB_LABELS: Record<AdminTab, string> = {
   suggestions: 'Suggestions',
   members: 'Membres',
+  history: 'Fusions',
   users: 'Utilisateurs',
   terms: 'Termes',
 };
@@ -25,7 +27,7 @@ export default function AdminPage() {
         <h2 className="page-title">Administration</h2>
 
         <div className="adm-tabs">
-          {(['suggestions', 'members', 'users', 'terms'] as AdminTab[]).map((t) => (
+          {(['suggestions', 'members', 'history', 'users', 'terms'] as AdminTab[]).map((t) => (
             <button
               key={t}
               className={`adm-tab${tab === t ? ' active' : ''}`}
@@ -41,6 +43,7 @@ export default function AdminPage() {
         {tab === 'members' && (
           <MembersSection members={members} refetch={refetchMembers} />
         )}
+        {tab === 'history' && <MergeHistorySection onReverted={refetchMembers} />}
         {tab === 'users' && <UsersSection />}
         {tab === 'terms' && <TermsManagementSection />}
       </div>
@@ -464,6 +467,7 @@ function MembersSection({
       {showModal && (
         <MemberFormModal
           member={editMember}
+          members={members}
           onClose={() => setShowModal(false)}
           onSaved={handleSaved}
         />
@@ -484,23 +488,27 @@ function MembersSection({
 }
 
 /* ---- Gestion des utilisateurs — redesign ---- */
+type StatusFilter = 'all' | 'active' | 'pending';
+type UserAction = 'activate' | 'deactivate' | 'promote' | 'demote' | 'delete' | 'reset_password';
+
 function UsersSection() {
   const [profiles, setProfiles] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState<'all' | 'admin' | 'user'>(
-    'all',
-  );
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [menuOpen, setMenuOpen] = useState<string | null>(null);
+  const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
   const [confirmAction, setConfirmAction] = useState<{
     profile: UserProfile;
-    newRole: 'admin' | 'user';
+    action: UserAction;
   } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const loadProfiles = useCallback(async () => {
     const { data } = await supabase
       .from('profiles')
-      .select('id, email, display_name, role')
-      .order('created_at', { ascending: true });
+      .select('id, email, display_name, role, is_active')
+      .order('created_at', { ascending: false });
     setProfiles((data as UserProfile[]) || []);
     setLoading(false);
   }, []);
@@ -509,22 +517,77 @@ function UsersSection() {
     loadProfiles();
   }, [loadProfiles]);
 
-  const toggleRole = async (profile: UserProfile) => {
-    const newRole = profile.role === 'admin' ? 'user' : 'admin';
-    await supabase
-      .from('profiles')
-      .update({ role: newRole })
-      .eq('id', profile.id);
+  const executeAction = async (profile: UserProfile, action: string) => {
+    switch (action) {
+      case 'activate':
+        await supabase.from('profiles').update({ is_active: true }).eq('id', profile.id);
+        break;
+      case 'deactivate':
+        await supabase.from('profiles').update({ is_active: false }).eq('id', profile.id);
+        break;
+      case 'promote':
+        await supabase.from('profiles').update({ role: 'admin' }).eq('id', profile.id);
+        break;
+      case 'demote':
+        await supabase.from('profiles').update({ role: 'user' }).eq('id', profile.id);
+        break;
+      case 'delete':
+        // Delete profile (le compte auth restera mais sera inutilisable)
+        await supabase.from('profiles').delete().eq('id', profile.id);
+        break;
+      case 'reset_password':
+        // Envoyer un email de réinitialisation de mot de passe
+        const { error } = await supabase.auth.resetPasswordForEmail(profile.email, {
+          redirectTo: window.location.origin,
+        });
+        if (error) {
+          setToast({ message: `Erreur: ${error.message}`, type: 'error' });
+        } else {
+          setToast({ message: `Email de réinitialisation envoyé à ${profile.email}`, type: 'success' });
+        }
+        setTimeout(() => setToast(null), 5000);
+        break;
+    }
     loadProfiles();
   };
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (menuOpen) {
+        setMenuOpen(null);
+        setMenuPosition(null);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [menuOpen]);
+
+  // Open menu with position
+  const openMenu = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (menuOpen === id) {
+      setMenuOpen(null);
+      setMenuPosition(null);
+    } else {
+      const rect = (e.target as HTMLElement).getBoundingClientRect();
+      setMenuPosition({
+        top: rect.bottom + 4,
+        left: rect.right - 160,
+      });
+      setMenuOpen(id);
+    }
+  };
+
   /* KPIs */
+  const activeCount = profiles.filter((p) => p.is_active).length;
+  const pendingCount = profiles.filter((p) => !p.is_active).length;
   const adminCount = profiles.filter((p) => p.role === 'admin').length;
-  const memberCount = profiles.filter((p) => p.role === 'user').length;
 
   /* Filtering */
   const filtered = profiles.filter((p) => {
-    if (roleFilter !== 'all' && p.role !== roleFilter) return false;
+    if (statusFilter === 'active' && !p.is_active) return false;
+    if (statusFilter === 'pending' && p.is_active) return false;
     if (
       search &&
       !p.display_name?.toLowerCase().includes(search.toLowerCase()) &&
@@ -545,6 +608,37 @@ function UsersSection() {
     return p.email[0].toUpperCase();
   };
 
+  const getActionLabel = (action: string) => {
+    switch (action) {
+      case 'activate': return 'Activer le compte';
+      case 'deactivate': return 'Désactiver le compte';
+      case 'promote': return 'Passer en Admin';
+      case 'demote': return 'Passer en Membre';
+      case 'delete': return 'Supprimer le compte';
+      case 'reset_password': return 'Réinitialiser le mot de passe';
+      default: return '';
+    }
+  };
+
+  const getActionDescription = (action: string) => {
+    switch (action) {
+      case 'activate':
+        return "Cet utilisateur pourra accéder à l'application.";
+      case 'deactivate':
+        return "Cet utilisateur ne pourra plus accéder à l'application.";
+      case 'promote':
+        return "Cet utilisateur aura accès à toutes les fonctions d'administration.";
+      case 'demote':
+        return "Cet utilisateur perdra ses droits d'administration.";
+      case 'delete':
+        return "Cette action est irréversible. Le profil sera supprimé et l'utilisateur ne pourra plus se connecter.";
+      case 'reset_password':
+        return "Un email sera envoyé à cet utilisateur avec un lien pour réinitialiser son mot de passe.";
+      default:
+        return '';
+    }
+  };
+
   if (loading) return <p>Chargement...</p>;
 
   return (
@@ -554,11 +648,14 @@ function UsersSection() {
         <div className="adm-kpi gold">
           <strong>{profiles.length}</strong> utilisateurs
         </div>
+        <div className="adm-kpi green">
+          <strong>{activeCount}</strong> actifs
+        </div>
+        <div className="adm-kpi orange">
+          <strong>{pendingCount}</strong> en attente
+        </div>
         <div className="adm-kpi terra">
           <strong>{adminCount}</strong> admins
-        </div>
-        <div className="adm-kpi blue">
-          <strong>{memberCount}</strong> membres
         </div>
       </div>
 
@@ -575,14 +672,14 @@ function UsersSection() {
           {(
             [
               ['all', 'Tous'],
-              ['admin', 'Admin'],
-              ['user', 'Membre'],
+              ['active', 'Actifs'],
+              ['pending', 'En attente'],
             ] as const
           ).map(([v, l]) => (
             <button
               key={v}
-              className={`adm-pill${roleFilter === v ? ' active' : ''}`}
-              onClick={() => setRoleFilter(v as 'all' | 'admin' | 'user')}
+              className={`adm-pill${statusFilter === v ? ' active' : ''}`}
+              onClick={() => setStatusFilter(v as StatusFilter)}
               type="button"
             >
               {l}
@@ -599,28 +696,37 @@ function UsersSection() {
       ) : (
         <div className="adm-rows">
           {filtered.map((p) => (
-            <div key={p.id} className={`adm-row ${p.role}`}>
-              <div className={`adm-av ${p.role}`}>{getInitials(p)}</div>
+            <div
+              key={p.id}
+              className={`adm-row ${p.role} ${!p.is_active ? 'inactive' : ''}`}
+            >
+              <div className={`adm-av ${p.role} ${!p.is_active ? 'inactive' : ''}`}>
+                {getInitials(p)}
+              </div>
               <div className="adm-row-info">
-                <strong>{p.display_name || p.email}</strong>
+                <strong>
+                  {p.display_name || p.email}
+                  {!p.is_active && <span className="adm-pending-tag">En attente</span>}
+                </strong>
                 <span className="adm-row-sub">{p.email}</span>
               </div>
               <span className={`adm-badge ${p.role}`}>
                 {p.role === 'admin' ? 'Admin' : 'Membre'}
               </span>
               <div className="adm-acts">
+                {!p.is_active && (
+                  <button
+                    className="adm-btn-activate"
+                    onClick={() => setConfirmAction({ profile: p, action: 'activate' })}
+                    title="Activer ce compte"
+                    type="button"
+                  >
+                    Activer
+                  </button>
+                )}
                 <button
-                  onClick={() =>
-                    setConfirmAction({
-                      profile: p,
-                      newRole: p.role === 'admin' ? 'user' : 'admin',
-                    })
-                  }
-                  title={
-                    p.role === 'admin'
-                      ? 'Passer en Membre'
-                      : 'Passer en Admin'
-                  }
+                  onClick={(e) => openMenu(e, p.id)}
+                  title="Plus d'options"
                   type="button"
                 >
                   &hellip;
@@ -631,7 +737,76 @@ function UsersSection() {
         </div>
       )}
 
-      {/* Role change confirmation modal */}
+      {/* Floating dropdown menu */}
+      {menuOpen && menuPosition && (
+        <div
+          className="adm-dropdown"
+          style={{ top: menuPosition.top, left: menuPosition.left }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {(() => {
+            const p = profiles.find((pr) => pr.id === menuOpen);
+            if (!p) return null;
+            return (
+              <>
+                {p.is_active && (
+                  <button
+                    onClick={() => {
+                      setMenuOpen(null);
+                      setMenuPosition(null);
+                      setConfirmAction({ profile: p, action: 'deactivate' });
+                    }}
+                  >
+                    ⏸ Désactiver
+                  </button>
+                )}
+                {p.role === 'user' ? (
+                  <button
+                    onClick={() => {
+                      setMenuOpen(null);
+                      setMenuPosition(null);
+                      setConfirmAction({ profile: p, action: 'promote' });
+                    }}
+                  >
+                    ⬆ Passer en Admin
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setMenuOpen(null);
+                      setMenuPosition(null);
+                      setConfirmAction({ profile: p, action: 'demote' });
+                    }}
+                  >
+                    ⬇ Passer en Membre
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setMenuOpen(null);
+                    setMenuPosition(null);
+                    setConfirmAction({ profile: p, action: 'reset_password' });
+                  }}
+                >
+                  🔑 Réinitialiser mot de passe
+                </button>
+                <button
+                  className="danger"
+                  onClick={() => {
+                    setMenuOpen(null);
+                    setMenuPosition(null);
+                    setConfirmAction({ profile: p, action: 'delete' });
+                  }}
+                >
+                  🗑 Supprimer
+                </button>
+              </>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* Action confirmation modal */}
       {confirmAction && (
         <div
           className="adm-confirm-overlay"
@@ -642,33 +817,41 @@ function UsersSection() {
             onClick={(e) => e.stopPropagation()}
           >
             <p>
-              Changer le r&ocirc;le de{' '}
+              {getActionLabel(confirmAction.action)} pour{' '}
               <strong>
-                {confirmAction.profile.display_name ||
-                  confirmAction.profile.email}
+                {confirmAction.profile.display_name || confirmAction.profile.email}
               </strong>{' '}
               ?
             </p>
             <p className="adm-confirm-sub">
-              {confirmAction.newRole === 'admin'
-                ? "Cet utilisateur aura accès à toutes les fonctions d'administration."
-                : "Cet utilisateur perdra ses droits d'administration."}
+              {getActionDescription(confirmAction.action)}
             </p>
             <div className="adm-confirm-actions">
               <button onClick={() => setConfirmAction(null)}>Annuler</button>
               <button
-                className="adm-confirm-gold"
+                className={
+                  confirmAction.action === 'deactivate' || confirmAction.action === 'delete'
+                    ? 'adm-confirm-danger'
+                    : confirmAction.action === 'reset_password'
+                    ? 'adm-confirm-blue'
+                    : 'adm-confirm-gold'
+                }
                 onClick={() => {
-                  toggleRole(confirmAction.profile);
+                  executeAction(confirmAction.profile, confirmAction.action);
                   setConfirmAction(null);
                 }}
               >
-                {confirmAction.newRole === 'admin'
-                  ? 'Passer en Admin'
-                  : 'Passer en Membre'}
+                {confirmAction.action === 'reset_password' ? 'Envoyer l\'email' : getActionLabel(confirmAction.action)}
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Toast notification */}
+      {toast && (
+        <div className={`adm-toast ${toast.type}`}>
+          {toast.type === 'success' ? '✓' : '⚠'} {toast.message}
         </div>
       )}
     </div>

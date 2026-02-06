@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { MembersProvider } from './context/MembersContext';
 import LoginScreen from './components/layout/LoginScreen';
+import PendingActivationScreen from './components/layout/PendingActivationScreen';
 import Header from './components/layout/Header';
 import BottomNav from './components/layout/BottomNav';
 import ConnStatus from './components/layout/ConnStatus';
@@ -15,7 +16,7 @@ import MesSuggestionsPage from './pages/MesSuggestionsPage';
 import AdminPage from './pages/AdminPage';
 
 function AppContent() {
-  const { user, loading } = useAuth();
+  const { user, loading, isActive, isRecoveryMode } = useAuth();
 
   if (loading) {
     return (
@@ -30,8 +31,18 @@ function AppContent() {
     );
   }
 
+  // Mode récupération de mot de passe : afficher l'écran de reset
+  if (isRecoveryMode) {
+    return <LoginScreen />;
+  }
+
   if (!user) {
     return <LoginScreen />;
+  }
+
+  // Utilisateur connecté mais compte non activé
+  if (!isActive) {
+    return <PendingActivationScreen />;
   }
 
   return (

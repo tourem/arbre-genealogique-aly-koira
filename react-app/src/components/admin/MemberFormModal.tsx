@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { Member } from '../../lib/types';
 
 interface Props {
   member: Member | null;
+  members: Record<string, Member>;
   onClose: () => void;
   onSaved: (updatedPayload?: Partial<Member>) => void;
 }
 
-export default function MemberFormModal({ member, onClose, onSaved }: Props) {
+export default function MemberFormModal({ member, members, onClose, onSaved }: Props) {
   const isEdit = member !== null;
 
   const [id, setId] = useState('');
@@ -19,7 +20,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
   const [fatherId, setFatherId] = useState('');
   const [motherRef, setMotherRef] = useState('');
   const [spousesStr, setSpousesStr] = useState('');
-  const [childrenStr, setChildrenStr] = useState('');
+  const [children, setChildren] = useState<string[]>([]);
   const [note, setNote] = useState('');
   const [birthCity, setBirthCity] = useState('');
   const [birthCountry, setBirthCountry] = useState('');
@@ -28,6 +29,15 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+
+  // Search state for adding children
+  const [childSearch, setChildSearch] = useState('');
+  const [showChildSuggestions, setShowChildSuggestions] = useState(false);
+  const childSearchRef = useRef<HTMLInputElement>(null);
+
+  // Track removed and added children for relationship updates
+  const [removedChildren, setRemovedChildren] = useState<string[]>([]);
+  const [addedChildren, setAddedChildren] = useState<string[]>([]);
 
   useEffect(() => {
     if (member) {
@@ -39,7 +49,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
       setFatherId(member.father_id || '');
       setMotherRef(member.mother_ref || '');
       setSpousesStr(member.spouses.join(', '));
-      setChildrenStr(member.children.join(', '));
+      setChildren(member.children || []);
       setPhotoPreview(member.photo_url || null);
       setNote(member.note || '');
       setBirthCity(member.birth_city || '');
@@ -47,6 +57,21 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
       setVillage(member.village || '');
     }
   }, [member]);
+
+  // Filter suggestions for child search
+  const childSuggestions = useMemo(() => {
+    if (!childSearch.trim()) return [];
+    const q = childSearch.toLowerCase();
+    return Object.values(members)
+      .filter(m =>
+        !children.includes(m.id) && // Not already a child
+        m.id !== id && // Not self
+        (m.name.toLowerCase().includes(q) ||
+         m.id.toLowerCase().includes(q) ||
+         (m.alias?.toLowerCase().includes(q) ?? false))
+      )
+      .slice(0, 8);
+  }, [childSearch, children, members, id]);
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -61,6 +86,31 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
 
   const parseList = (str: string): string[] =>
     str.split(',').map((s) => s.trim()).filter(Boolean);
+
+  // Remove a child from the list
+  const handleRemoveChild = (childId: string) => {
+    setChildren(prev => prev.filter(c => c !== childId));
+    // Track for relationship update (only if it was an original child)
+    if (member?.children.includes(childId)) {
+      setRemovedChildren(prev => [...prev, childId]);
+    }
+    // If it was just added, remove from addedChildren
+    setAddedChildren(prev => prev.filter(c => c !== childId));
+  };
+
+  // Add a child to the list
+  const handleAddChild = (childId: string) => {
+    if (children.includes(childId)) return;
+    setChildren(prev => [...prev, childId]);
+    setChildSearch('');
+    setShowChildSuggestions(false);
+    // Track for relationship update (only if not an original child)
+    if (!member?.children.includes(childId)) {
+      setAddedChildren(prev => [...prev, childId]);
+    }
+    // If it was removed before, remove from removedChildren
+    setRemovedChildren(prev => prev.filter(c => c !== childId));
+  };
 
   const handleSave = async () => {
     if (!id.trim() || !name.trim()) {
@@ -99,7 +149,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
       father_id: fatherId.trim() || null,
       mother_ref: motherRef.trim() || null,
       spouses: parseList(spousesStr),
-      children: parseList(childrenStr),
+      children,
       photo_url: photoUrl,
       note: note.trim() || null,
       birth_city: birthCity.trim() || null,
@@ -107,29 +157,82 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
       village: village.trim() || null,
     };
 
-    if (isEdit) {
-      const { error: err } = await supabase
-        .from('members')
-        .update(payload)
-        .eq('id', member.id);
-      if (err) {
-        setError(err.message);
-        setSaving(false);
-        return;
-      }
-    } else {
-      const { error: err } = await supabase
-        .from('members')
-        .insert(payload);
-      if (err) {
-        setError(err.message);
-        setSaving(false);
-        return;
-      }
-    }
+    try {
+      if (isEdit) {
+        // Update the member
+        const { error: err } = await supabase
+          .from('members')
+          .update(payload)
+          .eq('id', member.id);
+        if (err) {
+          setError(err.message);
+          setSaving(false);
+          return;
+        }
 
-    setSaving(false);
-    onSaved(isEdit ? payload : undefined);
+        // Update relationships for removed children
+        for (const childId of removedChildren) {
+          const child = members[childId];
+          if (!child) continue;
+
+          if (gender === 'M') {
+            // Remove father relationship
+            await supabase
+              .from('members')
+              .update({ father_id: null })
+              .eq('id', childId);
+          } else {
+            // Remove mother relationship
+            await supabase
+              .from('members')
+              .update({ mother_ref: null })
+              .eq('id', childId);
+          }
+        }
+
+        // Update relationships for added children
+        for (const childId of addedChildren) {
+          const child = members[childId];
+          if (!child) continue;
+
+          if (gender === 'M') {
+            // Set father relationship
+            await supabase
+              .from('members')
+              .update({ father_id: id.trim() })
+              .eq('id', childId);
+          } else {
+            // Set mother relationship
+            await supabase
+              .from('members')
+              .update({ mother_ref: id.trim() })
+              .eq('id', childId);
+          }
+        }
+      } else {
+        const { error: err } = await supabase
+          .from('members')
+          .insert(payload);
+        if (err) {
+          setError(err.message);
+          setSaving(false);
+          return;
+        }
+      }
+
+      setSaving(false);
+      onSaved(isEdit ? payload : undefined);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur inconnue');
+      setSaving(false);
+    }
+  };
+
+  // Get member name by ID
+  const getMemberName = (memberId: string) => {
+    const m = members[memberId];
+    if (!m) return memberId;
+    return m.alias ? `${m.name} (${m.alias})` : m.name;
   };
 
   return (
@@ -223,14 +326,74 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
             />
           </div>
 
+          {/* Children section with visual list */}
           <div className="form-group">
-            <label>Enfants (IDs s&eacute;par&eacute;s par des virgules)</label>
-            <input
-              type="text"
-              value={childrenStr}
-              onChange={(e) => setChildrenStr(e.target.value)}
-              placeholder="id1, id2, id3"
-            />
+            <label>Enfants ({children.length})</label>
+
+            {/* Current children list */}
+            {children.length > 0 && (
+              <div className="children-list">
+                {children.map(childId => {
+                  const child = members[childId];
+                  return (
+                    <div key={childId} className="child-tag">
+                      <span className={`child-gender ${child?.gender === 'F' ? 'female' : 'male'}`}>
+                        {child?.gender === 'F' ? '♀' : '♂'}
+                      </span>
+                      <span className="child-name">{getMemberName(childId)}</span>
+                      <button
+                        type="button"
+                        className="child-remove"
+                        onClick={() => handleRemoveChild(childId)}
+                        title="Retirer cet enfant"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Search to add children */}
+            <div className="child-search-wrap">
+              <input
+                ref={childSearchRef}
+                type="text"
+                value={childSearch}
+                onChange={(e) => {
+                  setChildSearch(e.target.value);
+                  setShowChildSuggestions(true);
+                }}
+                onFocus={() => setShowChildSuggestions(true)}
+                placeholder="Rechercher un enfant à ajouter..."
+                className="child-search-input"
+              />
+
+              {showChildSuggestions && childSuggestions.length > 0 && (
+                <div className="child-suggestions">
+                  {childSuggestions.map(m => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      className="child-suggestion"
+                      onClick={() => handleAddChild(m.id)}
+                    >
+                      <span className={`child-gender ${m.gender === 'F' ? 'female' : 'male'}`}>
+                        {m.gender === 'F' ? '♀' : '♂'}
+                      </span>
+                      <span className="suggestion-name">{m.name}</span>
+                      {m.alias && <span className="suggestion-alias">({m.alias})</span>}
+                      <span className="suggestion-gen">Gen. {m.generation}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {children.length === 0 && !childSearch && (
+              <p className="form-hint">Aucun enfant. Utilisez le champ ci-dessus pour en ajouter.</p>
+            )}
           </div>
 
           <div className="form-group">
@@ -292,7 +455,7 @@ export default function MemberFormModal({ member, onClose, onSaved }: Props) {
 
         <div className="modal-footer">
           <button className="action-btn" onClick={onClose} type="button">Annuler</button>
-          <button className="login-btn" onClick={handleSave} disabled={saving} type="button">
+          <button className="modal-btn-primary" onClick={handleSave} disabled={saving} type="button">
             {saving ? 'Enregistrement...' : isEdit ? 'Modifier' : 'Ajouter'}
           </button>
         </div>

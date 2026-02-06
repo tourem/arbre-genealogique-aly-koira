@@ -29,13 +29,13 @@ export default function TreePopup({ member, members, onClose }: Props) {
     .map((s) => members[s]);
   const genColor = genColors[member.generation] || '#6366f1';
 
-  const handleSaved = (updatedPayload?: Partial<Member>) => {
+  const handleSaved = async (updatedPayload?: Partial<Member>) => {
     if (updatedPayload && member.id) {
       updateMember(member.id, updatedPayload);
     }
+    await refetchMembers();
     setShowEdit(false);
     onClose();
-    refetchMembers();
   };
 
   const handleDelete = async () => {
@@ -99,6 +99,7 @@ export default function TreePopup({ member, members, onClose }: Props) {
     return (
       <MemberFormModal
         member={member}
+        members={members}
         onClose={() => setShowEdit(false)}
         onSaved={handleSaved}
       />
