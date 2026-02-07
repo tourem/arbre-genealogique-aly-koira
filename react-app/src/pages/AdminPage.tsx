@@ -247,8 +247,12 @@ function MembersSection({
 
   const getMiniStats = (m: Member) => {
     const parts: string[] = [];
-    if (m.spouses?.length)
-      parts.push(`${m.spouses.length} épouse${m.spouses.length > 1 ? 's' : ''}`);
+    if (m.spouses?.length) {
+      const spouseWord = m.gender === 'M'
+        ? `épouse${m.spouses.length > 1 ? 's' : ''}`
+        : 'époux';
+      parts.push(`${m.spouses.length} ${spouseWord}`);
+    }
     if (m.children?.length)
       parts.push(`${m.children.length} enfant${m.children.length > 1 ? 's' : ''}`);
     return parts.join(' · ');

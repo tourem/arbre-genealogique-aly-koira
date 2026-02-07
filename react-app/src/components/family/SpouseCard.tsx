@@ -79,7 +79,7 @@ export default function SpouseCard({ person, members, onNavigate, onInfo, onAddS
                 </div>
                 {spouses.length > 1 && (
                   <div className="fiche-sp-sub">
-                    {idx + 1}{idx === 0 ? 'ère' : 'ème'} épouse
+                    {idx + 1}{idx === 0 ? (actualGender === 'm' ? 'er' : 'ère') : 'ème'} {actualGender === 'm' ? 'époux' : 'épouse'}
                   </div>
                 )}
                 {spouseInTree?.note && (

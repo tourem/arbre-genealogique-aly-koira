@@ -52,7 +52,7 @@ export default function PersonCard({ person, spouseCount = 0, childrenCount = 0,
         <div className="fiche-portrait-stats">
           <div className="fiche-ps sp">
             <div className="fiche-ps-n">{spouseCount}</div>
-            <div className="fiche-ps-l">Épouses</div>
+            <div className="fiche-ps-l">{isMale ? 'Épouses' : 'Époux'}</div>
           </div>
           <div className="fiche-ps ch">
             <div className="fiche-ps-n">{childrenCount}</div>
