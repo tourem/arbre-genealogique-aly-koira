@@ -54,8 +54,11 @@ export default function SpouseCard({ person, members, onNavigate, onInfo, onAddS
           return (
             <div
               key={sp + idx}
-              className={`fiche-sp-card${spouseInTree ? '' : ' static'}`}
+              className={`fiche-sp-card${spouseInTree ? ' clickable' : ' static'}`}
               onClick={spouseInTree ? () => onNavigate(sp) : undefined}
+              onKeyDown={spouseInTree ? (e) => e.key === 'Enter' && onNavigate(sp) : undefined}
+              role={spouseInTree ? 'button' : undefined}
+              tabIndex={spouseInTree ? 0 : undefined}
             >
               {spouseInTree && onInfo && (
                 <button

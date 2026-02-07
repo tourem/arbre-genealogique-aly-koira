@@ -6364,10 +6364,20 @@ flex-shrink:0;
   cursor: default;
 }
 
-.fiche-sh .fiche-sp-card:not(.static):hover {
+.fiche-sh .fiche-sp-card.clickable {
+  cursor: pointer;
+}
+
+.fiche-sh .fiche-sp-card.clickable:hover,
+.fiche-sh .fiche-sp-card.clickable:focus {
   background: var(--sh-card-h);
   transform: translateY(-1px);
   box-shadow: var(--sh-shadow-h);
+  outline: none;
+}
+
+.fiche-sh .fiche-sp-card.clickable:focus-visible {
+  box-shadow: var(--sh-shadow-h), 0 0 0 2px var(--sh-gold);
 }
 
 .fiche-sh .fiche-sp-card::before {
