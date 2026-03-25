@@ -26,17 +26,18 @@ function AddChildCard({ onAddChild }: { onAddChild: () => void }) {
   );
 }
 
-interface WifeGroupProps {
-  motherKey: string;
-  motherName: string;
+interface ParentGroupProps {
+  parentName: string;
+  parentGender: 'M' | 'F';
   children: Member[];
   members: MemberDict;
   onNavigate: (id: string) => void;
   onInfo?: (member: Member) => void;
 }
 
-function WifeGroup({ motherName, children, members, onNavigate, onInfo }: WifeGroupProps) {
+function ParentGroup({ parentName, parentGender, children, members, onNavigate, onInfo }: ParentGroupProps) {
   const [open, setOpen] = useState(true);
+  const label = parentGender === 'M' ? 'Enfants avec' : 'Enfants avec';
 
   return (
     <div className="fiche-wife-group">
@@ -44,8 +45,10 @@ function WifeGroup({ motherName, children, members, onNavigate, onInfo }: WifeGr
         className={`fiche-wg-header${open ? ' open' : ''}`}
         onClick={() => setOpen((o) => !o)}
       >
-        <div className="fiche-wg-av">{getInitials(motherName)}</div>
-        <div className="fiche-wg-name">Enfants avec {motherName}</div>
+        <div className={`fiche-wg-av ${parentGender === 'F' ? 'female' : 'male'}`}>
+          {getInitials(parentName)}
+        </div>
+        <div className="fiche-wg-name">{label} {parentName}</div>
         <div className="fiche-wg-count">{children.length}</div>
         <div className="fiche-wg-chev">{'\u203A'}</div>
       </div>
@@ -61,47 +64,92 @@ function WifeGroup({ motherName, children, members, onNavigate, onInfo }: WifeGr
 }
 
 export default function ChildrenByMother({ person, kids, members, onNavigate, onInfo, onAddChild }: Props) {
-  const spouses = [...new Set(person.spouses || [])];
-
-  // Group by mother when male with multiple spouses
-  if (spouses.length > 1 && person.gender === 'M') {
-    const childrenByMother: Record<string, { name: string; children: Member[] }> = {};
+  // For males: check if children have multiple different mothers
+  if (person.gender === 'M') {
+    // Group by mother NAME (not ID) to handle duplicates
+    const childrenByMotherName: Record<string, { name: string; children: Member[] }> = {};
     kids.forEach((c) => {
-      const motherRef = c.mother_ref || 'Mère inconnue';
-      const motherMember = members[motherRef];
-      const motherName = motherMember ? motherMember.name : motherRef;
-      if (!childrenByMother[motherRef]) {
-        childrenByMother[motherRef] = { name: motherName, children: [] };
+      const motherRef = c.mother_ref;
+      const motherMember = motherRef ? members[motherRef] : null;
+      const motherName = motherMember ? motherMember.name : 'Mère inconnue';
+      if (!childrenByMotherName[motherName]) {
+        childrenByMotherName[motherName] = { name: motherName, children: [] };
       }
-      childrenByMother[motherRef].children.push(c);
+      childrenByMotherName[motherName].children.push(c);
     });
 
-    return (
-      <div className="fiche-section">
-        <div className="fiche-conn c-green"></div>
-        <div className="fiche-sh-header children">
-          <div className="fiche-sh-txt">
-            <span className="fiche-sh-ico">{'\u25BC'}</span> Enfants
-            <span className="fiche-sh-count">{kids.length}</span>
+    const uniqueMotherNames = Object.keys(childrenByMotherName);
+    if (uniqueMotherNames.length > 1) {
+
+      return (
+        <div className="fiche-section">
+          <div className="fiche-conn c-green"></div>
+          <div className="fiche-sh-header children">
+            <div className="fiche-sh-txt">
+              <span className="fiche-sh-ico">{'\u25BC'}</span> Enfants
+              <span className="fiche-sh-count">{kids.length}</span>
+            </div>
           </div>
+          {Object.entries(childrenByMotherName).map(([key, group]) => (
+            <ParentGroup
+              key={key}
+              parentName={group.name}
+              parentGender="F"
+              children={group.children}
+              members={members}
+              onNavigate={onNavigate}
+              onInfo={onInfo}
+            />
+          ))}
+          {onAddChild && <AddChildCard onAddChild={onAddChild} />}
         </div>
-        {Object.entries(childrenByMother).map(([key, group]) => (
-          <WifeGroup
-            key={key}
-            motherKey={key}
-            motherName={group.name}
-            children={group.children}
-            members={members}
-            onNavigate={onNavigate}
-            onInfo={onInfo}
-          />
-        ))}
-        {onAddChild && <AddChildCard onAddChild={onAddChild} />}
-      </div>
-    );
+      );
+    }
   }
 
-  // Simple display (single spouse or no grouping)
+  // For females: check if children have multiple different fathers
+  if (person.gender === 'F') {
+    // Group by father NAME (not ID) to handle duplicates
+    const childrenByFatherName: Record<string, { name: string; children: Member[] }> = {};
+    kids.forEach((c) => {
+      const fatherRef = c.father_id;
+      const fatherMember = fatherRef ? members[fatherRef] : null;
+      const fatherName = fatherMember ? fatherMember.name : 'Père inconnu';
+      if (!childrenByFatherName[fatherName]) {
+        childrenByFatherName[fatherName] = { name: fatherName, children: [] };
+      }
+      childrenByFatherName[fatherName].children.push(c);
+    });
+
+    const uniqueFatherNames = Object.keys(childrenByFatherName);
+    if (uniqueFatherNames.length > 1) {
+      return (
+        <div className="fiche-section">
+          <div className="fiche-conn c-green"></div>
+          <div className="fiche-sh-header children">
+            <div className="fiche-sh-txt">
+              <span className="fiche-sh-ico">{'\u25BC'}</span> Enfants
+              <span className="fiche-sh-count">{kids.length}</span>
+            </div>
+          </div>
+          {Object.entries(childrenByFatherName).map(([key, group]) => (
+            <ParentGroup
+              key={key}
+              parentName={group.name}
+              parentGender="M"
+              children={group.children}
+              members={members}
+              onNavigate={onNavigate}
+              onInfo={onInfo}
+            />
+          ))}
+          {onAddChild && <AddChildCard onAddChild={onAddChild} />}
+        </div>
+      );
+    }
+  }
+
+  // Simple display (single parent or no grouping needed)
   return (
     <div className="fiche-section">
       <div className="fiche-conn c-green"></div>

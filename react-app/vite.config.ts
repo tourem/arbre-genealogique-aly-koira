@@ -55,14 +55,9 @@ export default defineConfig({
             },
           },
           {
-            // Supabase API — Stale-While-Revalidate
+            // Supabase API — NetworkOnly (never cache API responses)
             urlPattern: /^https:\/\/.*\.supabase\.co\/rest\/.*/i,
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'supabase-api',
-              expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 7 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
+            handler: 'NetworkOnly',
           },
           {
             // Supabase Storage (photos) — Cache-First

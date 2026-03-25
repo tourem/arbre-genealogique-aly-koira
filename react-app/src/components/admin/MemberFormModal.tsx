@@ -12,7 +12,8 @@ interface Props {
 export default function MemberFormModal({ member, members, onClose, onSaved }: Props) {
   const isEdit = member !== null;
 
-  const [id, setId] = useState('');
+  // Auto-generate UUID for new members
+  const [id, setId] = useState(() => isEdit ? '' : crypto.randomUUID());
   const [name, setName] = useState('');
   const [alias, setAlias] = useState('');
   const [gender, setGender] = useState<'M' | 'F'>('M');
@@ -35,9 +36,21 @@ export default function MemberFormModal({ member, members, onClose, onSaved }: P
   const [showChildSuggestions, setShowChildSuggestions] = useState(false);
   const childSearchRef = useRef<HTMLInputElement>(null);
 
+  // Search state for father selection
+  const [fatherSearch, setFatherSearch] = useState('');
+  const [showFatherSuggestions, setShowFatherSuggestions] = useState(false);
+
+  // Search state for mother selection
+  const [motherSearch, setMotherSearch] = useState('');
+  const [showMotherSuggestions, setShowMotherSuggestions] = useState(false);
+
   // Track removed and added children for relationship updates
   const [removedChildren, setRemovedChildren] = useState<string[]>([]);
   const [addedChildren, setAddedChildren] = useState<string[]>([]);
+
+  // Track original parent IDs for detecting changes
+  const [originalFatherId, setOriginalFatherId] = useState<string | null>(null);
+  const [originalMotherRef, setOriginalMotherRef] = useState<string | null>(null);
 
   useEffect(() => {
     if (member) {
@@ -55,8 +68,22 @@ export default function MemberFormModal({ member, members, onClose, onSaved }: P
       setBirthCity(member.birth_city || '');
       setBirthCountry(member.birth_country || '');
       setVillage(member.village || '');
+
+      // Initialize parent search fields with current parent names
+      if (member.father_id && members[member.father_id]) {
+        const father = members[member.father_id];
+        setFatherSearch(father.alias ? `${father.name} (${father.alias})` : father.name);
+      }
+      if (member.mother_ref && members[member.mother_ref]) {
+        const mother = members[member.mother_ref];
+        setMotherSearch(mother.alias ? `${mother.name} (${mother.alias})` : mother.name);
+      }
+
+      // Track original parent IDs
+      setOriginalFatherId(member.father_id || null);
+      setOriginalMotherRef(member.mother_ref || null);
     }
-  }, [member]);
+  }, [member, members]);
 
   // Filter suggestions for child search
   const childSuggestions = useMemo(() => {
@@ -72,6 +99,56 @@ export default function MemberFormModal({ member, members, onClose, onSaved }: P
       )
       .slice(0, 8);
   }, [childSearch, children, members, id]);
+
+  // Filter suggestions for father search (only males)
+  const fatherSuggestions = useMemo(() => {
+    if (!fatherSearch.trim()) return [];
+    const q = fatherSearch.toLowerCase();
+    return Object.values(members)
+      .filter(m =>
+        m.gender === 'M' && // Only males
+        m.id !== id && // Not self
+        (m.name.toLowerCase().includes(q) ||
+         m.id.toLowerCase().includes(q) ||
+         (m.alias?.toLowerCase().includes(q) ?? false))
+      )
+      .sort((a, b) => a.generation - b.generation) // Sort by generation
+      .slice(0, 8);
+  }, [fatherSearch, members, id]);
+
+  // Filter suggestions for mother search (only females)
+  const motherSuggestions = useMemo(() => {
+    if (!motherSearch.trim()) return [];
+    const q = motherSearch.toLowerCase();
+    return Object.values(members)
+      .filter(m =>
+        m.gender === 'F' && // Only females
+        m.id !== id && // Not self
+        (m.name.toLowerCase().includes(q) ||
+         m.id.toLowerCase().includes(q) ||
+         (m.alias?.toLowerCase().includes(q) ?? false))
+      )
+      .sort((a, b) => a.generation - b.generation) // Sort by generation
+      .slice(0, 8);
+  }, [motherSearch, members, id]);
+
+  // Suggested mothers: father's spouses (if father is set)
+  const suggestedMothers = useMemo(() => {
+    if (!fatherId || !members[fatherId]) return [];
+    const father = members[fatherId];
+    return (father.spouses || [])
+      .map(spouseId => members[spouseId])
+      .filter((m): m is Member => m !== undefined && m.gender === 'F');
+  }, [fatherId, members]);
+
+  // Suggested fathers: mother's spouses (if mother is set)
+  const suggestedFathers = useMemo(() => {
+    if (!motherRef || !members[motherRef]) return [];
+    const mother = members[motherRef];
+    return (mother.spouses || [])
+      .map(spouseId => members[spouseId])
+      .filter((m): m is Member => m !== undefined && m.gender === 'M');
+  }, [motherRef, members]);
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -113,8 +190,8 @@ export default function MemberFormModal({ member, members, onClose, onSaved }: P
   };
 
   const handleSave = async () => {
-    if (!id.trim() || !name.trim()) {
-      setError('L\'ID et le nom sont requis');
+    if (!name.trim()) {
+      setError('Le nom est requis');
       return;
     }
 
@@ -196,20 +273,97 @@ export default function MemberFormModal({ member, members, onClose, onSaved }: P
           if (!child) continue;
 
           if (gender === 'M') {
-            // Set father relationship
+            // Set father relationship on child
             await supabase
               .from('members')
               .update({ father_id: id.trim() })
               .eq('id', childId);
+
+            // Also add child to mother's children[] if mother exists
+            if (child.mother_ref && members[child.mother_ref]) {
+              const mother = members[child.mother_ref];
+              const motherChildren = mother.children || [];
+              if (!motherChildren.includes(childId)) {
+                await supabase
+                  .from('members')
+                  .update({ children: [...motherChildren, childId] })
+                  .eq('id', child.mother_ref);
+              }
+            }
           } else {
-            // Set mother relationship
+            // Set mother relationship on child
             await supabase
               .from('members')
               .update({ mother_ref: id.trim() })
               .eq('id', childId);
+
+            // Also add child to father's children[] if father exists
+            if (child.father_id && members[child.father_id]) {
+              const father = members[child.father_id];
+              const fatherChildren = father.children || [];
+              if (!fatherChildren.includes(childId)) {
+                await supabase
+                  .from('members')
+                  .update({ children: [...fatherChildren, childId] })
+                  .eq('id', child.father_id);
+              }
+            }
+          }
+        }
+
+        // Handle parent changes (when editing a child's father/mother)
+        const currentFatherId = fatherId.trim() || null;
+        const currentMotherRef = motherRef.trim() || null;
+
+        // Father changed
+        if (originalFatherId !== currentFatherId) {
+          // Remove from old father's children[]
+          if (originalFatherId && members[originalFatherId]) {
+            const oldFather = members[originalFatherId];
+            const updatedChildren = (oldFather.children || []).filter(c => c !== member.id);
+            await supabase
+              .from('members')
+              .update({ children: updatedChildren })
+              .eq('id', originalFatherId);
+          }
+          // Add to new father's children[]
+          if (currentFatherId && members[currentFatherId]) {
+            const newFather = members[currentFatherId];
+            const newFatherChildren = newFather.children || [];
+            if (!newFatherChildren.includes(member.id)) {
+              await supabase
+                .from('members')
+                .update({ children: [...newFatherChildren, member.id] })
+                .eq('id', currentFatherId);
+            }
+          }
+        }
+
+        // Mother changed
+        if (originalMotherRef !== currentMotherRef) {
+          // Remove from old mother's children[]
+          if (originalMotherRef && members[originalMotherRef]) {
+            const oldMother = members[originalMotherRef];
+            const updatedChildren = (oldMother.children || []).filter(c => c !== member.id);
+            await supabase
+              .from('members')
+              .update({ children: updatedChildren })
+              .eq('id', originalMotherRef);
+          }
+          // Add to new mother's children[]
+          if (currentMotherRef && members[currentMotherRef]) {
+            const newMother = members[currentMotherRef];
+            const newMotherChildren = newMother.children || [];
+            if (!newMotherChildren.includes(member.id)) {
+              await supabase
+                .from('members')
+                .update({ children: [...newMotherChildren, member.id] })
+                .eq('id', currentMotherRef);
+            }
           }
         }
       } else {
+        // Creating new member
         const { error: err } = await supabase
           .from('members')
           .insert(payload);
@@ -217,6 +371,32 @@ export default function MemberFormModal({ member, members, onClose, onSaved }: P
           setError(err.message);
           setSaving(false);
           return;
+        }
+
+        // Add new member to father's children[] if father is set
+        const newFatherId = fatherId.trim() || null;
+        if (newFatherId && members[newFatherId]) {
+          const father = members[newFatherId];
+          const fatherChildren = father.children || [];
+          if (!fatherChildren.includes(id.trim())) {
+            await supabase
+              .from('members')
+              .update({ children: [...fatherChildren, id.trim()] })
+              .eq('id', newFatherId);
+          }
+        }
+
+        // Add new member to mother's children[] if mother is set
+        const newMotherRef = motherRef.trim() || null;
+        if (newMotherRef && members[newMotherRef]) {
+          const mother = members[newMotherRef];
+          const motherChildren = mother.children || [];
+          if (!motherChildren.includes(id.trim())) {
+            await supabase
+              .from('members')
+              .update({ children: [...motherChildren, id.trim()] })
+              .eq('id', newMotherRef);
+          }
         }
       }
 
@@ -244,26 +424,27 @@ export default function MemberFormModal({ member, members, onClose, onSaved }: P
         </div>
 
         <div className="modal-body">
-          <div className="form-row">
+          {/* ID is auto-generated (UUID) for new members, shown read-only for edits */}
+          {isEdit && (
             <div className="form-group">
-              <label>ID *</label>
+              <label>ID</label>
               <input
                 type="text"
                 value={id}
-                onChange={(e) => setId(e.target.value)}
-                disabled={isEdit}
-                placeholder="ex: moussa_ali"
+                disabled
+                className="input-disabled"
               />
             </div>
-            <div className="form-group">
-              <label>Nom *</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="ex: Moussa Ali"
-              />
-            </div>
+          )}
+
+          <div className="form-group">
+            <label>Nom *</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="ex: Moussa Ali"
+            />
           </div>
 
           <div className="form-row">
@@ -285,35 +466,182 @@ export default function MemberFormModal({ member, members, onClose, onSaved }: P
             </div>
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>G&eacute;n&eacute;ration</label>
-              <input
-                type="number"
-                value={generation}
-                onChange={(e) => setGeneration(Number(e.target.value))}
-                min={0}
-              />
-            </div>
-            <div className="form-group">
-              <label>P&egrave;re (ID)</label>
-              <input
-                type="text"
-                value={fatherId}
-                onChange={(e) => setFatherId(e.target.value)}
-                placeholder="ID du père"
-              />
-            </div>
+          <div className="form-group">
+            <label>G&eacute;n&eacute;ration</label>
+            <input
+              type="number"
+              value={generation}
+              onChange={(e) => setGeneration(Number(e.target.value))}
+              min={0}
+            />
           </div>
 
+          {/* Father selection with search */}
           <div className="form-group">
-            <label>M&egrave;re (r&eacute;f&eacute;rence)</label>
-            <input
-              type="text"
-              value={motherRef}
-              onChange={(e) => setMotherRef(e.target.value)}
-              placeholder="Référence de la mère"
-            />
+            <label>P&egrave;re</label>
+            {fatherId && members[fatherId] && (
+              <div className="selected-parent">
+                <span className="parent-gender male">♂</span>
+                <span className="parent-name">{getMemberName(fatherId)}</span>
+                <span className="parent-gen">Gen. {members[fatherId].generation}</span>
+                <button
+                  type="button"
+                  className="parent-remove"
+                  onClick={() => {
+                    setFatherId('');
+                    setFatherSearch('');
+                  }}
+                  title="Retirer le père"
+                >
+                  &times;
+                </button>
+              </div>
+            )}
+            {!fatherId && (
+              <>
+                {/* Suggested fathers from mother's spouses */}
+                {suggestedFathers.length > 0 && (
+                  <div className="suggested-parents">
+                    <span className="suggested-label">Époux de la mère :</span>
+                    <div className="suggested-list">
+                      {suggestedFathers.map(m => (
+                        <button
+                          key={m.id}
+                          type="button"
+                          className="suggested-parent-btn"
+                          onClick={() => {
+                            setFatherId(m.id);
+                            setFatherSearch(m.alias ? `${m.name} (${m.alias})` : m.name);
+                          }}
+                        >
+                          <span className="parent-gender male">♂</span>
+                          {m.alias ? `${m.name} (${m.alias})` : m.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <div className="parent-search-wrap">
+                  <input
+                    type="text"
+                    value={fatherSearch}
+                    onChange={(e) => {
+                      setFatherSearch(e.target.value);
+                      setShowFatherSuggestions(true);
+                    }}
+                    onFocus={() => setShowFatherSuggestions(true)}
+                    onBlur={() => setTimeout(() => setShowFatherSuggestions(false), 200)}
+                    placeholder={suggestedFathers.length > 0 ? "Ou rechercher un autre père..." : "Rechercher le père..."}
+                    className="parent-search-input"
+                  />
+                  {showFatherSuggestions && fatherSuggestions.length > 0 && (
+                    <div className="parent-suggestions">
+                      {fatherSuggestions.map(m => (
+                        <button
+                          key={m.id}
+                          type="button"
+                          className="parent-suggestion"
+                          onClick={() => {
+                            setFatherId(m.id);
+                            setFatherSearch(m.alias ? `${m.name} (${m.alias})` : m.name);
+                            setShowFatherSuggestions(false);
+                          }}
+                        >
+                          <span className="parent-gender male">♂</span>
+                          <span className="suggestion-name">{m.name}</span>
+                          {m.alias && <span className="suggestion-alias">({m.alias})</span>}
+                          <span className="suggestion-gen">Gen. {m.generation}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Mother selection with search */}
+          <div className="form-group">
+            <label>M&egrave;re</label>
+            {motherRef && members[motherRef] && (
+              <div className="selected-parent">
+                <span className="parent-gender female">♀</span>
+                <span className="parent-name">{getMemberName(motherRef)}</span>
+                <span className="parent-gen">Gen. {members[motherRef].generation}</span>
+                <button
+                  type="button"
+                  className="parent-remove"
+                  onClick={() => {
+                    setMotherRef('');
+                    setMotherSearch('');
+                  }}
+                  title="Retirer la mère"
+                >
+                  &times;
+                </button>
+              </div>
+            )}
+            {!motherRef && (
+              <>
+                {/* Suggested mothers from father's spouses */}
+                {suggestedMothers.length > 0 && (
+                  <div className="suggested-parents">
+                    <span className="suggested-label">Épouses du père :</span>
+                    <div className="suggested-list">
+                      {suggestedMothers.map(m => (
+                        <button
+                          key={m.id}
+                          type="button"
+                          className="suggested-parent-btn"
+                          onClick={() => {
+                            setMotherRef(m.id);
+                            setMotherSearch(m.alias ? `${m.name} (${m.alias})` : m.name);
+                          }}
+                        >
+                          <span className="parent-gender female">♀</span>
+                          {m.alias ? `${m.name} (${m.alias})` : m.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <div className="parent-search-wrap">
+                  <input
+                    type="text"
+                    value={motherSearch}
+                    onChange={(e) => {
+                      setMotherSearch(e.target.value);
+                      setShowMotherSuggestions(true);
+                    }}
+                    onFocus={() => setShowMotherSuggestions(true)}
+                    onBlur={() => setTimeout(() => setShowMotherSuggestions(false), 200)}
+                    placeholder={suggestedMothers.length > 0 ? "Ou rechercher une autre mère..." : "Rechercher la mère..."}
+                    className="parent-search-input"
+                  />
+                  {showMotherSuggestions && motherSuggestions.length > 0 && (
+                    <div className="parent-suggestions">
+                      {motherSuggestions.map(m => (
+                        <button
+                          key={m.id}
+                          type="button"
+                          className="parent-suggestion"
+                          onClick={() => {
+                            setMotherRef(m.id);
+                            setMotherSearch(m.alias ? `${m.name} (${m.alias})` : m.name);
+                            setShowMotherSuggestions(false);
+                          }}
+                        >
+                          <span className="parent-gender female">♀</span>
+                          <span className="suggestion-name">{m.name}</span>
+                          {m.alias && <span className="suggestion-alias">({m.alias})</span>}
+                          <span className="suggestion-gen">Gen. {m.generation}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
 
           <div className="form-group">

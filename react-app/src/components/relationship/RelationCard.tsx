@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { SonghoyRelationResult } from '../../lib/types';
+import type { SonghoyRelationResult, RelationTerm } from '../../lib/types';
 import RelationPathGraph from './RelationPathGraph';
 import TreePathModal from './TreePathModal';
 
@@ -14,6 +14,36 @@ function getInitials(name: string): string {
   const words = name.trim().split(/\s+/);
   if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
   return name.slice(0, 2).toUpperCase();
+}
+
+// Render term with age annotation for BABA and NIA
+// On affiche juste le terme principal + annotation car on ne connaît pas l'âge relatif
+function renderTermSonghoy(term: RelationTerm): React.ReactNode {
+  const songhoy = (term.term_songhoy || '').trim();
+  const songhoyUpper = songhoy.toUpperCase();
+
+  // BABA (avec ou sans BERO/KATCHA) → afficher "BABA" + annotation
+  if (songhoyUpper.startsWith('BABA')) {
+    return (
+      <>
+        BABA
+        <span className="term-age-hint">(BERO/KATCHA)</span>
+      </>
+    );
+  }
+
+  // NIA/NIAN (avec ou sans BERO/KEYNA) → afficher "NIA" + annotation
+  if (songhoyUpper.startsWith('NIA')) {
+    return (
+      <>
+        NIA
+        <span className="term-age-hint">(BERO/KEYNA)</span>
+      </>
+    );
+  }
+
+  // Pour les autres termes, afficher normalement
+  return term.term_songhoy;
 }
 
 function getCategoryClass(code: string): string {
@@ -119,7 +149,7 @@ export default function RelationCard({
               </div>
               <div className="parente-rt">
                 <div className="parente-sg xl c1">
-                  {termAtoB.term_songhoy}
+                  {renderTermSonghoy(termAtoB)}
                 </div>
                 <div className="parente-td">{termAtoB.label_fr}</div>
               </div>
@@ -145,7 +175,7 @@ export default function RelationCard({
               <ArrowSvg />
             </div>
             <div className="parente-rt">
-              <div className="parente-sg lg c2">{termBtoA.term_songhoy}</div>
+              <div className="parente-sg lg c2">{renderTermSonghoy(termBtoA)}</div>
               <div className="parente-td">{termBtoA.label_fr}</div>
             </div>
           </div>
@@ -179,7 +209,7 @@ export default function RelationCard({
                 </div>
                 <div className="parente-rt">
                   <div className="parente-sg lg c1">
-                    {additionalTermAtoB.term_songhoy}
+                    {renderTermSonghoy(additionalTermAtoB)}
                   </div>
                   <div className="parente-td">
                     {additionalTermAtoB.label_fr}
@@ -202,7 +232,7 @@ export default function RelationCard({
                 </div>
                 <div className="parente-rt">
                   <div className="parente-sg lg c2">
-                    {additionalTermBtoA.term_songhoy}
+                    {renderTermSonghoy(additionalTermBtoA)}
                   </div>
                   <div className="parente-td">
                     {additionalTermBtoA.label_fr}

@@ -3247,6 +3247,155 @@ transform:none;
   margin-top:8px;
 }
 
+/* ========== PARENT SELECTION (Member Edit) ========== */
+.selected-parent{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-bottom:8px;
+}
+.parent-gender{
+  font-size:14px;
+  font-weight:600;
+}
+.parent-gender.male{color:#4A90D9}
+.parent-gender.female{color:#D94A8C}
+.parent-name{
+  font-weight:500;
+  flex:1;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.parent-gen{
+  font-size:11px;
+  color:var(--text-muted);
+  background:var(--card);
+  padding:2px 8px;
+  border-radius:10px;
+}
+.parent-remove{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:22px;
+  height:22px;
+  background:rgba(176,72,56,.1);
+  border:none;
+  border-radius:50%;
+  color:#B04838;
+  font-size:16px;
+  font-weight:600;
+  line-height:1;
+  cursor:pointer;
+  transition:all .2s;
+}
+.parent-remove:hover{
+  background:#B04838;
+  color:white;
+}
+.parent-search-wrap{
+  position:relative;
+}
+.parent-search-input{
+  width:100%;
+  padding:10px 14px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-size:14px;
+  color:var(--text);
+  transition:border-color .2s, box-shadow .2s;
+}
+.parent-search-input:focus{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(99,102,241,.1);
+}
+.parent-search-input::placeholder{
+  color:var(--text-muted);
+}
+.parent-suggestions{
+  position:absolute;
+  top:100%;
+  left:0;
+  right:0;
+  margin-top:4px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.15);
+  z-index:100;
+  max-height:200px;
+  overflow-y:auto;
+}
+.parent-suggestion{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  padding:10px 14px;
+  background:none;
+  border:none;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  font-size:14px;
+  color:var(--text);
+  cursor:pointer;
+  transition:background .15s;
+}
+.parent-suggestion:last-child{
+  border-bottom:none;
+}
+.parent-suggestion:hover{
+  background:var(--surface);
+}
+
+/* Suggested parents from spouse */
+.suggested-parents{
+  margin-bottom:10px;
+  padding:10px 12px;
+  background:var(--surface);
+  border-radius:10px;
+  border:1px dashed var(--border);
+}
+.suggested-label{
+  display:block;
+  font-size:12px;
+  color:var(--text-muted);
+  margin-bottom:8px;
+}
+.suggested-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.suggested-parent-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  font-size:13px;
+  color:var(--text);
+  cursor:pointer;
+  transition:all .15s;
+}
+.suggested-parent-btn:hover{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
+.suggested-parent-btn .parent-gender{
+  font-size:12px;
+}
+
 /* ========== ADD MEMBER MODAL (extended) ========== */
 .modal-content.modal-lg{
 max-width:600px;
@@ -4772,6 +4921,85 @@ flex-shrink:0;
    Relation system - Path Graph
    ================================================================ */
 
+/* Tree Modal */
+.tree-modal {
+  max-width: 95vw !important;
+  width: 700px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.tree-modal .modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.tree-modal .modal-header h3 {
+  flex: 1;
+}
+
+.tree-modal-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tree-zoom-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.tree-zoom-btn:hover:not(:disabled) {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.tree-zoom-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tree-zoom-level {
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 40px;
+  text-align: center;
+}
+
+.tree-modal-body {
+  flex: 1;
+  overflow: hidden;
+  padding: 0 !important;
+}
+
+.tree-scroll-container {
+  width: 100%;
+  height: 100%;
+  max-height: calc(90vh - 80px);
+  overflow: auto;
+  padding: 16px;
+}
+
+.tree-scroll-container .relation-graph {
+  min-width: max-content;
+  transition: transform 0.2s ease;
+}
+
 .relation-graph {
   padding: 12px 0;
 }
@@ -4811,9 +5039,13 @@ flex-shrink:0;
   color: var(--text);
   font-weight: 500;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 120px;
+}
+
+.relation-graph-alias {
+  font-size: .75em;
+  font-weight: 400;
+  color: var(--sh-gold, #e0845a);
+  font-style: italic;
 }
 
 .relation-graph-direct {
@@ -4837,8 +5069,8 @@ flex-shrink:0;
 }
 
 .relation-graph-hline {
-  width: 60%;
-  max-width: 300px;
+  width: 80%;
+  max-width: 500px;
   height: 2px;
   background: var(--border);
 }
@@ -4847,15 +5079,14 @@ flex-shrink:0;
 .relation-graph-branches {
   display: flex;
   justify-content: center;
-  gap: 24px;
+  gap: 40px;
 }
 
 .relation-graph-branch {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 100px;
-  max-width: 180px;
+  min-width: 140px;
 }
 
 .relation-graph-step {
@@ -4944,15 +5175,14 @@ flex-shrink:0;
   }
 
   .relation-graph-branches {
-    gap: 12px;
+    gap: 20px;
   }
 
   .relation-graph-branch {
-    min-width: 80px;
+    min-width: 100px;
   }
 
   .relation-graph-name {
-    max-width: 80px;
     font-size: 11px;
   }
 
@@ -5245,6 +5475,28 @@ flex-shrink:0;
   font-weight: 600;
 }
 
+/* ── Calculating state ── */
+.parente-calculating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  gap: 16px;
+}
+
+.parente-calculating .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border-width: 3px;
+}
+
+.parente-calculating-text {
+  font-size: 0.9rem;
+  color: var(--sh-t2);
+  text-align: center;
+}
+
 /* ── Relation card ── */
 .parente-rc {
   background: var(--sh-card);
@@ -5462,6 +5714,18 @@ flex-shrink:0;
   color: var(--sh-cyan);
 }
 
+/* Age hint for BABA/NIA terms */
+.term-age-hint {
+  display: block;
+  font-size: 0.4em;
+  font-weight: 400;
+  font-style: italic;
+  opacity: 0.65;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+  text-align: center;
+}
+
 .parente-sg.c2 {
   color: var(--sh-gold);
 }
@@ -5501,16 +5765,25 @@ flex-shrink:0;
   border-top: 1px solid var(--sh-bdr);
 }
 
+.parente-hp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .parente-hp-l {
   font-size: 0.52rem;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--sh-t3);
   font-weight: 600;
-  margin-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-bottom: 0;
 }
 
 .parente-hp-l::after {
@@ -5518,6 +5791,59 @@ flex-shrink:0;
   flex: 1;
   height: 1px;
   background: var(--sh-bdr);
+  min-width: 20px;
+}
+
+.parente-hp-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.parente-zoom-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--sh-bdr);
+  border-radius: 6px;
+  background: var(--sh-elev);
+  color: var(--sh-t2);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.parente-zoom-btn:hover:not(:disabled) {
+  background: var(--sh-acc);
+  color: #fff;
+  border-color: var(--sh-acc);
+}
+
+.parente-zoom-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.parente-zoom-reset {
+  width: auto;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.parente-fullscreen-btn {
+  margin-left: 4px;
+}
+
+.parente-hp-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--sh-elev) transparent;
 }
 
 .parente-hp-t {
@@ -5525,9 +5851,43 @@ flex-shrink:0;
   align-items: flex-start;
   justify-content: center;
   padding: 6px 0 2px;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--sh-elev) transparent;
+  min-width: max-content;
+  transition: transform 0.2s ease;
+}
+
+/* Fullscreen mode */
+.parente-hp-fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.parente-hp-fullscreen {
+  background: var(--sh-card);
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.parente-hp-fullscreen .parente-hp-scroll {
+  max-height: calc(90vh - 80px);
+  overflow: auto;
+}
+
+.parente-hp-fullscreen .parente-hp-t {
+  padding: 20px;
 }
 
 /* Node */
@@ -5604,11 +5964,19 @@ flex-shrink:0;
 .parente-nn {
   font-size: 0.56rem;
   color: var(--sh-t2);
-  max-width: 60px;
+  max-width: 80px;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.parente-alias {
+  display: block;
+  font-size: 0.48rem;
+  color: var(--sh-gold);
+  font-style: italic;
+  margin-top: 1px;
 }
 
 .parente-ng {
@@ -6436,6 +6804,15 @@ flex-shrink:0;
   color: var(--sh-txt);
 }
 
+/* ── Alias (surnom) ── */
+.fiche-sh .fiche-alias {
+  font-size: .72rem;
+  font-weight: 400;
+  color: var(--sh-gold);
+  margin-left: 4px;
+  font-style: italic;
+}
+
 .fiche-sh .fiche-sp-sub {
   font-size: .62rem;
   color: var(--sh-t2);
@@ -6540,6 +6917,16 @@ flex-shrink:0;
   justify-content: center;
 }
 
+.fiche-sh .fiche-wg-av.female {
+  background: rgba(204,160,238,.08);
+  color: #CCA0EE;
+}
+
+.fiche-sh .fiche-wg-av.male {
+  background: rgba(114,180,238,.08);
+  color: #72B4EE;
+}
+
 .fiche-sh .fiche-wg-name {
   font-size: .72rem;
   font-weight: 500;
@@ -6641,6 +7028,7 @@ flex-shrink:0;
 .fiche-sh .fiche-kid-info {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 5px;
   min-width: 0;
   flex: 1;

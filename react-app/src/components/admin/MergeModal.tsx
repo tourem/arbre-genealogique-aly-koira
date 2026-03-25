@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Member, MemberDict } from '../../lib/types';
 import { supabase } from '../../lib/supabase';
 import {
@@ -7,6 +7,7 @@ import {
   computeMergeChanges,
   computeMergeResult,
   performMerge,
+  filterActiveMembersDict,
 } from '../../lib/mergeUtils';
 
 type Step = 1 | 2 | 3;
@@ -26,11 +27,21 @@ export default function MergeModal({ members, onClose, onMerged }: Props) {
   const [confirmInput, setConfirmInput] = useState('');
   const [merging, setMerging] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  const memberList = useMemo(() => Object.values(members), [members]);
+  // Get current user ID
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUserId(data.user?.id || null);
+    });
+  }, []);
 
-  const source = sourceId ? members[sourceId] : null;
-  const target = targetId ? members[targetId] : null;
+  // Filter out merged members
+  const activeMembers = useMemo(() => filterActiveMembersDict(members), [members]);
+  const memberList = useMemo(() => Object.values(activeMembers), [activeMembers]);
+
+  const source = sourceId ? activeMembers[sourceId] : null;
+  const target = targetId ? activeMembers[targetId] : null;
 
   // Filter members for search
   const filterMembers = (query: string, excludeId?: string) => {
@@ -52,31 +63,31 @@ export default function MergeModal({ members, onClose, onMerged }: Props) {
 
   // Get relations
   const sourceRels = useMemo(
-    () => (sourceId ? getMemberRelations(sourceId, members) : null),
-    [sourceId, members]
+    () => (sourceId ? getMemberRelations(sourceId, activeMembers) : null),
+    [sourceId, activeMembers]
   );
   const targetRels = useMemo(
-    () => (targetId ? getMemberRelations(targetId, members) : null),
-    [targetId, members]
+    () => (targetId ? getMemberRelations(targetId, activeMembers) : null),
+    [targetId, activeMembers]
   );
 
   // Conflicts
   const conflicts = useMemo(() => {
     if (!sourceId || !targetId) return [];
-    return detectConflicts(sourceId, targetId, members);
-  }, [sourceId, targetId, members]);
+    return detectConflicts(sourceId, targetId, activeMembers);
+  }, [sourceId, targetId, activeMembers]);
 
   // Changes for step 2
   const changes = useMemo(() => {
     if (!sourceId || !targetId) return null;
-    return computeMergeChanges(sourceId, targetId, members);
-  }, [sourceId, targetId, members]);
+    return computeMergeChanges(sourceId, targetId, activeMembers);
+  }, [sourceId, targetId, activeMembers]);
 
   // Result preview for step 2
   const mergeResult = useMemo(() => {
     if (!sourceId || !targetId) return null;
-    return computeMergeResult(sourceId, targetId, members);
-  }, [sourceId, targetId, members]);
+    return computeMergeResult(sourceId, targetId, activeMembers);
+  }, [sourceId, targetId, activeMembers]);
 
   // Validation
   const canProceed = sourceId && targetId && sourceId !== targetId;
@@ -97,13 +108,26 @@ export default function MergeModal({ members, onClose, onMerged }: Props) {
   };
 
   const handleMerge = async () => {
-    if (!sourceId || !targetId || !isConfirmValid) return;
+    if (!sourceId || !targetId || !isConfirmValid || !userId) return;
 
     setMerging(true);
     setError(null);
 
     try {
-      await performMerge(sourceId, targetId, { transferNote: true }, members, supabase);
+      const result = await performMerge(
+        sourceId,
+        targetId,
+        { transferNote: true, performedBy: userId },
+        activeMembers,
+        supabase
+      );
+
+      if (!result.success) {
+        setError(result.error || 'Erreur lors de la fusion');
+        setMerging(false);
+        return;
+      }
+
       await onMerged();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de la fusion');
@@ -486,16 +510,17 @@ export default function MergeModal({ members, onClose, onMerged }: Props) {
               <div className="mg-confirm-icon">⚠️</div>
               <div className="mg-confirm-text">
                 <span className="del-name">{source.name}</span> (Gén. {source.generation},{' '}
-                {source.gender === 'M' ? 'Homme' : 'Femme'}) sera{' '}
-                <strong>définitivement supprimé(e)</strong>.
+                {source.gender === 'M' ? 'Homme' : 'Femme'}) sera supprimé(e).
                 <br />
                 <br />
                 Ses {changes.summary.transferred} relations seront transférées à{' '}
                 <span className="keep-name">{target.name}</span> (Gén. {target.generation},{' '}
                 {target.gender === 'M' ? 'Homme' : 'Femme'}).
-                <br />
-                <br />
-                Cette action est <strong>irréversible</strong>.
+              </div>
+              <div className="mg-rollback-notice">
+                <span className="mg-rollback-icon">↩</span>
+                Cette fusion peut être annulée pendant <strong>30 jours</strong> depuis
+                l'historique des fusions.
               </div>
 
               <div className="mg-confirm-input">
@@ -528,10 +553,10 @@ export default function MergeModal({ members, onClose, onMerged }: Props) {
               <button
                 className="mg-btn danger"
                 onClick={handleMerge}
-                disabled={!isConfirmValid || merging}
+                disabled={!isConfirmValid || merging || !userId}
                 type="button"
               >
-                {merging ? 'Fusion en cours...' : '🔗 Fusionner définitivement'}
+                {merging ? 'Fusion en cours...' : '🔗 Confirmer la fusion'}
               </button>
             </div>
           </div>

@@ -14,6 +14,10 @@ export interface Member {
   birth_city: string | null;
   birth_country: string | null;
   village: string | null;
+  // Soft delete fields for merge
+  merged?: boolean;
+  merged_into_id?: string | null;
+  merged_at?: string | null;
 }
 
 export type MemberDict = Record<string, Member>;
@@ -44,6 +48,7 @@ export interface UserProfile {
   email: string;
   display_name: string;
   role: UserRole;
+  is_active: boolean;
 }
 
 export interface Suggestion {
@@ -106,4 +111,54 @@ export interface SonghoyRelationResult {
     distanceB: number;
     labelFr: string;
   };
+}
+
+// --- Système de fusion avec rollback ---
+
+export type MergeStatus = 'ACTIVE' | 'REVERTED' | 'EXPIRED';
+
+export type MergeOperationType = 'TRANSFER' | 'SKIP' | 'CONFLICT';
+
+export type RelationshipType = 'FATHER' | 'MOTHER' | 'SPOUSE' | 'CHILD';
+
+export interface MergeOperation {
+  type: MergeOperationType;
+  relationshipType: RelationshipType;
+  description: string;
+  personId?: string;
+  personName?: string;
+}
+
+export interface MemberSnapshot {
+  member: Member;
+  relations: {
+    father: { id: string; name: string } | null;
+    mother: { id: string; name: string } | null;
+    spouses: { id: string; name: string }[];
+    children: { id: string; name: string }[];
+  };
+}
+
+export interface MergeSnapshot {
+  source: MemberSnapshot;
+  target: MemberSnapshot;
+  mergedAt: string;
+}
+
+export interface MergeHistory {
+  id: string;
+  source_id: string;
+  target_id: string;
+  performed_by: string;
+  performed_at: string;
+  reverted_at: string | null;
+  reverted_by: string | null;
+  status: MergeStatus;
+  snapshot: MergeSnapshot;
+  operations: MergeOperation[];
+  // Computed fields (joined)
+  source_name?: string;
+  target_name?: string;
+  performer_name?: string;
+  days_remaining?: number;
 }

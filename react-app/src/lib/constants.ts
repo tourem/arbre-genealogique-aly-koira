@@ -20,19 +20,25 @@ export const genNames: Record<number, string> = {
   7: '7eme',
 };
 
-export const roots = [
-  'alkamahamane',
-  'ali',
-  'mahamane',
-  'babachigaw',
-  'kobbo',
-  'moussa',
-  'omorou',
-  'tamimoune',
-  'mahadi',
-  'goussoumbi',
-  'hamatou_lassane',
-  'mahamane_h',
+// Note: roots IDs are now UUIDs after migration
+// The app will dynamically find the root person by name/generation
+export const ROOT_NAMES = [
+  'Alkamahamane',
+  'Ali Alkamahamane',
+  'Mahamane',
+  'Babachigaw',
+  'Kobbo',
+  'Moussa',
+  'Omorou',
+  'Tamimoune',
+  'Mahadi',
+  'Goussoumbi',
+  'Hamatou Lassane',
 ];
 
-export const DEFAULT_PERSON = 'ali';
+/**
+ * Numéro WhatsApp pour les demandes d'activation de compte
+ * Format: code pays + numéro sans espaces ni caractères spéciaux
+ * Exemple: '33612345678' pour +33 6 12 34 56 78
+ */
+export const WHATSAPP_ACTIVATION_NUMBER = '33662992985'; // TODO: Remplacer par le vrai numéro

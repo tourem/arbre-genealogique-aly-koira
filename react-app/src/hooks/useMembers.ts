@@ -44,7 +44,7 @@ export function useMembers() {
           const fresh = await fetchFromNetwork();
           if (fresh && Object.keys(fresh).length > 0) {
             setMembers(fresh);
-            setCachedMembers(fresh);
+            await setCachedMembers(fresh);
           }
         } catch {
           // Offline — cached data is fine
@@ -55,10 +55,10 @@ export function useMembers() {
           const fresh = await fetchFromNetwork();
           if (fresh && Object.keys(fresh).length > 0) {
             setMembers(fresh);
-            setCachedMembers(fresh);
+            await setCachedMembers(fresh);
           }
         } catch {
-          setError('Impossible de charger les donn\u00E9es. V\u00E9rifiez votre connexion.');
+          setError('Impossible de charger les données. Vérifiez votre connexion.');
         }
         setLoading(false);
       }
@@ -72,10 +72,10 @@ export function useMembers() {
       const fresh = await fetchFromNetwork();
       if (fresh && Object.keys(fresh).length > 0) {
         setMembers(fresh);
-        setCachedMembers(fresh);
+        await setCachedMembers(fresh);
       }
     } catch {
-      setError('Synchronisation \u00E9chou\u00E9e. Les donn\u00E9es locales sont affich\u00E9es.');
+      setError('Synchronisation échouée. Les données locales sont affichées.');
     }
   }, [fetchFromNetwork]);
 

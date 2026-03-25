@@ -21,3 +21,14 @@ react-app/node_modules/
 react-app/dist/
 react-app/.env
 react-app/.vite-dev.pid
+
+# Working notes, screenshots, prompts
+data/
+deploy/
+fusion/
+redesign/
+/test/
+relation/bug1.png
+
+# Claude Code
+.claude/

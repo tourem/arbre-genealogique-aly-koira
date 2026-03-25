@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useMembersContext } from '../context/MembersContext';
 import { useRelationTerms } from '../hooks/useRelationTerms';
 import { findSonghoyRelations } from '../lib/songhoyRelationship';
+import type { SonghoyRelationResult } from '../lib/types';
 import MemberAutocomplete from '../components/relationship/MemberAutocomplete';
 import RelationshipResult from '../components/relationship/RelationshipResult';
 
@@ -10,12 +11,30 @@ export default function ParentePage() {
   const { terms, categories, loading: termsLoading } = useRelationTerms();
   const [person1, setPerson1] = useState('');
   const [person2, setPerson2] = useState('');
+  const [results, setResults] = useState<SonghoyRelationResult[] | null>(null);
+  const [calculating, setCalculating] = useState(false);
 
   const loading = membersLoading || termsLoading;
 
-  const results = useMemo(() => {
-    if (!person1 || !person2 || person1 === person2) return null;
-    return findSonghoyRelations(person1, person2, members, terms, categories);
+  // Exécuter l'algorithme de manière asynchrone
+  useEffect(() => {
+    if (!person1 || !person2 || person1 === person2) {
+      setResults(null);
+      return;
+    }
+
+    // Afficher l'indicateur de chargement
+    setCalculating(true);
+    setResults(null);
+
+    // Utiliser setTimeout pour permettre à l'UI de se mettre à jour
+    const timeoutId = setTimeout(() => {
+      const relationResults = findSonghoyRelations(person1, person2, members, terms, categories);
+      setResults(relationResults);
+      setCalculating(false);
+    }, 50); // Petit délai pour laisser le spinner s'afficher
+
+    return () => clearTimeout(timeoutId);
   }, [person1, person2, members, terms, categories]);
 
   const handleSwap = () => {
@@ -80,6 +99,13 @@ export default function ParentePage() {
             <div className="parente-flash-n">!</div>
             <div className="parente-flash-t">
               Meme personne selectionnee
+            </div>
+          </div>
+        ) : calculating ? (
+          <div className="parente-calculating">
+            <div className="loading-spinner" />
+            <div className="parente-calculating-text">
+              Recherche des liens de parenté...
             </div>
           </div>
         ) : results !== null ? (

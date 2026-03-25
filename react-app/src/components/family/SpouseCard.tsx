@@ -14,11 +14,34 @@ function getInitials(name: string): string {
   return name.slice(0, 2).toUpperCase();
 }
 
-function countChildrenForSpouse(person: Member, spouseId: string, members: MemberDict): number {
+/**
+ * Find spouse member by ID or name.
+ * Some data may have names instead of IDs in spouses array.
+ */
+function findSpouseMember(spouseRef: string, members: MemberDict): Member | null {
+  // First try exact ID match
+  if (members[spouseRef]) {
+    return members[spouseRef];
+  }
+  // Then try name match (case-insensitive)
+  const refLower = spouseRef.toLowerCase().trim();
+  for (const m of Object.values(members)) {
+    if (m.name.toLowerCase() === refLower) {
+      return m;
+    }
+  }
+  return null;
+}
+
+function countChildrenForSpouse(person: Member, spouseRef: string, members: MemberDict): number {
   const kids = [...new Set(person.children || [])].filter((c) => members[c]);
+  const spouse = findSpouseMember(spouseRef, members);
+  const spouseId = spouse?.id || spouseRef;
   return kids.filter((c) => {
     const child = members[c];
-    return child.mother_ref === spouseId;
+    // Check if mother_ref matches spouseId, spouse name, or original spouseRef
+    return child.mother_ref === spouseId || child.mother_ref === spouseRef ||
+           (spouse && child.mother_ref === spouse.name);
   }).length;
 }
 
@@ -44,7 +67,7 @@ export default function SpouseCard({ person, members, onNavigate, onInfo, onAddS
       </div>
       <div className="fiche-spouses-list">
         {spouses.map((sp, idx) => {
-          const spouseInTree = members[sp];
+          const spouseInTree = findSpouseMember(sp, members);
           const spouseName = spouseInTree ? spouseInTree.name : sp;
           const actualGender = spouseInTree ? (spouseInTree.gender === 'M' ? 'm' : 'f') : spouseGender;
           const childCount = person.gender === 'M'
@@ -55,8 +78,8 @@ export default function SpouseCard({ person, members, onNavigate, onInfo, onAddS
             <div
               key={sp + idx}
               className={`fiche-sp-card${spouseInTree ? ' clickable' : ' static'}`}
-              onClick={spouseInTree ? () => onNavigate(sp) : undefined}
-              onKeyDown={spouseInTree ? (e) => e.key === 'Enter' && onNavigate(sp) : undefined}
+              onClick={spouseInTree ? () => onNavigate(spouseInTree.id) : undefined}
+              onKeyDown={spouseInTree ? (e) => e.key === 'Enter' && onNavigate(spouseInTree.id) : undefined}
               role={spouseInTree ? 'button' : undefined}
               tabIndex={spouseInTree ? 0 : undefined}
             >
@@ -76,6 +99,9 @@ export default function SpouseCard({ person, members, onNavigate, onInfo, onAddS
               <div className="fiche-sp-info">
                 <div className="fiche-sp-name">
                   {spouseName}
+                  {spouseInTree?.alias && (
+                    <span className="fiche-alias">({spouseInTree.alias})</span>
+                  )}
                   <span className={`fiche-gender-tag ${actualGender}`}>
                     {actualGender === 'm' ? '\u2642' : '\u2640'}
                   </span>

@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useMembersContext } from '../context/MembersContext';
 import { useAuth } from '../context/AuthContext';
-import { DEFAULT_PERSON, genColors } from '../lib/constants';
+import { genColors } from '../lib/constants';
 import PersonCard from '../components/family/PersonCard';
 import ParentCard from '../components/family/ParentCard';
 import SpouseCard from '../components/family/SpouseCard';
@@ -16,12 +16,29 @@ import AddMemberModal from '../components/family/AddMemberModal';
 import FicheSkeleton from '../components/layout/FicheSkeleton';
 import type { Member } from '../lib/types';
 
+// Find the best default person (lowest generation, or first member)
+function getDefaultPerson(members: Record<string, Member>): string {
+  const memberList = Object.values(members);
+  if (memberList.length === 0) return '';
+
+  // Prefer member named "Ali Alkamahamane" or similar
+  const ali = memberList.find(m =>
+    m.name.toLowerCase().includes('ali') &&
+    m.name.toLowerCase().includes('alkama')
+  );
+  if (ali) return ali.id;
+
+  // Otherwise, find the member with the lowest generation
+  const sorted = memberList.sort((a, b) => a.generation - b.generation);
+  return sorted[0]?.id || '';
+}
+
 export default function FamillePage() {
   const { members, loading, refetchMembers } = useMembersContext();
   const { isAdmin } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPersonId, setCurrentPersonId] = useState(
-    searchParams.get('person') || DEFAULT_PERSON,
+    searchParams.get('person') || '',
   );
   const [history, setHistory] = useState<string[]>([]);
   const [animClass, setAnimClass] = useState('');
@@ -39,6 +56,18 @@ export default function FamillePage() {
       setSearchParams({}, { replace: true });
     }
   }, [searchParams, members, currentPersonId, setSearchParams]);
+
+  // Set default person if current is invalid or empty
+  useEffect(() => {
+    if (!loading && Object.keys(members).length > 0) {
+      if (!currentPersonId || !members[currentPersonId]) {
+        const defaultId = getDefaultPerson(members);
+        if (defaultId) {
+          setCurrentPersonId(defaultId);
+        }
+      }
+    }
+  }, [loading, members, currentPersonId]);
 
   const navigateTo = useCallback(
     (id: string) => {

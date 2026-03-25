@@ -51,7 +51,10 @@ export default function ParentCard({ person, members, onNavigate, onInfo, onAddP
               <span className="fiche-av-sm-gb">G{father.generation}</span>
             </div>
             <div className="fiche-p-info">
-              <div className="fiche-p-name">{father.name}</div>
+              <div className="fiche-p-name">
+                {father.name}
+                {father.alias && <span className="fiche-alias">({father.alias})</span>}
+              </div>
               <div className="fiche-p-role">
                 <span className="fiche-gender-ico m">{'\u2642'}</span> Père
               </div>
@@ -81,7 +84,10 @@ export default function ParentCard({ person, members, onNavigate, onInfo, onAddP
               <span className="fiche-av-sm-gb">G{mother.generation}</span>
             </div>
             <div className="fiche-p-info">
-              <div className="fiche-p-name">{mother.name}</div>
+              <div className="fiche-p-name">
+                {mother.name}
+                {mother.alias && <span className="fiche-alias">({mother.alias})</span>}
+              </div>
               <div className="fiche-p-role">
                 <span className="fiche-gender-ico f">{'\u2640'}</span> Mère
               </div>

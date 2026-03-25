@@ -14,19 +14,8 @@ interface Props {
 interface SpouseEntry { name: string; firstName: string }
 interface ChildEntry { name: string; firstName: string; gender: 'M' | 'F' }
 
-function generateId(name: string, members: MemberDict): string {
-  const base = name
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, '_')
-    .replace(/[^a-z0-9_]/g, '');
-  if (!base) return `membre_${Date.now()}`;
-  if (!members[base]) return base;
-  let i = 2;
-  while (members[`${base}_${i}`]) i++;
-  return `${base}_${i}`;
+function generateUUID(): string {
+  return crypto.randomUUID();
 }
 
 function buildFullName(firstName: string, lastName: string): string {
@@ -182,7 +171,7 @@ export default function AddMemberModal({ mode, person, members, onClose, onSaved
 
     try {
       const fullName = buildFullName(firstName, lastName);
-      const newId = generateId(fullName, members);
+      const newId = generateUUID();
       const generation =
         mode === 'child' ? person.generation + 1 :
         mode === 'parent' ? person.generation - 1 :
@@ -231,7 +220,7 @@ export default function AddMemberModal({ mode, person, members, onClose, onSaved
       for (const sp of spouseEntries) {
         const spFullName = buildFullName(sp.firstName, sp.name);
         if (!spFullName) continue;
-        const spId = generateId(spFullName, { ...members, [newId]: {} as Member });
+        const spId = generateUUID();
         const spGender = gender === 'M' ? 'F' : 'M';
         const spMember = {
           id: spId,
@@ -258,7 +247,7 @@ export default function AddMemberModal({ mode, person, members, onClose, onSaved
       for (const ch of childEntries) {
         const chFullName = buildFullName(ch.firstName, ch.name);
         if (!chFullName) continue;
-        const chId = generateId(chFullName, { ...members, [newId]: {} as Member });
+        const chId = generateUUID();
         const chMember: Record<string, unknown> = {
           id: chId,
           name: chFullName,
