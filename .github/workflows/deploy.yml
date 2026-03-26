@@ -19,6 +19,6 @@ jobs:
         run: |
           DOKPLOY_URL="$(echo "$DOKPLOY_URL" | xargs)"
           curl -sSf -X POST "${DOKPLOY_URL}/api/application.redeploy" \
-            -H "Authorization: Bearer ${DOKPLOY_TOKEN}" \
+            -H "x-api-key: ${DOKPLOY_TOKEN}" \
             -H "Content-Type: application/json" \
             -d "{\"applicationId\": \"${DOKPLOY_APP_ID}\"}"
