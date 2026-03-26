@@ -1,0 +1,272 @@
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useMembersContext } from '../context/MembersContext';
+import { useAuth } from '../context/AuthContext';
+import { genColors } from '../lib/constants';
+import PersonCard from '../components/family/PersonCard';
+import ParentCard from '../components/family/ParentCard';
+import SpouseCard from '../components/family/SpouseCard';
+import ChildrenByMother from '../components/family/ChildrenByMother';
+import Breadcrumb from '../components/family/Breadcrumb';
+import ExtendedFamily from '../components/family/ExtendedFamily';
+import MemberSearch from '../components/family/MemberSearch';
+import TreeView from '../components/tree/TreeView';
+import TreePopup from '../components/tree/TreePopup';
+import AddMemberModal from '../components/family/AddMemberModal';
+import FicheSkeleton from '../components/layout/FicheSkeleton';
+import type { Member } from '../lib/types';
+
+// Find the best default person (lowest generation, or first member)
+function getDefaultPerson(members: Record<string, Member>): string {
+  const memberList = Object.values(members);
+  if (memberList.length === 0) return '';
+
+  // Prefer member named "Ali Alkamahamane" or similar
+  const ali = memberList.find(m =>
+    m.name.toLowerCase().includes('ali') &&
+    m.name.toLowerCase().includes('alkama')
+  );
+  if (ali) return ali.id;
+
+  // Otherwise, find the member with the lowest generation
+  const sorted = memberList.sort((a, b) => a.generation - b.generation);
+  return sorted[0]?.id || '';
+}
+
+export default function FamillePage() {
+  const { members, loading, refetchMembers } = useMembersContext();
+  const { isAdmin } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPersonId, setCurrentPersonId] = useState(
+    searchParams.get('person') || '',
+  );
+  const [history, setHistory] = useState<string[]>([]);
+  const [animClass, setAnimClass] = useState('');
+  const [viewMode, setViewMode] = useState<'card' | 'tree'>('card');
+  const [popupMember, setPopupMember] = useState<Member | null>(null);
+  const [addModal, setAddModal] = useState<{ mode: 'child' | 'spouse' | 'parent' } | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Handle query param navigation from search page
+  useEffect(() => {
+    const personParam = searchParams.get('person');
+    if (personParam && members[personParam] && personParam !== currentPersonId) {
+      setHistory([]);
+      setCurrentPersonId(personParam);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, members, currentPersonId, setSearchParams]);
+
+  // Set default person if current is invalid or empty
+  useEffect(() => {
+    if (!loading && Object.keys(members).length > 0) {
+      if (!currentPersonId || !members[currentPersonId]) {
+        const defaultId = getDefaultPerson(members);
+        if (defaultId) {
+          setCurrentPersonId(defaultId);
+        }
+      }
+    }
+  }, [loading, members, currentPersonId]);
+
+  const navigateTo = useCallback(
+    (id: string) => {
+      if (!members[id]) return;
+
+      // Flash bar
+      const genColor = genColors[members[id].generation] || '#6366f1';
+      const flash = document.createElement('div');
+      flash.className = 'click-flash';
+      flash.style.background = `linear-gradient(90deg, ${genColor}, transparent)`;
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 500);
+
+      // Animate out
+      setAnimClass('changing');
+
+      setTimeout(() => {
+        if (currentPersonId !== id) {
+          setHistory((prev) => [...prev, currentPersonId]);
+        }
+        setCurrentPersonId(id);
+
+        // Animate in
+        setAnimClass('entering');
+        setTimeout(() => setAnimClass(''), 400);
+
+        scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 150);
+    },
+    [members, currentPersonId],
+  );
+
+  const goBack = useCallback(() => {
+    if (history.length > 0) {
+      const prev = history[history.length - 1];
+      setHistory((h) => h.slice(0, -1));
+      setCurrentPersonId(prev);
+    }
+  }, [history]);
+
+  if (loading) {
+    return (
+      <div className="page active fiche-sh">
+        <div className="scroll" tabIndex={0}>
+          <FicheSkeleton />
+        </div>
+      </div>
+    );
+  }
+
+  const person = members[currentPersonId];
+  if (!person) return null;
+
+  const kids = [...new Set(person.children || [])]
+    .filter((c) => members[c])
+    .map((c) => members[c]);
+
+  const spouseCount = new Set(person.spouses || []).size;
+  const childrenCount = kids.length;
+  const maxGeneration = Math.max(...Object.values(members).map((m) => m.generation ?? 0));
+
+  const handleAddSaved = async () => {
+    setAddModal(null);
+    await refetchMembers();
+  };
+
+  return (
+    <div className="page active fiche-sh">
+      <div className="scroll" ref={scrollRef} tabIndex={0}>
+        <MemberSearch
+          members={members}
+          currentPersonId={currentPersonId}
+          onSelect={navigateTo}
+        />
+
+        <div className="fiche-tabs">
+          <div
+            className={`fiche-tab${viewMode === 'card' ? ' on' : ''}`}
+            onClick={() => setViewMode('card')}
+          >
+            <svg className="fiche-tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <rect x="4" y="4" width="16" height="16" rx="2" />
+              <line x1="8" y1="9" x2="16" y2="9" />
+              <line x1="8" y1="13" x2="14" y2="13" />
+              <line x1="8" y1="17" x2="12" y2="17" />
+            </svg>
+            Fiche
+          </div>
+          <div
+            className={`fiche-tab${viewMode === 'tree' ? ' on' : ''}`}
+            onClick={() => setViewMode('tree')}
+          >
+            <svg className="fiche-tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <circle cx="12" cy="6" r="2" />
+              <circle cx="6" cy="18" r="2" />
+              <circle cx="18" cy="18" r="2" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="12" x2="6" y2="16" />
+              <line x1="12" y1="12" x2="18" y2="16" />
+            </svg>
+            Arbre
+          </div>
+        </div>
+
+        {viewMode === 'tree' ? (
+          <TreeView rootId={currentPersonId} members={members} />
+        ) : (
+          <>
+            <Breadcrumb
+              currentPersonId={currentPersonId}
+              members={members}
+              historyLength={history.length}
+              onNavigate={navigateTo}
+              onGoBack={goBack}
+            />
+
+            <div className={`person-view-container ${animClass}`} key={currentPersonId}>
+              <PersonCard
+                person={person}
+                spouseCount={spouseCount}
+                childrenCount={childrenCount}
+                maxGeneration={maxGeneration}
+              />
+
+              <ParentCard
+                person={person}
+                members={members}
+                onNavigate={navigateTo}
+                onInfo={setPopupMember}
+                onAddParent={isAdmin ? () => setAddModal({ mode: 'parent' }) : undefined}
+              />
+
+              <SpouseCard
+                person={person}
+                members={members}
+                onNavigate={navigateTo}
+                onInfo={setPopupMember}
+                onAddSpouse={isAdmin ? () => setAddModal({ mode: 'spouse' }) : undefined}
+              />
+
+              {kids.length > 0 ? (
+                <ChildrenByMother
+                  person={person}
+                  kids={kids}
+                  members={members}
+                  onNavigate={navigateTo}
+                  onInfo={setPopupMember}
+                  onAddChild={isAdmin ? () => setAddModal({ mode: 'child' }) : undefined}
+                />
+              ) : (
+                <div className="fiche-section">
+                  <div className="fiche-conn c-green"></div>
+                  <div className="fiche-sh-header children">
+                    <div className="fiche-sh-txt">
+                      <span className="fiche-sh-ico">{'\u25BC'}</span> Enfants
+                    </div>
+                  </div>
+                  {isAdmin ? (
+                    <button
+                      className="fiche-add-btn"
+                      onClick={() => setAddModal({ mode: 'child' })}
+                      type="button"
+                    >
+                      <span className="fiche-add-ico">+</span>
+                      Ajouter un enfant
+                    </button>
+                  ) : (
+                    <div className="no-data">Pas d&apos;enfants enregistr&eacute;s</div>
+                  )}
+                </div>
+              )}
+
+              <ExtendedFamily
+                person={person}
+                members={members}
+                onNavigate={navigateTo}
+              />
+            </div>
+
+            {popupMember && (
+              <TreePopup
+                member={popupMember}
+                members={members}
+                onClose={() => setPopupMember(null)}
+              />
+            )}
+
+            {addModal && (
+              <AddMemberModal
+                mode={addModal.mode}
+                person={person}
+                members={members}
+                onClose={() => setAddModal(null)}
+                onSaved={handleAddSaved}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}

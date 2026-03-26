@@ -1,0 +1,34 @@
+node_modules/
+dist/
+.env
+.pid
+.DS_Store
+
+# IDE
+.idea/
+
+# Fichiers sensibles
+donnes-sensibles-a-ne-pas-commiter.txt
+
+# Donnees sensibles (credentials, donnees familiales)
+scripts/sql/data/
+
+# Debug
+react-app/debug/
+
+# React app
+react-app/node_modules/
+react-app/dist/
+react-app/.env
+react-app/.vite-dev.pid
+
+# Working notes, screenshots, prompts
+data/
+deploy/
+fusion/
+redesign/
+/test/
+relation/bug1.png
+
+# Claude Code
+.claude/

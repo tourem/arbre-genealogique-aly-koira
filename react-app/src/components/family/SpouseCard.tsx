@@ -1,0 +1,136 @@
+import type { Member, MemberDict } from '../../lib/types';
+
+interface Props {
+  person: Member;
+  members: MemberDict;
+  onNavigate: (id: string) => void;
+  onInfo?: (member: Member) => void;
+  onAddSpouse?: () => void;
+}
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+}
+
+/**
+ * Find spouse member by ID or name.
+ * Some data may have names instead of IDs in spouses array.
+ */
+function findSpouseMember(spouseRef: string, members: MemberDict): Member | null {
+  // First try exact ID match
+  if (members[spouseRef]) {
+    return members[spouseRef];
+  }
+  // Then try name match (case-insensitive)
+  const refLower = spouseRef.toLowerCase().trim();
+  for (const m of Object.values(members)) {
+    if (m.name.toLowerCase() === refLower) {
+      return m;
+    }
+  }
+  return null;
+}
+
+function countChildrenForSpouse(person: Member, spouseRef: string, members: MemberDict): number {
+  const kids = [...new Set(person.children || [])].filter((c) => members[c]);
+  const spouse = findSpouseMember(spouseRef, members);
+  const spouseId = spouse?.id || spouseRef;
+  return kids.filter((c) => {
+    const child = members[c];
+    // Check if mother_ref matches spouseId, spouse name, or original spouseRef
+    return child.mother_ref === spouseId || child.mother_ref === spouseRef ||
+           (spouse && child.mother_ref === spouse.name);
+  }).length;
+}
+
+export default function SpouseCard({ person, members, onNavigate, onInfo, onAddSpouse }: Props) {
+  const spouses = [...new Set(person.spouses || [])];
+
+  if (spouses.length === 0 && !onAddSpouse) return null;
+
+  const spouseLabel = person.gender === 'M' ? 'Épouses' : 'Époux';
+  // Spouse gender is opposite of the person
+  const spouseGender = person.gender === 'M' ? 'f' : 'm';
+
+  return (
+    <div className="fiche-section">
+      <div className="fiche-conn c-gold"></div>
+      <div className="fiche-sh-header spouses">
+        <div className="fiche-sh-txt">
+          <span className="fiche-sh-ico">{'\u25C6'}</span> {spouseLabel}
+          {spouses.length > 0 && (
+            <span className="fiche-sh-count">{spouses.length}</span>
+          )}
+        </div>
+      </div>
+      <div className="fiche-spouses-list">
+        {spouses.map((sp, idx) => {
+          const spouseInTree = findSpouseMember(sp, members);
+          const spouseName = spouseInTree ? spouseInTree.name : sp;
+          const actualGender = spouseInTree ? (spouseInTree.gender === 'M' ? 'm' : 'f') : spouseGender;
+          const childCount = person.gender === 'M'
+            ? countChildrenForSpouse(person, sp, members)
+            : 0;
+
+          return (
+            <div
+              key={sp + idx}
+              className={`fiche-sp-card${spouseInTree ? ' clickable' : ' static'}`}
+              onClick={spouseInTree ? () => onNavigate(spouseInTree.id) : undefined}
+              onKeyDown={spouseInTree ? (e) => e.key === 'Enter' && onNavigate(spouseInTree.id) : undefined}
+              role={spouseInTree ? 'button' : undefined}
+              tabIndex={spouseInTree ? 0 : undefined}
+            >
+              {spouseInTree && onInfo && (
+                <button
+                  className="info-icon-btn"
+                  onClick={(e) => { e.stopPropagation(); onInfo(spouseInTree); }}
+                  type="button"
+                >
+                  i
+                </button>
+              )}
+              <div className="fiche-sp-num">{idx + 1}</div>
+              <div className={`fiche-av-sp ${actualGender}`}>
+                {getInitials(spouseName)}
+              </div>
+              <div className="fiche-sp-info">
+                <div className="fiche-sp-name">
+                  {spouseName}
+                  {spouseInTree?.alias && (
+                    <span className="fiche-alias">({spouseInTree.alias})</span>
+                  )}
+                  <span className={`fiche-gender-tag ${actualGender}`}>
+                    {actualGender === 'm' ? '\u2642' : '\u2640'}
+                  </span>
+                </div>
+                {spouses.length > 1 && (
+                  <div className="fiche-sp-sub">
+                    {idx + 1}{idx === 0 ? (actualGender === 'm' ? 'er' : 'ère') : 'ème'} {actualGender === 'm' ? 'époux' : 'épouse'}
+                  </div>
+                )}
+                {spouseInTree?.note && (
+                  <div className="note-hint">{'★'} {spouseInTree.note}</div>
+                )}
+              </div>
+              {person.gender === 'M' && (
+                <div className={`fiche-sp-children${childCount === 0 ? ' zero' : ''}`}>
+                  {childCount} enfant{childCount !== 1 ? 's' : ''}
+                </div>
+              )}
+              {spouseInTree && <div className="fiche-sp-arrow">{'\u203A'}</div>}
+            </div>
+          );
+        })}
+        {onAddSpouse && (
+          <button className="fiche-add-btn" onClick={onAddSpouse} type="button">
+            <span className="fiche-add-ico">+</span>
+            Ajouter {person.gender === 'M' ? 'une épouse' : 'un époux'}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
