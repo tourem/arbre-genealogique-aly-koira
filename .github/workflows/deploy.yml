@@ -12,8 +12,13 @@ jobs:
 
     steps:
       - name: Deploy via Dokploy API
+        env:
+          DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
+          DOKPLOY_APP_ID: ${{ vars.DOKPLOY_APP_ID }}
+          DOKPLOY_TOKEN: ${{ secrets.DOKPLOY_TOKEN }}
         run: |
-          curl -sSf -X POST "${{ vars.DOKPLOY_URL }}/api/application.redeploy" \
-            -H "Authorization: Bearer ${{ secrets.DOKPLOY_TOKEN }}" \
+          DOKPLOY_URL="$(echo "$DOKPLOY_URL" | xargs)"
+          curl -sSf -X POST "${DOKPLOY_URL}/api/application.redeploy" \
+            -H "Authorization: Bearer ${DOKPLOY_TOKEN}" \
             -H "Content-Type: application/json" \
-            -d '{"applicationId": "${{ vars.DOKPLOY_APP_ID }}"}'
+            -d "{\"applicationId\": \"${DOKPLOY_APP_ID}\"}"
