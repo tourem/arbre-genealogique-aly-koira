@@ -331,6 +331,7 @@ font-size:20px;
 }
 .logo-text h1{font-size:18px;font-weight:700;letter-spacing:-0.5px}
 .logo-text span{font-size:11px;color:var(--text-secondary);font-weight:500}
+.app-version{font-size:10px;opacity:0.6;font-weight:400}
 .logout-btn{
 background:rgba(239,68,68,0.15);
 border:none;

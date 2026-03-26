@@ -14,7 +14,7 @@ export default function Header() {
           <div className="logo-icon">{'\u{1F333}'}</div>
           <div className="logo-text">
             <h1>Famille Aly Ko&iuml;ra</h1>
-            <span>Arbre g&eacute;n&eacute;alogique</span>
+            <span>Arbre g&eacute;n&eacute;alogique <span className="app-version">v{__APP_VERSION__}</span></span>
           </div>
         </div>
         <div className="header-user">
