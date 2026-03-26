@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   version-and-deploy:
     name: Bump Version & Deploy
@@ -17,7 +20,18 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Skip if version bump commit
+        id: skip
+        run: |
+          MSG=$(git log -1 --pretty=format:"%s")
+          if [[ "$MSG" == chore:\ bump\ version* ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Determine version bump from commits
+        if: steps.skip.outputs.skip == 'false'
         id: bump
         run: |
           # Get commit messages since last version tag
@@ -42,6 +56,7 @@ jobs:
           fi
 
       - name: Bump version in package.json
+        if: steps.skip.outputs.skip == 'false'
         id: version
         working-directory: react-app
         run: |
@@ -61,6 +76,7 @@ jobs:
           echo "Bumped $CURRENT -> $NEW_VERSION ($BUMP)"
 
       - name: Commit & tag version
+        if: steps.skip.outputs.skip == 'false'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -71,6 +87,7 @@ jobs:
           git push --tags
 
       - name: Deploy via Dokploy API
+        if: steps.skip.outputs.skip == 'false'
         env:
           DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
           DOKPLOY_APP_ID: ${{ vars.DOKPLOY_APP_ID }}
