@@ -230,7 +230,7 @@ html[data-theme="light"] .login-screen{
 .login-btn{
   width:100%;padding:16px 24px;border:none;border-radius:14px;
   background:linear-gradient(135deg,var(--lg-gold) 0%,var(--lg-terra) 100%);
-  color:#fff;font-family:'Inter',system-ui,sans-serif;
+  color:#111827;font-family:'Inter',system-ui,sans-serif;
   font-size:.95rem;font-weight:700;cursor:pointer;transition:all .25s;
   box-shadow:0 4px 16px rgba(168,128,42,.25);
   display:flex;align-items:center;justify-content:center;gap:8px;
@@ -999,7 +999,7 @@ transition:border-color 0.2s;
 }
 .member-search-input-wrap:focus-within{
 border-color:var(--primary);
-box-shadow:0 0 0 3px rgba(99,102,241,0.15);
+box-shadow:0 0 0 3px rgba(212,168,83,0.15);
 }
 .member-search-icon{
 font-size:16px;
@@ -1122,7 +1122,7 @@ font-size:16px;
 font-family:inherit;
 transition:all 0.2s;
 }
-.search-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,0.2)}
+.search-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,83,0.2)}
 .search-input::placeholder{color:var(--text-muted)}
 .search-icon{
 position:absolute;
@@ -1319,7 +1319,7 @@ transition:all 0.2s;
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus{
 outline:none;
 border-color:var(--primary);
-box-shadow:0 0 0 3px rgba(99,102,241,0.2);
+box-shadow:0 0 0 3px rgba(212,168,83,0.2);
 }
 .form-group input::placeholder, .form-group textarea::placeholder{color:var(--text-muted)}
 .form-group textarea{resize:vertical;min-height:80px}
@@ -1423,7 +1423,7 @@ font-weight:500;
 }
 .gender-selector .gender-option.selected{
 border-color:var(--primary);
-background:rgba(99,102,241,0.15);
+background:var(--gold-subtle);
 }
 .gender-selector .gender-option:active{transform:scale(0.98)}
 .gender-option{
@@ -1438,7 +1438,7 @@ transition:all 0.2s;
 }
 .gender-option.selected{
 border-color:var(--primary);
-background:rgba(99,102,241,0.15);
+background:var(--gold-subtle);
 }
 .gender-option:active{transform:scale(0.98)}
 .gender-option span{font-size:20px;display:block;margin-bottom:4px}
@@ -3309,7 +3309,7 @@ transform:none;
 .child-search-input:focus{
   outline:none;
   border-color:var(--primary);
-  box-shadow:0 0 0 3px rgba(99,102,241,.1);
+  box-shadow:0 0 0 3px rgba(212,168,83,.1);
 }
 .child-search-input::placeholder{
   color:var(--text-muted);
@@ -3437,7 +3437,7 @@ transform:none;
 .parent-search-input:focus{
   outline:none;
   border-color:var(--primary);
-  box-shadow:0 0 0 3px rgba(99,102,241,.1);
+  box-shadow:0 0 0 3px rgba(212,168,83,.1);
 }
 .parent-search-input::placeholder{
   color:var(--text-muted);
@@ -3618,8 +3618,8 @@ gap:8px;
 width:100%;
 padding:12px 16px;
 border-radius:10px;
-border:1px dashed rgba(99,102,241,.4);
-background:rgba(99,102,241,.06);
+border:1px dashed rgba(212,168,83,.4);
+background:rgba(212,168,83,.06);
 color:var(--primary-light);
 font-size:.85rem;
 cursor:pointer;
@@ -3628,7 +3628,7 @@ margin-top:2px;
 }
 .modal-body .fiche-add-btn:hover{
 border-color:var(--primary-light);
-background:rgba(99,102,241,.12);
+background:rgba(212,168,83,.12);
 color:#a5b4fc;
 }
 .modal-body .fiche-add-ico{
@@ -3663,7 +3663,7 @@ background:var(--primary);
 color:#fff;
 }
 .add-modal-toggle-btn:not(.active):hover{
-background:rgba(99,102,241,0.08);
+background:rgba(212,168,83,.08);
 color:var(--text);
 }
 
@@ -3714,10 +3714,10 @@ border-bottom:1px solid var(--border);
 border-bottom:none;
 }
 .member-picker-item:hover{
-background:rgba(99,102,241,0.06);
+background:rgba(212,168,83,.06);
 }
 .member-picker-item.selected{
-background:rgba(99,102,241,0.12);
+background:rgba(212,168,83,.12);
 border-left:3px solid var(--primary);
 }
 .member-picker-gen{
@@ -3759,8 +3759,8 @@ align-items:center;
 gap:12px;
 padding:12px 16px;
 border-radius:10px;
-background:rgba(99,102,241,0.08);
-border:1px solid rgba(99,102,241,0.2);
+background:rgba(212,168,83,.08);
+border:1px solid var(--gold-border);
 }
 .preview-gender{
 font-size:24px;
@@ -3803,7 +3803,7 @@ font-size:14px;
 color:var(--text);
 }
 .children-assign-item:hover{
-background:rgba(99,102,241,0.06);
+background:rgba(212,168,83,.06);
 }
 .children-assign-item input[type="checkbox"]{
 width:16px;
@@ -4364,7 +4364,7 @@ position:absolute;
 top:6px;right:6px;
 width:24px;height:24px;
 border-radius:50%;
-background:rgba(99,102,241,0.5);
+background:rgba(212,168,83,0.5);
 color:white;
 border:none;
 font-size:13px;
@@ -4377,7 +4377,7 @@ line-height:1;
 padding:0;
 }
 .info-icon-btn:hover{
-background:rgba(99,102,241,0.8);
+background:rgba(212,168,83,0.8);
 }
 .info-icon-btn:active{
 transform:scale(0.9);
@@ -4448,7 +4448,7 @@ min-height:60px;
 .add-member-card:hover{
 border-color:var(--primary);
 color:var(--primary-light);
-background:rgba(99,102,241,0.08);
+background:rgba(212,168,83,.08);
 }
 .add-member-card:active{
 transform:scale(0.97);
@@ -4473,8 +4473,8 @@ display:flex;
 align-items:center;
 gap:10px;
 padding:12px 16px;
-background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(236,72,153,0.10));
-border:1px solid rgba(99,102,241,0.25);
+background:linear-gradient(135deg,var(--gold-subtle),rgba(212,168,83,0.06));
+border:1px solid var(--gold-border);
 border-radius:var(--radius);
 font-size:14px;
 font-weight:500;
@@ -7496,17 +7496,9 @@ flex-shrink:0;
    Applied via html[data-theme="light"]
    ================================================================ */
 
+/* Light theme base tokens are defined at :root level above.
+   Only generation background overrides needed here. */
 html[data-theme="light"] {
-  --bg: #F5F2EC;
-  --card: #FFFFFF;
-  --card-hover: #F8F6F1;
-  --surface: #FAF8F4;
-  --text: #1C1C28;
-  --text-secondary: #5A5F7A;
-  --text-muted: #8A8FA5;
-  --border: rgba(0,0,0,0.08);
-  --shadow: 0 4px 24px rgba(0,0,0,0.06);
-  --success: #059669;
   --gen1-bg: rgba(245,158,11,0.22);
   --gen2-bg: rgba(16,185,129,0.22);
   --gen3-bg: rgba(99,102,241,0.22);
@@ -7577,7 +7569,7 @@ html[data-theme="light"] .parente-page {
 /* ---- Hardcoded color fixes for light theme ---- */
 
 html[data-theme="light"] .login-screen {
-  background: linear-gradient(135deg, #F5F2EC 0%, #EDE9E0 50%, #E8E4DB 100%);
+  background: var(--lg-bg);
 }
 html[data-theme="light"] .login-logo h1 {
   background: linear-gradient(135deg, #1C1C28, var(--primary));
@@ -7585,8 +7577,8 @@ html[data-theme="light"] .login-logo h1 {
   background-clip: text;
 }
 html[data-theme="light"] .header {
-  background: linear-gradient(135deg, #FFFFFF 0%, #FAF8F4 100%);
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 html[data-theme="light"] .nav {
   background: rgba(245,242,236,0.95);
@@ -7616,20 +7608,20 @@ html[data-theme="light"] .add-member-card {
 }
 html[data-theme="light"] .add-member-card:hover {
   border-color: var(--primary);
-  background: rgba(99,102,241,0.10);
+  background: rgba(212,168,83,0.10);
 }
 html[data-theme="light"] .add-first-child {
   border-color: rgba(0,0,0,0.18);
 }
 html[data-theme="light"] .modal-body .fiche-add-btn {
-  border: 1px dashed rgba(99,102,241,.45);
-  background: rgba(99,102,241,.08);
-  color: #4F46E5;
+  border: 1px dashed rgba(212,168,83,.45);
+  background: rgba(212,168,83,.08);
+  color: #9A7B2E;
 }
 html[data-theme="light"] .modal-body .fiche-add-btn:hover {
-  border-color: rgba(99,102,241,.7);
-  background: rgba(99,102,241,.14);
-  color: #4338CA;
+  border-color: rgba(212,168,83,.7);
+  background: rgba(212,168,83,.14);
+  color: #7A6020;
 }
 html[data-theme="light"] .btn-add-term {
   border-color: rgba(0,0,0,0.18);
@@ -7638,7 +7630,7 @@ html[data-theme="light"] .btn-add-term:hover {
   border-color: var(--primary);
 }
 html[data-theme="light"] .add-child-btn {
-  box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+  box-shadow: 0 2px 8px rgba(212,168,83,0.25);
 }
 
 /* ---- Gender icons — darken for light bg contrast ---- */
