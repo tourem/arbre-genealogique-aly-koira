@@ -451,21 +451,23 @@ color:var(--text-muted);font-size:14px;
 
 /* ========== PROFILE MENU ========== */
 .profile-menu-backdrop{
-position:fixed;inset:0;z-index:150;
-background:rgba(0,0,0,0.3);
+position:fixed;inset:0;z-index:110;
+background:rgba(0,0,0,0.4);
 animation:fadeIn .15s ease-out;
 }
 .profile-menu{
-position:fixed;bottom:0;left:0;right:0;
-width:100%;max-width:500px;margin:0 auto;
+position:fixed;bottom:68px;bottom:calc(68px + env(safe-area-inset-bottom,0));
+left:50%;transform:translateX(-50%);
+width:calc(100% - 32px);max-width:468px;
 background:var(--surface);
 border:1px solid var(--border);
-border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+border-radius:var(--radius);
 box-shadow:var(--shadow);
-padding:12px 12px calc(12px + env(safe-area-inset-bottom,0));
-animation:menuSlideUp .25s ease-out;
+padding:8px;
+animation:menuSlideUp .2s ease-out;
+z-index:120;
 }
-@keyframes menuSlideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes menuSlideUp{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .profile-menu-user{
 display:flex;align-items:center;gap:8px;
 padding:8px 12px;
@@ -568,7 +570,7 @@ width:100%;
 max-width:500px;
 padding:12px 20px;
 padding-bottom:max(12px,env(safe-area-inset-bottom));
-background:rgba(15,15,26,0.95);
+background:rgba(17,24,39,0.95);
 backdrop-filter:blur(20px);
 -webkit-backdrop-filter:blur(20px);
 border-top:1px solid var(--border);
