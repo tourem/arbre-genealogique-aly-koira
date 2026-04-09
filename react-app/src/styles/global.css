@@ -5574,9 +5574,38 @@ flex-shrink:0;
   animation: sh-rise 0.6s ease-out both;
 }
 
+.parente-rc.collapsed {
+  margin-bottom: 8px;
+}
+.parente-rc.collapsed .parente-rh {
+  border-bottom: none;
+  cursor: pointer;
+}
+.parente-rc.expanded .parente-rh {
+  cursor: pointer;
+}
+.parente-rb.hidden {
+  display: none;
+}
+.parente-chevron {
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.parente-chevron.open {
+  transform: rotate(180deg);
+}
+.parente-rh-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .parente-rc.dim {
-  opacity: 0.4;
-  transition: opacity 0.4s;
+  opacity: 0.7;
+  transition: opacity 0.3s;
 }
 
 .parente-rc.dim:hover {
