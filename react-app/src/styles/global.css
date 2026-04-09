@@ -1898,8 +1898,8 @@ margin-top:8px;
 
 /* --- Admin variables --- */
 .admin-page {
-  --adm-serif: var(--sh-serif, 'Playfair Display', Georgia, serif);
-  --adm-sans: var(--sh-sans, 'Nunito Sans', system-ui, sans-serif);
+  --adm-serif: 'Inter', system-ui, sans-serif;
+  --adm-sans: 'Inter', system-ui, sans-serif;
   --adm-gold: var(--sh-gold, #D4A853);
   --adm-gold-bg: rgba(212,168,83,.10);
   --adm-gold-bdr: rgba(212,168,83,.20);
@@ -1971,9 +1971,13 @@ html[data-theme="light"] .admin-page {
   background:var(--adm-bg2);
   border-radius:12px;
   margin-bottom:20px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
 }
+.adm-tabs::-webkit-scrollbar{display:none}
 .adm-tab{
   flex:1;
+  min-width:max-content;
   padding:8px 12px;
   border:none;
   background:transparent;
@@ -1984,6 +1988,7 @@ html[data-theme="light"] .admin-page {
   cursor:pointer;
   border-radius:10px;
   transition:all .2s;
+  white-space:nowrap;
 }
 .adm-tab:hover{color:var(--adm-txt)}
 .adm-tab.active{
@@ -2001,8 +2006,8 @@ html[data-theme="light"] .admin-page {
   margin-bottom:16px;
 }
 .adm-kpi{
-  flex:1;
-  min-width:0;
+  flex:1 1 auto;
+  min-width:100px;
   display:flex;
   align-items:center;
   gap:8px;
@@ -4531,10 +4536,11 @@ flex-shrink:0;
   .scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   .scroll::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-  /* Admin page — wider content, no max-width constraint */
+  /* Admin page — constrain width on desktop */
   .admin-page .scroll {
-    max-width: none;
-    padding: 0 40px 32px;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 20px 32px;
   }
 
   /* 5. Person card — wider, larger avatar */
@@ -4699,8 +4705,8 @@ flex-shrink:0;
     max-width: 1000px;
   }
   .admin-page .scroll {
-    max-width: none;
-    padding: 0 56px 32px;
+    max-width: 700px;
+    padding: 0 20px 32px;
   }
   .children-grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -4770,7 +4776,7 @@ flex-shrink:0;
     color: var(--text-secondary);
   }
   .admin-tab:hover:not(.active) {
-    background: rgba(99, 102, 241, 0.1);
+    background: var(--gold-subtle);
     color: var(--text-secondary);
   }
   .action-btn:hover {
