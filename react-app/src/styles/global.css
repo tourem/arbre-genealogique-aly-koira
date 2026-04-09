@@ -1,22 +1,31 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
---bg:#0f0f1a;
---card:#1a1a2e;
---card-hover:#252542;
---surface:#16163a;
---primary:#6366f1;
---primary-light:#818cf8;
---secondary:#ec4899;
---accent:#22d3ee;
---success:#10b981;
---text:#f8fafc;
---text-secondary:#94a3b8;
---text-muted:#64748b;
---male:#3b82f6;
---female:#f472b6;
---border:rgba(255,255,255,0.08);
---shadow:0 4px 24px rgba(0,0,0,0.4);
---radius:16px;
+--bg:#111827;
+--card:#1f2937;
+--card-hover:#283548;
+--surface:#1f2937;
+--surface-hover:#283548;
+--surface-active:#334155;
+--primary:#d4a853;
+--primary-light:#e8c77b;
+--secondary:#d4a853;
+--accent:#d4a853;
+--success:#34d399;
+--error:#f87171;
+--gold:#d4a853;
+--gold-light:#e8c77b;
+--gold-subtle:rgba(212,168,83,0.12);
+--gold-border:rgba(212,168,83,0.2);
+--text:#f1f5f9;
+--text-secondary:#9ca3af;
+--text-muted:#6b7280;
+--male:#60a5fa;
+--female:#f9a8d4;
+--border:rgba(255,255,255,0.07);
+--shadow:0 8px 32px rgba(0,0,0,0.4);
+--shadow-sm:0 2px 12px rgba(0,0,0,0.3);
+--radius:20px;
+--radius-sm:12px;
 --radius-lg:24px;
 --radius-full:9999px;
 --gen1:#f59e0b;--gen1-bg:rgba(245,158,11,0.15);
@@ -28,47 +37,63 @@
 --gen7:#f97316;--gen7-bg:rgba(249,115,22,0.15);
 --gen0:#9333ea;--gen0-bg:rgba(147,51,234,0.15);
 }
+html[data-theme="light"]{
+--bg:#f8f6f1;
+--card:#ffffff;
+--card-hover:#f3f0e8;
+--surface:#ffffff;
+--surface-hover:#f3f0e8;
+--surface-active:#ebe7dc;
+--primary:#a8802a;
+--primary-light:#c49a3a;
+--secondary:#a8802a;
+--accent:#a8802a;
+--gold:#a8802a;
+--gold-light:#c49a3a;
+--gold-subtle:rgba(168,128,42,0.08);
+--gold-border:rgba(168,128,42,0.2);
+--text:#1f2937;
+--text-secondary:#6b7280;
+--text-muted:#9ca3af;
+--border:rgba(0,0,0,0.08);
+--shadow:0 8px 32px rgba(0,0,0,0.08);
+--shadow-sm:0 2px 12px rgba(0,0,0,0.05);
+}
 
 /* ========== ECRAN DE CONNEXION — Redesign v2 ========== */
 /* Tokens locaux pour la page login */
 .login-screen{
-  --lg-bg:#F4EFE4;--lg-bg2:#EBE5D8;--lg-card:#FFFFFF;
-  --lg-gold:#A8802A;--lg-gold-bg:rgba(168,128,42,.08);--lg-gold-bdr:rgba(168,128,42,.18);
-  --lg-terra:#B05838;
+  --lg-bg:#111827;--lg-bg2:#1f2937;--lg-card:#1f2937;
+  --lg-gold:#d4a853;--lg-gold-bg:rgba(212,168,83,.10);--lg-gold-bdr:rgba(212,168,83,.20);
+  --lg-terra:#e8c77b;
+  --lg-green:#34d399;--lg-green-bg:rgba(52,211,153,.07);
+  --lg-red:#f87171;--lg-red-bg:rgba(248,113,113,.08);--lg-red-bdr:rgba(248,113,113,.18);
+  --lg-txt:#f1f5f9;--lg-t2:#9ca3af;--lg-t3:#6b7280;
+  --lg-bdr:rgba(255,255,255,.07);--lg-input-bg:rgba(255,255,255,.04);
+  --lg-logo-bg:linear-gradient(135deg,#d4a853,#b8860b);
+  --lg-shadow:0 8px 40px rgba(0,0,0,.4);
+}
+html[data-theme="light"] .login-screen{
+  --lg-bg:#f8f6f1;--lg-bg2:#ebe7dc;--lg-card:#ffffff;
+  --lg-gold:#a8802a;--lg-gold-bg:rgba(168,128,42,.08);--lg-gold-bdr:rgba(168,128,42,.18);
+  --lg-terra:#c49a3a;
   --lg-green:#2A7D45;--lg-green-bg:rgba(42,125,69,.06);
   --lg-red:#B04838;--lg-red-bg:rgba(176,72,56,.06);--lg-red-bdr:rgba(176,72,56,.18);
-  --lg-txt:#2C2416;--lg-t2:#6A5E4E;--lg-t3:#A09478;
-  --lg-bdr:#E0D8CA;--lg-input-bg:#F6F2EA;
-  --lg-logo-bg:linear-gradient(145deg,#E8DCC8,#D4C4A8);
-  --lg-shadow:0 8px 40px rgba(90,70,30,.08);
-}
-html[data-theme="dark"] .login-screen{
-  --lg-bg:#070A14;--lg-bg2:#0B0F1E;--lg-card:#111830;
-  --lg-gold:#D4A853;--lg-gold-bg:rgba(212,168,83,.10);--lg-gold-bdr:rgba(212,168,83,.20);
-  --lg-terra:#E0845A;
-  --lg-green:#5ACD8A;--lg-green-bg:rgba(90,205,138,.07);
-  --lg-red:#E86050;--lg-red-bg:rgba(232,96,80,.08);--lg-red-bdr:rgba(232,96,80,.18);
-  --lg-txt:#EAE6DE;--lg-t2:#929AB0;--lg-t3:#4A5068;
-  --lg-bdr:rgba(255,255,255,.06);--lg-input-bg:rgba(255,255,255,.04);
-  --lg-logo-bg:linear-gradient(145deg,#1A2040,#252E50);
-  --lg-shadow:0 8px 40px rgba(0,0,0,.4);
+  --lg-txt:#1f2937;--lg-t2:#6b7280;--lg-t3:#9ca3af;
+  --lg-bdr:rgba(0,0,0,.08);--lg-input-bg:#f3f0e8;
+  --lg-logo-bg:linear-gradient(135deg,#d4a853,#c49a3a);
+  --lg-shadow:0 8px 40px rgba(0,0,0,.08);
 }
 .login-screen{
   position:fixed;inset:0;
   background:var(--lg-bg);
   display:flex;align-items:center;justify-content:center;
   z-index:9999;padding:20px;
-  font-family:'Nunito Sans',system-ui,sans-serif;
+  font-family:'Inter',system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;
   transition:background .4s;
 }
-/* Subtle tree pattern */
-.login-screen::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  opacity:.025;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M60 20 L60 100 M60 40 L40 25 M60 40 L80 25 M60 55 L35 42 M60 55 L85 42 M60 70 L30 55 M60 70 L90 55 M60 85 L25 68 M60 85 L95 68' stroke='%23A8802A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-size:120px 120px;
-}
+/* Tree pattern removed for Royal Gold */
 .login-container{
   position:relative;z-index:1;width:100%;max-width:420px;
   animation:lgFadeUp .6s ease-out both;
@@ -93,7 +118,7 @@ html[data-theme="dark"] .login-screen{
 }
 .login-logo-tree{font-size:2.8rem;position:relative;z-index:1}
 .login-title{
-  font-family:'Playfair Display',Georgia,serif;
+  font-family:'Inter',system-ui,sans-serif;
   font-size:1.7rem;font-weight:700;color:var(--lg-txt);
   margin-bottom:4px;line-height:1.2;
 }
@@ -150,7 +175,7 @@ html[data-theme="dark"] .login-screen{
   width:100%;padding:14px 14px 14px 44px;
   border:1.5px solid var(--lg-bdr);border-radius:12px;
   background:var(--lg-input-bg);
-  font-family:'Nunito Sans',system-ui,sans-serif;
+  font-family:'Inter',system-ui,sans-serif;
   font-size:.9rem;color:var(--lg-txt);outline:none;
   transition:all .25s;
 }
@@ -205,7 +230,7 @@ html[data-theme="dark"] .login-screen{
 .login-btn{
   width:100%;padding:16px 24px;border:none;border-radius:14px;
   background:linear-gradient(135deg,var(--lg-gold) 0%,var(--lg-terra) 100%);
-  color:#fff;font-family:'Nunito Sans',system-ui,sans-serif;
+  color:#fff;font-family:'Inter',system-ui,sans-serif;
   font-size:.95rem;font-weight:700;cursor:pointer;transition:all .25s;
   box-shadow:0 4px 16px rgba(168,128,42,.25);
   display:flex;align-items:center;justify-content:center;gap:8px;
@@ -259,7 +284,7 @@ html[data-theme="dark"] .login-screen{
   width:100%;padding:14px 14px 14px 44px;
   border:1.5px solid var(--lg-bdr);border-radius:12px;
   background:var(--lg-input-bg);
-  font-family:'Nunito Sans',system-ui,sans-serif;
+  font-family:'Inter',system-ui,sans-serif;
   font-size:.9rem;color:var(--lg-txt);outline:none;
   transition:all .25s;
 }
@@ -466,7 +491,7 @@ height:6px;
 }
 .person-card.gen1::before{background:linear-gradient(90deg,var(--gen1),#fbbf24)}
 .person-card.gen2::before{background:linear-gradient(90deg,var(--gen2),#34d399)}
-.person-card.gen3::before{background:linear-gradient(90deg,var(--gen3),#818cf8)}
+.person-card.gen3::before{background:linear-gradient(90deg,var(--gen3),#a5b4fc)}
 .person-card.gen4::before{background:linear-gradient(90deg,var(--gen4),#f472b6)}
 .person-card.gen5::before{background:linear-gradient(90deg,var(--gen5),#a78bfa)}
 .person-card.gen6::before{background:linear-gradient(90deg,var(--gen6),#2dd4bf)}
@@ -500,7 +525,7 @@ font-size:36px;
 position:relative;
 }
 .person-avatar.male{background:linear-gradient(135deg,#1e3a5f,#3b82f6)}
-.person-avatar.female{background:linear-gradient(135deg,#5f1e4a,#ec4899)}
+.person-avatar.female{background:linear-gradient(135deg,#9d174d,var(--female))}
 .person-avatar::after{
 content:'';
 position:absolute;
@@ -755,7 +780,7 @@ font-weight:500;
 }
 .spouse-avatar{
 width:44px;height:44px;
-background:linear-gradient(135deg,#ec4899,#8b5cf6);
+background:linear-gradient(135deg,var(--female),#8b5cf6);
 border-radius:50%;
 display:flex;
 align-items:center;
@@ -995,7 +1020,7 @@ font-size:22px;
 flex-shrink:0;
 }
 .person-item .avatar.male{background:linear-gradient(135deg,#1e3a5f,#3b82f6)}
-.person-item .avatar.female{background:linear-gradient(135deg,#5f1e4a,#ec4899)}
+.person-item .avatar.female{background:linear-gradient(135deg,#9d174d,var(--female))}
 .person-item .info{flex:1;min-width:0}
 .person-item .info .name{font-size:15px;font-weight:600;margin-bottom:2px}
 .person-item .info .details{font-size:12px;color:var(--text-secondary)}
@@ -1477,7 +1502,7 @@ animation:spin 0.8s linear infinite;
   margin-bottom:8px;
 }
 .login-activation-title{
-  font-family:'Playfair Display',Georgia,serif;
+  font-family:'Inter',system-ui,sans-serif;
   font-size:1rem;
   font-weight:700;
   color:var(--lg-green);
@@ -1551,7 +1576,7 @@ animation:spin 0.8s linear infinite;
   margin-bottom:20px;
 }
 .login-card-header h2{
-  font-family:'Playfair Display',Georgia,serif;
+  font-family:'Inter',system-ui,sans-serif;
   font-size:1.25rem;
   font-weight:700;
   color:var(--lg-txt);
@@ -1599,7 +1624,7 @@ animation:spin 0.8s linear infinite;
   height:100%;
 }
 .login-success-title{
-  font-family:'Playfair Display',Georgia,serif;
+  font-family:'Inter',system-ui,sans-serif;
   font-size:1.1rem;
   font-weight:700;
   color:var(--lg-green);
@@ -4069,7 +4094,7 @@ font-size:24px;
 flex-shrink:0;
 }
 .tree-popup-avatar.male{background:linear-gradient(135deg,#1e3a5f,#3b82f6)}
-.tree-popup-avatar.female{background:linear-gradient(135deg,#5f1e4a,#ec4899)}
+.tree-popup-avatar.female{background:linear-gradient(135deg,#9d174d,var(--female))}
 .tree-popup-title{
 flex:1;
 min-width:0;
