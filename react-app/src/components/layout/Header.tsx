@@ -1,17 +1,13 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 import { useMembersContext } from '../../context/MembersContext';
-import ProfileMenu from './ProfileMenu';
 import type { Member } from '../../lib/types';
 
 export default function Header() {
-  const { user } = useAuth();
   const { members } = useMembersContext();
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [menuOpen, setMenuOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -36,10 +32,6 @@ export default function Header() {
     navigate(`/?person=${id}`);
   };
 
-  const initials = user?.display_name
-    ? user.display_name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
-    : '?';
-
   return (
     <>
       <header className="header">
@@ -59,14 +51,6 @@ export default function Header() {
               <path d="m21 21-4.35-4.35" />
             </svg>
             <span className="header-search-placeholder">Rechercher...</span>
-          </button>
-
-          <button
-            className="header-avatar"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Menu profil"
-          >
-            {initials}
           </button>
         </div>
       </header>
@@ -116,8 +100,6 @@ export default function Header() {
           </div>
         </div>
       )}
-
-      {menuOpen && <ProfileMenu onClose={() => setMenuOpen(false)} />}
     </>
   );
 }

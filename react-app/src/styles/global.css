@@ -456,24 +456,16 @@ background:rgba(0,0,0,0.3);
 animation:fadeIn .15s ease-out;
 }
 .profile-menu{
-position:absolute;top:56px;right:16px;
-width:260px;background:var(--surface);
-border:1px solid var(--border);border-radius:var(--radius);
-box-shadow:var(--shadow);padding:8px;
-animation:menuSlideIn .2s ease-out;
-max-width:calc(100vw - 32px);
-}
-@keyframes menuSlideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:480px){
-.profile-menu{
-position:fixed;bottom:0;left:0;right:0;top:auto;
-width:100%;border-radius:var(--radius-lg) var(--radius-lg) 0 0;
-animation:menuSlideUp .25s ease-out;
+position:fixed;bottom:0;left:0;right:0;
+width:100%;max-width:500px;margin:0 auto;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+box-shadow:var(--shadow);
 padding:12px 12px calc(12px + env(safe-area-inset-bottom,0));
-max-width:100%;
+animation:menuSlideUp .25s ease-out;
 }
 @keyframes menuSlideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-}
 .profile-menu-user{
 display:flex;align-items:center;gap:8px;
 padding:8px 12px;
