@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMembersContext } from '../../context/MembersContext';
@@ -30,7 +31,7 @@ export default function ProfileMenu({ onClose }: Props) {
     onClose();
   };
 
-  return (
+  return createPortal(
     <div className="profile-menu-backdrop">
       <div className="profile-menu" ref={menuRef}>
         <div className="profile-menu-user">
@@ -108,6 +109,7 @@ export default function ProfileMenu({ onClose }: Props) {
 
         <div className="profile-menu-version">v{__APP_VERSION__}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
