@@ -100,6 +100,7 @@ export default function RelationCard({
   } = result;
 
   const [showTree, setShowTree] = useState(false);
+  const [expanded, setExpanded] = useState(index === 0);
   const catClass = getCategoryClass(category.code);
   const catIcon = getCategoryIcon(category.code);
   const distance = details.distanceA + details.distanceB;
@@ -108,11 +109,11 @@ export default function RelationCard({
 
   return (
     <div
-      className={`parente-rc${index > 0 ? ' dim' : ''}`}
+      className={`parente-rc${index > 0 ? ' dim' : ''}${expanded ? ' expanded' : ' collapsed'}`}
       style={index > 0 ? { animationDelay: `${index * 0.12}s` } : undefined}
     >
-      {/* Card header with colored band */}
-      <div className={`parente-rh ${catClass}`}>
+      {/* Card header with colored band — clickable to toggle */}
+      <div className={`parente-rh ${catClass}`} onClick={() => setExpanded(!expanded)}>
         <div className="parente-rh-l">
           <div className="parente-ci">{catIcon}</div>
           <div>
@@ -122,14 +123,19 @@ export default function RelationCard({
             <div className="parente-ct">{category.label_fr}</div>
           </div>
         </div>
-        <div className="parente-db">
-          <div className="parente-dv">{distance}</div>
-          <div className="parente-dl">distance</div>
+        <div className="parente-rh-right">
+          <div className="parente-db">
+            <div className="parente-dv">{distance}</div>
+            <div className="parente-dl">distance</div>
+          </div>
+          <svg className={`parente-chevron${expanded ? ' open' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
         </div>
       </div>
 
-      {/* Card body */}
-      <div className="parente-rb">
+      {/* Card body — collapsible */}
+      <div className={`parente-rb${expanded ? '' : ' hidden'}`}>
         {/* Relation A → B */}
         {termAtoB && (
           <>

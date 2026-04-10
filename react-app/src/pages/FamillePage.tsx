@@ -9,7 +9,6 @@ import SpouseCard from '../components/family/SpouseCard';
 import ChildrenByMother from '../components/family/ChildrenByMother';
 import Breadcrumb from '../components/family/Breadcrumb';
 import ExtendedFamily from '../components/family/ExtendedFamily';
-import MemberSearch from '../components/family/MemberSearch';
 import TreeView from '../components/tree/TreeView';
 import TreePopup from '../components/tree/TreePopup';
 import AddMemberModal from '../components/family/AddMemberModal';
@@ -137,12 +136,6 @@ export default function FamillePage() {
   return (
     <div className="page active fiche-sh">
       <div className="scroll" ref={scrollRef} tabIndex={0}>
-        <MemberSearch
-          members={members}
-          currentPersonId={currentPersonId}
-          onSelect={navigateTo}
-        />
-
         <div className="fiche-tabs">
           <div
             className={`fiche-tab${viewMode === 'card' ? ' on' : ''}`}

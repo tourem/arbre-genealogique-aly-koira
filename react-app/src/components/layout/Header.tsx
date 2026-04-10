@@ -1,81 +1,105 @@
-import { useAuth } from '../../context/AuthContext';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useMembersContext } from '../../context/MembersContext';
-import { useTheme } from '../../context/ThemeContext';
+import type { Member } from '../../lib/types';
 
 export default function Header() {
-  const { user, isAdmin, logout } = useAuth();
-  const { stats } = useMembersContext();
-  const { theme, toggleTheme } = useTheme();
+  const { members } = useMembersContext();
+  const navigate = useNavigate();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (searchOpen) {
+      searchInputRef.current?.focus();
+    } else {
+      setSearchQuery('');
+    }
+  }, [searchOpen]);
+
+  const filteredMembers = useCallback((): Member[] => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase();
+    return Object.values(members)
+      .filter((m) => m.name.toLowerCase().includes(q))
+      .slice(0, 15);
+  }, [searchQuery, members]);
+
+  const handleSelectMember = (id: string) => {
+    setSearchOpen(false);
+    setSearchQuery('');
+    navigate(`/?person=${id}`);
+  };
 
   return (
-    <header className="header">
-      <div className="header-top">
-        <div className="logo">
-          <div className="logo-icon">{'\u{1F333}'}</div>
-          <div className="logo-text">
-            <h1>Famille Aly Ko&iuml;ra</h1>
-            <span>Arbre g&eacute;n&eacute;alogique <span className="app-version">v{__APP_VERSION__}</span></span>
+    <>
+      <header className="header">
+        <div className="header-inner">
+          <div className="header-logo">
+            <div className="header-logo-icon">{'\u{1F333}'}</div>
+            <span className="header-logo-text">Aly Ko&iuml;ra</span>
+          </div>
+
+          <button
+            className="header-search-trigger"
+            onClick={() => setSearchOpen(true)}
+            aria-label="Rechercher"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            <span className="header-search-placeholder">Rechercher...</span>
+          </button>
+        </div>
+      </header>
+
+      {searchOpen && (
+        <div className="search-overlay">
+          <div className="search-overlay-header">
+            <div className="search-overlay-input-wrap">
+              <svg className="search-overlay-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input
+                ref={searchInputRef}
+                type="text"
+                className="search-overlay-input"
+                placeholder="Rechercher un membre..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <button className="search-overlay-close" onClick={() => setSearchOpen(false)}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <div className="search-overlay-results">
+            {filteredMembers().map((m) => (
+              <button
+                key={m.id}
+                className="search-overlay-item"
+                onClick={() => handleSelectMember(m.id)}
+              >
+                <div className={`search-overlay-item-avatar ${m.gender === 'F' ? 'female' : 'male'}`}>
+                  {m.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
+                </div>
+                <div className="search-overlay-item-info">
+                  <div className="search-overlay-item-name">{m.name}</div>
+                  <div className="search-overlay-item-gen">G&eacute;n&eacute;ration {m.generation}</div>
+                </div>
+              </button>
+            ))}
+            {searchQuery.trim() && filteredMembers().length === 0 && (
+              <div className="search-overlay-empty">Aucun membre trouv&eacute;</div>
+            )}
           </div>
         </div>
-        <div className="header-user">
-          {user && (
-            <div className="header-user-info">
-              <span className="header-user-name">{user.display_name || user.email}</span>
-              <span className={`header-role-badge ${isAdmin ? 'admin' : 'user'}`}>
-                {isAdmin ? 'Admin' : 'Membre'}
-              </span>
-            </div>
-          )}
-          <button
-            className="theme-toggle-btn"
-            onClick={toggleTheme}
-            title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
-          >
-            {theme === 'dark' ? (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="5" />
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-              </svg>
-            ) : (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-              </svg>
-            )}
-          </button>
-          <button className="logout-btn" onClick={() => void logout()} title="D&eacute;connexion">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-          </button>
-        </div>
-      </div>
-      <div className="header-stats">
-        <div className="header-stat">
-          <div className="header-stat-value">{stats.total || '-'}</div>
-          <div className="header-stat-label">Membres</div>
-        </div>
-        <div className="header-stat">
-          <div className="header-stat-value">{stats.generations || '-'}</div>
-          <div className="header-stat-label">G&eacute;n&eacute;rations</div>
-        </div>
-        <div className="header-stat">
-          <div className="header-stat-value">{stats.males || '-'}</div>
-          <div className="header-stat-label">Hommes</div>
-        </div>
-        <div className="header-stat">
-          <div className="header-stat-value">{stats.females || '-'}</div>
-          <div className="header-stat-label">Femmes</div>
-        </div>
-      </div>
-    </header>
+      )}
+    </>
   );
 }
