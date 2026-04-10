@@ -4525,7 +4525,7 @@ flex-shrink:0;
     overflow: hidden;
   }
   .scroll {
-    padding-bottom: 32px;
+    padding-bottom: 120px;
     max-width: 900px;
     margin: 0 auto;
     scrollbar-width: thin;
@@ -4540,7 +4540,7 @@ flex-shrink:0;
   .admin-page .scroll {
     max-width: 700px;
     margin: 0 auto;
-    padding: 0 20px 32px;
+    padding: 0 20px 120px;
   }
 
   /* 5. Person card — wider, larger avatar */
@@ -4706,7 +4706,7 @@ flex-shrink:0;
   }
   .admin-page .scroll {
     max-width: 700px;
-    padding: 0 20px 32px;
+    padding: 0 20px 120px;
   }
   .children-grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
