@@ -176,7 +176,7 @@ html[data-theme="light"] .login-screen{
   border:1.5px solid var(--lg-bdr);border-radius:12px;
   background:var(--lg-input-bg);
   font-family:'Inter',system-ui,sans-serif;
-  font-size:.9rem;color:var(--lg-txt);outline:none;
+  font-size:16px;color:var(--lg-txt);outline:none;
   transition:all .25s;
 }
 .login-input-wrap input::placeholder{color:var(--lg-t3)}
@@ -408,7 +408,7 @@ border-radius:var(--radius-sm);padding:10px 14px;
 .search-overlay-icon{width:18px;height:18px;color:var(--gold);flex-shrink:0}
 .search-overlay-input{
 flex:1;background:none;border:none;outline:none;
-font-size:15px;color:var(--text);font-family:'Inter',system-ui,sans-serif;
+font-size:16px;color:var(--text);font-family:'Inter',system-ui,sans-serif;
 }
 .search-overlay-input::placeholder{color:var(--text-muted)}
 .search-overlay-close{
@@ -2038,12 +2038,13 @@ html[data-theme="light"] .admin-page {
 .adm-search{
   flex:1;
   min-width:180px;
-  padding:8px 12px 8px 34px;
+  padding:10px 12px 10px 34px;
   border-radius:10px;
   border:1px solid var(--adm-bdr);
   background:var(--adm-input-bg);
   color:var(--adm-txt);
-  font-size:13px;
+  font-size:16px;
+  min-height:44px;
   font-family:var(--adm-sans);
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23929AB0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
@@ -7672,4 +7673,116 @@ html[data-theme="light"] .btn-toggle-active.activate {
 
 html[data-theme="light"] .theme-toggle-btn {
   background: rgba(0,0,0,0.06);
+}
+
+/* ================================================================
+   MOBILE ACCESSIBILITY — Touch targets, iOS zoom, safe areas
+   ================================================================ */
+
+/* Prevent iOS zoom on input focus (requires 16px minimum) */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+textarea,
+select {
+  font-size: 16px;
+}
+
+/* Touch targets: minimum 44x44px per WCAG/Apple HIG */
+.nav-item {
+  min-height: 56px;
+  min-width: 56px;
+}
+.header-search-trigger {
+  min-height: 44px;
+}
+.header-avatar {
+  min-width: 44px;
+  min-height: 44px;
+  width: 44px;
+  height: 44px;
+}
+.search-overlay-close {
+  min-width: 44px;
+  min-height: 44px;
+  width: 44px;
+  height: 44px;
+}
+.profile-menu-item {
+  min-height: 44px;
+}
+.adm-tab {
+  min-height: 44px;
+}
+.adm-pill {
+  min-height: 36px;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+.fiche-sh .fiche-tab {
+  min-height: 44px;
+  padding: 12px 0;
+}
+.modal-close {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Font size minimums for readability */
+.nav-item {
+  font-size: 11px;
+}
+.profile-menu-badge,
+.profile-menu-version {
+  font-size: 11px;
+}
+.child-card .gen-tag,
+.parent-card .gen-tag {
+  font-size: 10px;
+}
+.login-field-helper,
+.login-pwd-strength-text {
+  font-size: 12px;
+}
+
+/* Safe-area insets for landscape notched devices */
+.header {
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+}
+.nav {
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
+}
+.search-overlay {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Mobile-only adjustments */
+@media (max-width: 480px) {
+  .profile-menu {
+    padding: 10px;
+  }
+}
+
+/* Very narrow screens — hide logo text to save space */
+@media (max-width: 360px) {
+  .header-logo-text {
+    display: none;
+  }
+}
+
+/* Tap highlight - already transparent via *{-webkit-tap-highlight-color} */
+/* Prevent double-tap zoom on interactive elements */
+button, a, .nav-item, .header-avatar, .header-search-trigger,
+.profile-menu-item, .adm-tab, .adm-pill, .fiche-tab,
+.search-overlay-close, .search-overlay-item {
+  touch-action: manipulation;
 }
