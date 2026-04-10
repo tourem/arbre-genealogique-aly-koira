@@ -32,3 +32,11 @@ relation/bug1.png
 
 # Claude Code
 .claude/
+
+# Superpowers brainstorming sessions
+.superpowers/
+
+# Genealogy import — sensitive family data
+react-app/scripts/output/
+react-app/scripts/input.txt
+react-app/scripts/membres.txt
