@@ -28,6 +28,7 @@ Alykoira est l'application web de généalogie de la famille Aly Koïra (Gao, Ma
 - **Structure UX** : page `/parente` avec deux sélecteurs en haut + **modal popup automatique** dès que les deux personnes sont sélectionnées.
 - **Responsive** : **bottom-sheet plein écran sur mobile** (<768 px), **modal centré avec backdrop sur desktop** (≥768 px).
 - **Rendu du sous-arbre** : **SVG hybride** — nœuds en HTML positionnés absolument (avatars, italique, gloses), arêtes + badges P/M en SVG overlay.
+- **Affichage par défaut des N > 3 relations** : seules les **3 relations les plus proches** (proximité la plus faible) sont affichées d'emblée. Un bouton « Voir les N − 3 autres relations » en bas du sélecteur révèle le reste, toujours dans l'ordre du plus proche au plus éloigné. Truncation strictement UI — le moteur retourne toujours la liste complète triée.
 
 ## 3. Architecture — moteur de calcul (`lib/parenteSonghay/`)
 
@@ -158,9 +159,19 @@ Visible uniquement si `relations.length > 1`. Pills horizontales scrollables :
 `01 · hassa / touba · via Sékou`, `02 · arma / arma · via Sira`.
 La pill active est pleine or, les autres sont outlined. Navigation clavier : ← → synchronisées sur le sélecteur quand le focus est dans le modal.
 
+**Troncature à 3 relations par défaut.** Seules les 3 relations les plus proches (proximité la plus faible) sont affichées d'emblée, dans l'ordre du plus proche au plus éloigné. Si `relations.length > 3`, un bouton à la fin de la rangée des pills révèle les autres :
+
+```
+[ 01 · hassa/touba · via Sékou ]  [ 02 · arma/arma · via Sira ]  [ 03 · … ]  [ + Voir les 4 autres ]
+```
+
+Une fois déplié, le bouton devient `[ − Masquer ]` et toutes les pills sont visibles, toujours triées par proximité. L'état « déplié/replié » est local au modal et se réinitialise à chaque nouvelle paire de personnes. La vue détaillée applique la même troncature : seules les 3 premières fiches sont listées par défaut, avec le même bouton « Voir plus » en bas.
+
 **Comportement par onglet :**
 - **Vue graphique** : cliquer une pill change le sous-arbre affiché (la vue graphique suit strictement le sélecteur).
-- **Vue détaillée** : toutes les fiches sont listées, cliquer une pill **scrolle** jusqu'à la fiche correspondante (la pill reste un repère visuel de position, pas un filtre).
+- **Vue détaillée** : toutes les fiches (3 ou dépliées) sont listées, cliquer une pill **scrolle** jusqu'à la fiche correspondante (la pill reste un repère visuel de position, pas un filtre).
+
+**Sélection d'une pill repliée par clavier** : si l'utilisateur utilise ← → et atteint l'index > 3, le sélecteur déplie automatiquement le reste pour garder la pill active visible.
 
 ### `SubTreeSvg` — rendu hybride
 
