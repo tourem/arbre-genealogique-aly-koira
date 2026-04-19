@@ -24,7 +24,8 @@ Alykoira est l'application web de généalogie de la famille Aly Koïra (Gao, Ma
 ## 2. Périmètre fonctionnel retenu
 
 - **Périmètre** : relations de sang uniquement, fidèles au vocabulaire du document de spec (13 termes : `baba`, `gna`, `izé`, `arma`, `woyma`, `baassa arou`, `baassa woy`, `hassa`, `touba`, `hawa`, `kaga arou`, `kaga woy`, `haama`).
-- **Tables DB** : `relation_categories`, `relation_terms`, `term_audit_log` + l'écran admin associé (`TermsManagementSection`) sont **supprimés**. Le vocabulaire est codé en dur dans le moteur TypeScript (source unique de vérité = le code).
+- **Tables DB** : les 3 anciennes tables (`relation_categories`, `relation_terms`, `term_audit_log`) + l'écran admin `TermsManagementSection` sont **supprimés**. **Elles sont remplacées** par UNE nouvelle table simple `parente_labels (key, value, updated_at)` couplée à un écran admin minimal `ParenteLabelsSection` qui permet d'**overrider** les libellés (termes Songhay, gloses françaises, explications pédagogiques) depuis l'application, sans toucher au code.
+- **Valeurs par défaut** : les libellés par défaut sont dans `lib/parenteSonghay/labels.ts` (source de vérité, commitée, type-safe). L'app fonctionne sans la table DB (fallback silencieux sur les défauts). L'admin peut override chaque clé ; un bouton « réinitialiser » supprime l'override et rétablit la valeur du code.
 - **Structure UX** : page `/parente` avec deux sélecteurs en haut + **modal popup automatique** dès que les deux personnes sont sélectionnées.
 - **Responsive** : **bottom-sheet plein écran sur mobile** (<768 px), **modal centré avec backdrop sur desktop** (≥768 px).
 - **Rendu du sous-arbre** : **SVG hybride** — nœuds en HTML positionnés absolument (avatars, italique, gloses), arêtes + badges P/M en SVG overlay.
@@ -42,11 +43,27 @@ react-app/src/lib/parenteSonghay/
 ├── classify.ts              ← dispatch direct/parallel/cross/avuncular/distant-vertical
 ├── buildTerms.ts            ← composition "kaga kaga arou coté baba", "haama haama"
 ├── explain.ts               ← génération dynamique de l'explication pédagogique française
-├── labels.ts                ← libellés UI français (source unique)
+├── labels.ts                ← libellés par défaut (source unique, ~30-40 clés hiérarchiques)
+├── applyLabels.ts           ← (pure) merge d'un dict d'overrides par-dessus les défauts
 ├── index.ts                 ← orchestrateur computeRelations + adaptateur Member → Person
 ├── index.test.ts            ← 14 cas du spec
+├── applyLabels.test.ts      ← test du merge
 └── explain.test.ts          ← snapshots des 6 kinds d'explication
 ```
+
+### Source de vérité des libellés
+
+Le fichier `labels.ts` exporte un dict plat `defaultLabels: Record<string, string>` avec des clés hiérarchiques :
+
+| Préfixe | Exemples | Rôle |
+|---|---|---|
+| `term.*` | `term.baba`, `term.hassa`, `term.kaga_arou`, `term.cote_baba`, `term.cote_gna`, `term.haama` | Mots Songhay atomiques utilisés par `buildTerms.ts` pour composer les strings (`"kaga kaga arou coté baba"`). |
+| `gloss.*` | `gloss.hassa` = "oncle maternel", `gloss.touba` = "neveu via l'oncle maternel" | Petite glose française affichée sous les termes dans le sous-arbre. |
+| `explain.*` | `explain.avuncular.hassa`, `explain.parallel`, `explain.cross`, `explain.distant_vertical`, etc. | Templates d'explication pédagogique avec placeholders `{nameA}`, `{nameB}`, `{termA}`, `{termB}`, `{lca}`. |
+
+**Pas de catégorie en colonne DB** : elle se dérive du préfixe de la clé.
+
+**Principe de couplage faible** : le moteur de calcul (`classify.ts`, `buildTerms.ts`) importe `labels` directement (soit les défauts, soit une version mergée passée en argument). Le moteur reste pur et testable en isolation. La logique de merge DB → défauts (`applyLabels.ts`) est séparée et testable indépendamment. Seuls les composants UI consomment la version mergée via un React Context.
 
 ### Contrat API
 
@@ -93,6 +110,28 @@ export function computeRelations(
 
 L'app utilise `Member.father_id` / `Member.mother_ref` (et `gender`, `name`). Le moteur travaille en interne avec un type `Person { id, name, sex, fatherId, motherId }`. L'adaptation se fait dans `index.ts` uniquement, sans exposer `Member` au reste du moteur. Le moteur n'importe jamais `react`, `@supabase/supabase-js`, ni aucun composant UI.
 
+### API des libellés
+
+```ts
+// labels.ts
+export const defaultLabels: Record<string, string> = {
+  'term.baba': 'baba',
+  'term.gna': 'gna',
+  'term.izé': 'izé',
+  // ... ~30-40 clés
+  'explain.avuncular.hassa': 'En pays songhay, l\'oncle maternel ({termA}) ...',
+};
+
+// applyLabels.ts
+export function applyLabels(
+  overrides: Record<string, string>,
+): Record<string, string> {
+  return { ...defaultLabels, ...overrides };
+}
+```
+
+Côté composants UI, un hook `useParenteLabels()` (voir section 4) expose le dict mergé via React Context.
+
 ### Conformité au spec
 
 - DFS ancêtres avec `max_depth = 20` (garde-fou cycles).
@@ -113,6 +152,31 @@ L'app utilise `Member.father_id` / `Member.mother_ref` (et `gender`, `name`). Le
 - **Déduplication** : clé `(termForA, termForB, via)`.
 
 ## 4. Architecture — UI
+
+### Chargement des libellés
+
+Un nouveau hook `useParenteLabels()` est exposé via un React Context (`ParenteLabelsProvider`) monté au même niveau que `MembersProvider` dans `App.tsx` :
+
+```ts
+// hooks/useParenteLabels.ts
+export function ParenteLabelsProvider({ children }) {
+  const [overrides, setOverrides] = useState<Record<string, string>>({});
+  useEffect(() => {
+    supabase.from('parente_labels').select('key, value').then(({ data, error }) => {
+      if (error || !data) return; // fallback silencieux aux défauts
+      setOverrides(Object.fromEntries(data.map(r => [r.key, r.value])));
+    });
+  }, []);
+  const labels = useMemo(() => applyLabels(overrides), [overrides]);
+  return <ParenteLabelsContext.Provider value={labels}>{children}</ParenteLabelsContext.Provider>;
+}
+
+export function useParenteLabels() {
+  return useContext(ParenteLabelsContext);
+}
+```
+
+Le hook charge une seule fois au mount. En cas d'échec (réseau, RLS, table vide), il utilise silencieusement les défauts — **l'app marche toujours sans la table DB**.
 
 ### Hiérarchie des composants
 
@@ -211,6 +275,30 @@ Une fois déplié, le bouton devient `[ − Masquer ]` et toutes les pills sont 
 
 **Accessibilité** : chaque nœud a `role="button"`, `aria-label="Nom, homme/femme, génération N"`. Les termes Songhay ont `<span lang="son">` sur l'élément parent.
 
+### `ParenteLabelsSection` (écran admin)
+
+Nouvel onglet dans `AdminPage` intitulé **« Parenté »**. Remplace l'ancien `TermsManagementSection`. Structure simple :
+
+```
+Admin / Parenté
+├─ Termes Songhay              (tous les keys term.*)
+│   Table : clé (ro) · valeur (input) · défaut (texte grisé) · bouton ↺
+├─ Gloses françaises           (tous les keys gloss.*)
+│   Table : clé (ro) · valeur (input) · défaut · ↺
+└─ Explications pédagogiques   (tous les keys explain.*)
+    Table : clé (ro) · valeur (textarea) · défaut · ↺
+
+[ Enregistrer les modifications ]   [ Tout réinitialiser ]
+```
+
+- **Source des lignes** : `Object.keys(defaultLabels)`. Pas de gestion d'ajout/suppression de clés — seuls les keys connus dans le code sont éditables.
+- **État local** : `modifiedValues: Record<string, string>` pour les valeurs en cours d'édition.
+- **Save (batch)** : `upsert` des lignes modifiées en une requête.
+- **Reset par ligne** (↺) : `delete from parente_labels where key = ?` → la valeur par défaut reprend effet au prochain fetch.
+- **Tout réinitialiser** : `delete from parente_labels` (confirmation modale).
+- **Badge visuel** sur les lignes avec override actif : « personnalisé ».
+- Après un save/reset, le hook ré-émet via un `refetch()` exposé dans le contexte pour que l'app affiche immédiatement les nouveaux libellés sans recharger la page.
+
 ### `DetailedView`
 
 - **Énoncés réciproques** (gros, mis en valeur) :
@@ -296,28 +384,61 @@ const showModal = result !== null && !modalDismissed;
 - `react-app/src/components/relationship/RelationCard.tsx`
 - `react-app/src/components/relationship/RelationPathGraph.tsx`
 - `react-app/src/components/relationship/TreePathModal.tsx`
-- `react-app/src/components/admin/TermsManagementSection.tsx`
+- `react-app/src/components/admin/TermsManagementSection.tsx` (**remplacé** par `ParenteLabelsSection.tsx`)
 
 ### Fichiers à éditer
 
 - `react-app/src/pages/ParentePage.tsx` : réécrit, plus de dépendance à `useRelationTerms`.
-- `react-app/src/pages/AdminPage.tsx` : retirer l'onglet/section « Termes » et l'import.
+- `react-app/src/pages/AdminPage.tsx` : remplacer l'onglet/section « Termes » par « Parenté » (monte `ParenteLabelsSection`).
+- `react-app/src/App.tsx` : monter `<ParenteLabelsProvider>` au même niveau que `<MembersProvider>`.
 - `react-app/src/lib/types.ts` : supprimer `RelationTerm`, `RelationCategory`, `TermsDict`, `CategoriesDict`, `SonghoyRelationResult`, `AncestorInfo`, `RelationResult` (ancien).
 - `react-app/src/styles/global.css` : nettoyer les classes `.parente-*` obsolètes ; conserver les tokens `.parente-page`.
+
+### Fichiers à créer
+
+- `react-app/src/hooks/useParenteLabels.ts` : hook + Provider.
+- `react-app/src/components/admin/ParenteLabelsSection.tsx` : UI admin.
 
 ### Migration SQL
 
 Le projet a migré les nouvelles migrations vers `supabase/migrations/` depuis la 010. On suit cette convention :
 
-```
-supabase/migrations/013_drop_relation_terms.sql
-  DROP TABLE IF EXISTS term_audit_log;
-  DROP TABLE IF EXISTS relation_terms;
-  DROP TABLE IF EXISTS relation_categories;
-  DROP FUNCTION IF EXISTS update_relation_terms_updated_at();
+```sql
+-- supabase/migrations/013_parente_labels.sql
+
+-- 1. Drop l'ancien système
+DROP TABLE IF EXISTS term_audit_log;
+DROP TABLE IF EXISTS relation_terms;
+DROP TABLE IF EXISTS relation_categories;
+DROP FUNCTION IF EXISTS update_relation_terms_updated_at();
+
+-- 2. Nouveau système minimal
+CREATE TABLE parente_labels (
+  key         TEXT PRIMARY KEY,
+  value       TEXT NOT NULL,
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE OR REPLACE FUNCTION update_parente_labels_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN NEW.updated_at = now(); RETURN NEW; END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_parente_labels_updated_at
+  BEFORE UPDATE ON parente_labels
+  FOR EACH ROW EXECUTE FUNCTION update_parente_labels_updated_at();
+
+-- 3. RLS
+ALTER TABLE parente_labels ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "parente_labels_read" ON parente_labels
+  FOR SELECT TO authenticated USING (true);
+
+CREATE POLICY "parente_labels_admin_write" ON parente_labels
+  FOR ALL TO authenticated USING (is_admin()) WITH CHECK (is_admin());
 ```
 
-Application manuelle sur la DB distante (convention du projet — même pattern que 010-012).
+**Pas de seed** : la table est créée vide. Les valeurs par défaut viennent de `labels.ts`, la table ne contient que les overrides explicites saisis par un admin. Application manuelle sur la DB distante (convention du projet — même pattern que 010-012).
 
 ## 8. Tests
 
@@ -344,6 +465,13 @@ Les 14 cas du spec sur la fixture Sira/Modibo/Hadja/Cheick/Bakary/Khadidia/Maria
 
 Un snapshot par `kind` (6 snapshots) avec des paramètres représentatifs, pour verrouiller le texte français pédagogique.
 
+### Merge test — `lib/parenteSonghay/applyLabels.test.ts`
+
+Vérifie :
+- `applyLabels({})` renvoie les défauts tels quels.
+- `applyLabels({ 'term.hassa': 'xxxx' })` override uniquement cette clé, les autres restent aux défauts.
+- Les clés absentes de `defaultLabels` dans les overrides sont ignorées (ou loggées, au choix — par défaut, ignorées silencieusement pour résilience).
+
 ### Test manuel UI
 
 Pas de test React automatisé. Validation manuelle : ouvrir `/parente`, tester :
@@ -358,13 +486,15 @@ Pas de test React automatisé. Validation manuelle : ouvrir `/parente`, tester :
 
 Commits atomiques, chacun laissant l'app compilable et les tests verts :
 
-1. `feat(parente): moteur de calcul songhay conforme au spec` — `lib/parenteSonghay/*` + tests.
-2. `feat(parente): composant PersonPicker avec autocomplete` — `PersonPicker.tsx`.
-3. `feat(parente): modal de resultat responsive` — `ParenteResultModal.tsx` + CSS responsive.
-4. `feat(parente): sous-arbre SVG avec zoom/pan` — `SubTreeSvg.tsx`.
-5. `feat(parente): vue detaillee avec explication pedagogique` — `DetailedView.tsx` + sous-composants.
-6. `refactor(parente): integration dans ParentePage` — nouvelle `ParentePage.tsx`.
-7. `chore(parente): suppression ancien systeme de termes DB` — suppression des fichiers + migration SQL + nettoyage `types.ts`.
+1. `feat(parente): moteur de calcul songhay conforme au spec` — `lib/parenteSonghay/*` (types, enumeratePaths, findLCAInstances, classify, buildTerms, explain, labels, applyLabels, index) + tests.
+2. `feat(parente): hook et provider pour les libelles externalises` — `useParenteLabels.ts` + intégration dans `App.tsx`.
+3. `feat(parente): composant PersonPicker avec autocomplete` — `PersonPicker.tsx`.
+4. `feat(parente): modal de resultat responsive` — `ParenteResultModal.tsx` + CSS responsive.
+5. `feat(parente): sous-arbre SVG avec zoom/pan` — `SubTreeSvg.tsx`.
+6. `feat(parente): vue detaillee avec explication pedagogique` — `DetailedView.tsx` + sous-composants.
+7. `refactor(parente): integration dans ParentePage` — nouvelle `ParentePage.tsx`.
+8. `feat(admin): ecran de gestion des libelles de parente` — `ParenteLabelsSection.tsx` + intégration dans `AdminPage`.
+9. `chore(parente): remplacement de l'ancien systeme de termes DB` — suppression des fichiers obsolètes + migration SQL 013 + nettoyage `types.ts`.
 
 ## 10. Principes de conception
 
