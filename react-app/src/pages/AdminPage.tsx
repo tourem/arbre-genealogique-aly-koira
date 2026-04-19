@@ -5,16 +5,16 @@ import type { Suggestion, UserProfile, Member } from '../lib/types';
 import MemberFormModal from '../components/admin/MemberFormModal';
 import MergeModal from '../components/admin/MergeModal';
 import MergeHistorySection from '../components/admin/MergeHistorySection';
-import TermsManagementSection from '../components/admin/TermsManagementSection';
+import ParenteLabelsSection from '../components/admin/ParenteLabelsSection';
 
-type AdminTab = 'suggestions' | 'members' | 'history' | 'users' | 'terms';
+type AdminTab = 'suggestions' | 'members' | 'history' | 'users' | 'parente';
 
 const TAB_LABELS: Record<AdminTab, string> = {
   suggestions: 'Suggestions',
   members: 'Membres',
   history: 'Fusions',
   users: 'Utilisateurs',
-  terms: 'Termes',
+  parente: 'Parenté',
 };
 
 export default function AdminPage() {
@@ -27,7 +27,7 @@ export default function AdminPage() {
         <h2 className="page-title">Administration</h2>
 
         <div className="adm-tabs">
-          {(['suggestions', 'members', 'history', 'users', 'terms'] as AdminTab[]).map((t) => (
+          {(['suggestions', 'members', 'history', 'users', 'parente'] as AdminTab[]).map((t) => (
             <button
               key={t}
               className={`adm-tab${tab === t ? ' active' : ''}`}
@@ -45,7 +45,7 @@ export default function AdminPage() {
         )}
         {tab === 'history' && <MergeHistorySection onReverted={refetchMembers} />}
         {tab === 'users' && <UsersSection />}
-        {tab === 'terms' && <TermsManagementSection />}
+        {tab === 'parente' && <ParenteLabelsSection />}
       </div>
     </div>
   );
