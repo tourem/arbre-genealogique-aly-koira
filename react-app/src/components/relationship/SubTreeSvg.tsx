@@ -201,6 +201,8 @@ function layout(
     id: lca.id, name: lca.name, role: 'LCA', sex: lca.gender,
     x: centerX, y: 20,
   };
+  if (dA === 0) lcaBox.role = 'A';
+  else if (dB === 0) lcaBox.role = 'B';
   boxes.push(lcaBox);
 
   // Chaîne A (gauche) : du LCA descendant vers A

@@ -49,6 +49,13 @@ export default function ParenteResultModal({ result, personA, personB, getMember
         </div>
 
         <div className="parente-modal-body">
+          {result.kind === 'same-person' && (
+            <div className="parente-empty">
+              <div className="parente-empty-title">Même personne</div>
+              <p>Vous avez sélectionné deux fois la même personne.</p>
+            </div>
+          )}
+
           {result.kind === 'no-link' && (
             <div className="parente-empty">
               <div className="parente-empty-title">Aucun lien de parenté trouvé</div>
