@@ -42,6 +42,7 @@ export default function ParenteLabelsSection() {
   };
 
   const handleResetOne = async (key: string) => {
+    if (saving) return;
     setSaving(true);
     setError(null);
     const { error: err } = await supabase.from('parente_labels').delete().eq('key', key);
@@ -52,6 +53,7 @@ export default function ParenteLabelsSection() {
   };
 
   const handleResetAll = async () => {
+    if (saving) return;
     if (!confirm('Réinitialiser tous les libellés aux valeurs par défaut ? Les overrides seront supprimés.')) return;
     setSaving(true);
     setError(null);
@@ -63,6 +65,7 @@ export default function ParenteLabelsSection() {
   };
 
   const handleSave = async () => {
+    if (saving) return;
     const rows = Object.keys(draft)
       .filter((k) => draft[k] !== defaults[k] || isOverridden(k))
       .map((k) => ({ key: k, value: draft[k] }));
@@ -109,9 +112,9 @@ export default function ParenteLabelsSection() {
                   </div>
                   <div className="row-value">
                     {isTextarea ? (
-                      <textarea value={val} onChange={(e) => handleChange(key, e.target.value)} rows={3} />
+                      <textarea aria-label={key} value={val} onChange={(e) => handleChange(key, e.target.value)} rows={3} />
                     ) : (
-                      <input type="text" value={val} onChange={(e) => handleChange(key, e.target.value)} />
+                      <input type="text" aria-label={key} value={val} onChange={(e) => handleChange(key, e.target.value)} />
                     )}
                     {val !== def && <div className="row-default">Défaut : {def}</div>}
                   </div>
