@@ -7902,3 +7902,11 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
 .admin-labels-footer .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 .admin-labels-footer .btn-danger { padding: 10px 20px; background: transparent; color: #f87171; border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; cursor: pointer; }
 .admin-error { padding: 10px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 6px; color: #f87171; }
+
+.parente-card-header { cursor: pointer; transition: border-color 0.15s; }
+.parente-card-header:hover { border-color: rgba(212,168,83,0.2); }
+.parente-card-chevron { margin-left: auto; color: #9ca3af; font-size: 14px; transition: transform 0.15s ease; flex-shrink: 0; padding-top: 4px; }
+.parente-card.collapsed .parente-card-chevron { transform: rotate(0deg); }
+.parente-card.expanded .parente-card-chevron { transform: rotate(90deg); }
+.parente-card.collapsed .parente-card-header { padding-bottom: 0; border-bottom: 0; }
+

@@ -118,6 +118,7 @@ export default function ParentePage() {
                   personA={personA}
                   personB={personB}
                   getMember={getMember}
+                  defaultExpanded={i === 0}
                 />
               ))}
 
