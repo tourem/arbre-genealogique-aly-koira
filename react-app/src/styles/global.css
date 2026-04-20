@@ -7891,6 +7891,102 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
   .parente-results { padding: 14px; }
   .parente-sticky-head { padding: 12px 14px 10px; }
   .parente-sel { gap: 10px; }
+
+  /* Card padding + header compaction */
+  .parente-card { padding: 14px 12px; gap: 10px; }
+  .parente-card-header { gap: 10px; }
+  .parente-card-num { font-size: 18px; padding-top: 1px; }
+  .parente-card-title { font-size: 16px; }
+  .parente-card-subtitle { font-size: 11px; }
+
+  /* Summary line */
+  .parente-summary { padding: 10px 12px; flex-wrap: wrap; }
+  .parente-summary-num { font-size: 18px; }
+  .parente-summary span:last-child { font-size: 13px; }
+
+  /* Reciprocal statements */
+  .parente-reciprocal { padding: 12px; gap: 10px; }
+  .parente-reciprocal-row { font-size: 14px; }
+  .parente-reciprocal-row .term { font-size: 15px; }
+  .parente-reciprocal-row .verb { font-size: 12px; }
+  .parente-reciprocal .term-gloss { font-size: 10px; }
+
+  /* Pedagogical explanation */
+  .parente-explain { padding: 12px; font-size: 13px; }
+
+  /* Technical details */
+  .parente-tech-details { padding: 10px 12px; font-size: 11px; }
+  .parente-tech-details dl { grid-template-columns: 70px 1fr; gap: 3px 8px; }
+
+  /* Path pills — allow tighter wrap */
+  .parente-path-selector { gap: 6px; }
+  .parente-path-pill { padding: 5px 10px; font-size: 11px; }
+
+  /* Suggested pairs */
+  .parente-suggestions { gap: 8px; }
+  .parente-suggestion-chip { padding: 8px 12px; font-size: 12px; flex-wrap: wrap; justify-content: center; }
+  .parente-suggestion-chip .chip-hint { margin-left: 0; width: 100%; text-align: center; }
+  .parente-empty-state { padding: 40px 14px; }
+  .parente-empty-hint { margin-top: 18px; font-size: 12px; }
+
+  /* Notice blocks */
+  .parente-notice { padding: 16px; }
+  .parente-notice h2 { font-size: 15px; }
+  .parente-notice p { font-size: 13px; }
+
+  /* Fullscreen subtree overlay */
+  .parente-fullscreen-header { padding: 12px 16px; }
+  .parente-fullscreen-title { font-size: 12px; }
+  .parente-fullscreen-close { font-size: 24px; }
+
+  /* Admin labels editor */
+  .admin-parente-labels { gap: 18px; }
+  .admin-labels-row { grid-template-columns: 1fr auto; gap: 8px 10px; padding: 10px 8px; }
+  .admin-labels-row .row-key { grid-column: 1 / -1; }
+  .admin-labels-row .row-key code { font-size: 10px; word-break: break-all; }
+  .admin-labels-row .row-value { grid-column: 1; }
+  .admin-labels-row .row-actions { grid-column: 2; grid-row: 2; align-self: start; }
+  .admin-labels-row input, .admin-labels-row textarea { font-size: 13px; }
+  .admin-labels-footer { flex-direction: column; gap: 8px; }
+  .admin-labels-footer .btn-primary, .admin-labels-footer .btn-danger { width: 100%; text-align: center; padding: 12px 16px; }
+
+  /* SubTreeSvg zoom controls — keep accessible on touch */
+  .parente-zoom-controls { bottom: 8px; right: 8px; padding: 5px 8px; gap: 4px; }
+  .parente-zoom-controls button { width: 28px; height: 28px; font-size: 14px; }
+}
+
+@media (max-width: 480px) {
+  /* Extra-compact on small phones */
+  .parente-card { padding: 12px 10px; }
+  .parente-card-num { font-size: 16px; }
+  .parente-card-title { font-size: 15px; }
+  .parente-card-title .sep { margin: 0 4px; }
+
+  .parente-summary span:last-child { font-size: 12px; }
+
+  .parente-reciprocal-row {
+    /* Stack name-verb-term-verb-name vertically for clarity */
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+  }
+  .parente-reciprocal-row .verb { font-size: 11px; opacity: 0.75; }
+
+  .parente-subtree-viewport { height: 280px; }
+
+  .parente-suggestion-chip { width: 100%; justify-content: center; }
+
+  .parente-fullscreen-header { padding: 10px 12px; }
+  .parente-fullscreen-close { font-size: 22px; padding: 2px 6px; }
+
+  .parente-sticky-head { padding: 10px 12px 8px; }
+  .parente-hdr-i { width: 36px; height: 36px; font-size: 16px; }
+  .parente-hdr h1 { font-size: 1.1rem; }
+  .parente-hdr small { font-size: 0.65rem; }
+
+  /* Technical details: stack label + value vertically when cramped */
+  .parente-tech-details dl { grid-template-columns: 1fr; }
+  .parente-tech-details dt { padding-top: 4px; }
 }
 
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
