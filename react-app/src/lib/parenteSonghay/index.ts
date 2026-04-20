@@ -21,6 +21,55 @@ function toPersonDict(members: MemberDict): PersonDict {
   return out;
 }
 
+function areCoupleDuplicates(
+  r1: Relation,
+  r2: Relation,
+  members: MemberDict,
+): boolean {
+  if (r1.termForA !== r2.termForA) return false;
+  if (r1.termForB !== r2.termForB) return false;
+  if (r1.pathA.length !== r2.pathA.length) return false;
+  if (r1.pathB.length !== r2.pathB.length) return false;
+  if (r1.pathA.length === 0 || r1.pathB.length === 0) return false;
+
+  // All hops but the last must match exactly
+  for (let i = 0; i < r1.pathA.length - 1; i++) {
+    if (r1.pathA[i] !== r2.pathA[i]) return false;
+  }
+  for (let i = 0; i < r1.pathB.length - 1; i++) {
+    if (r1.pathB[i] !== r2.pathB[i]) return false;
+  }
+
+  // Last hops must be OPPOSITE on both sides (one P, one M)
+  if (r1.pathA[r1.pathA.length - 1] === r2.pathA[r2.pathA.length - 1]) return false;
+  if (r1.pathB[r1.pathB.length - 1] === r2.pathB[r2.pathB.length - 1]) return false;
+
+  // LCAs must be spouses of each other
+  const lca1 = members[r1.via];
+  const lca2 = members[r2.via];
+  if (!lca1 || !lca2) return false;
+  const spouses1 = lca1.spouses ?? [];
+  const spouses2 = lca2.spouses ?? [];
+  return spouses1.includes(r2.via) || spouses2.includes(r1.via);
+}
+
+function dedupCoupleDuplicates(
+  relations: Relation[],
+  members: MemberDict,
+): Relation[] {
+  const dropped = new Set<number>();
+  for (let i = 0; i < relations.length; i++) {
+    if (dropped.has(i)) continue;
+    for (let j = i + 1; j < relations.length; j++) {
+      if (dropped.has(j)) continue;
+      if (areCoupleDuplicates(relations[i], relations[j], members)) {
+        dropped.add(j);
+      }
+    }
+  }
+  return relations.filter((_, i) => !dropped.has(i));
+}
+
 export function computeRelations(
   idA: string,
   idB: string,
@@ -88,5 +137,6 @@ export function computeRelations(
     return true;
   });
 
-  return { kind: 'relations', relations: unique };
+  const coupleDeduped = dedupCoupleDuplicates(unique, members);
+  return { kind: 'relations', relations: coupleDeduped };
 }

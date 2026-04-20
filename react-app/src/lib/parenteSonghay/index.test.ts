@@ -19,6 +19,23 @@ function toMemberDict(dict: ReturnType<typeof makeTestFamily>): MemberDict {
   return out;
 }
 
+function mkMember(
+  id: string,
+  name: string,
+  gender: 'M' | 'F',
+  fatherId: string | null,
+  motherId: string | null,
+  spouses: string[] = [],
+): Member {
+  return {
+    id, name, first_name: null, alias: null,
+    gender, generation: 0,
+    father_id: fatherId, mother_ref: motherId,
+    spouses, children: [], photo_url: null, note: null,
+    birth_city: null, birth_country: null, village: null,
+  };
+}
+
 const members = toMemberDict(makeTestFamily());
 
 function firstTerms(idA: string, idB: string) {
@@ -151,5 +168,48 @@ describe('computeRelations — Cas de test du spec', () => {
   it('returns same-person when idA === idB', () => {
     const r = computeRelations('sira', 'sira', members);
     expect(r).toEqual({ kind: 'same-person' });
+  });
+});
+
+describe('computeRelations — dedup via couple marié', () => {
+  it('merges duplicate relations coming from husband and wife of the same couple', () => {
+    // Fixture : un couple Omar+Amina avec 2 enfants Ali et Bintou.
+    // Ali a un fils Salif, Bintou a une fille Aya.
+    // Salif ↔ Aya devraient être baassa (cousins croisés) via UN seul lien
+    //   (pas deux : via Omar ET via Amina).
+    const synthMembers: MemberDict = {
+      omar:  mkMember('omar',  'Omar',  'M', null, null, ['amina']),
+      amina: mkMember('amina', 'Amina', 'F', null, null, ['omar']),
+      ali:    mkMember('ali',    'Ali',    'M', 'omar', 'amina', []),
+      bintou: mkMember('bintou', 'Bintou', 'F', 'omar', 'amina', []),
+      salif:  mkMember('salif',  'Salif',  'M', 'ali', null, []),
+      aya:    mkMember('aya',    'Aya',    'F', null, 'bintou', []),
+    };
+    const r = computeRelations('salif', 'aya', synthMembers);
+    if (r.kind !== 'relations') throw new Error('expected relations');
+    // SANS dedup couple: 2 relations baassa (via Omar via Amina).
+    // AVEC dedup couple: 1 seule relation.
+    expect(r.relations).toHaveLength(1);
+    // Salif♂ père Ali♂, Aya♀ mère Bintou♀ → parents sexes opposés → cross → baassa
+    expect(r.relations[0].termForA).toBe('baassa arou');
+    expect(r.relations[0].termForB).toBe('baassa woy');
+  });
+
+  it('does NOT merge relations when the two LCAs are not spouses', () => {
+    // Fixture : même pattern mais Omar et Amina ne sont PAS spouses.
+    // (Ils sont tous deux parents des mêmes enfants Ali/Bintou — situation rare
+    // mais possible dans une base imparfaite.)
+    // On attend alors 2 relations distinctes (pas de dedup).
+    const synthMembers: MemberDict = {
+      omar:  mkMember('omar',  'Omar',  'M', null, null, []),  // PAS marié à amina
+      amina: mkMember('amina', 'Amina', 'F', null, null, []),  // PAS mariée à omar
+      ali:    mkMember('ali',    'Ali',    'M', 'omar', 'amina', []),
+      bintou: mkMember('bintou', 'Bintou', 'F', 'omar', 'amina', []),
+      salif:  mkMember('salif',  'Salif',  'M', 'ali', null, []),
+      aya:    mkMember('aya',    'Aya',    'F', null, 'bintou', []),
+    };
+    const r = computeRelations('salif', 'aya', synthMembers);
+    if (r.kind !== 'relations') throw new Error('expected relations');
+    expect(r.relations.length).toBe(2);
   });
 });
