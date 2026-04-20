@@ -1,25 +1,53 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useMembersContext } from '../context/MembersContext';
 import { computeRelations } from '../lib/parenteSonghay';
 import { useParenteLabels } from '../hooks/useParenteLabels';
 import PersonPicker from '../components/relationship/PersonPicker';
 import RelationCard from '../components/relationship/RelationCard';
 import { groupRelations } from '../components/relationship/groupRelations';
+import { suggestPairs } from '../components/relationship/suggestPairs';
 
 const DEFAULT_VISIBLE = 3;
 
 export default function ParentePage() {
   const { members, loading } = useMembersContext();
   const { labels, loading: labelsLoading } = useParenteLabels();
-  const [personAId, setPersonAId] = useState<string | null>(null);
-  const [personBId, setPersonBId] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [personAId, setPersonAIdState] = useState<string | null>(searchParams.get('a'));
+  const [personBId, setPersonBIdState] = useState<string | null>(searchParams.get('b'));
   const [expanded, setExpanded] = useState(false);
+
+  // Wrap the setters to ALSO update the URL.
+  const setPersonAId = (id: string | null) => {
+    setPersonAIdState(id);
+    const next = new URLSearchParams(searchParams);
+    if (id) next.set('a', id); else next.delete('a');
+    setSearchParams(next, { replace: true });
+  };
+  const setPersonBId = (id: string | null) => {
+    setPersonBIdState(id);
+    const next = new URLSearchParams(searchParams);
+    if (id) next.set('b', id); else next.delete('b');
+    setSearchParams(next, { replace: true });
+  };
+
+  // If the URL referenced a now-unknown member, clear local state silently
+  // (no URL update — we just drop the invalid IDs from local selection).
+  useEffect(() => {
+    if (personAId && !members[personAId]) setPersonAIdState(null);
+    if (personBId && !members[personBId]) setPersonBIdState(null);
+  }, [members, personAId, personBId]);
 
   const result = useMemo(() => {
     if (!personAId || !personBId) return null;
     if (personAId === personBId) return { kind: 'same-person' as const };
     return computeRelations(personAId, personBId, members, labels);
   }, [personAId, personBId, members, labels]);
+
+  const relations = result?.kind === 'relations' ? result.relations : [];
+  const groups = useMemo(() => groupRelations(relations), [relations]);
+  const suggestions = useMemo(() => suggestPairs(members, 3), [members]);
 
   const personA = personAId ? members[personAId] : null;
   const personB = personBId ? members[personBId] : null;
@@ -36,8 +64,6 @@ export default function ParentePage() {
     );
   }
 
-  const relations = result?.kind === 'relations' ? result.relations : [];
-  const groups = useMemo(() => groupRelations(relations), [relations]);
   const visibleGroups = expanded ? groups : groups.slice(0, DEFAULT_VISIBLE);
   const hiddenCount = Math.max(0, groups.length - DEFAULT_VISIBLE);
 
@@ -73,8 +99,28 @@ export default function ParentePage() {
         <section className="parente-results">
           {!personAId || !personBId ? (
             <div className="parente-empty-state">
-              <div className="parente-empty-state-icon">{'\u{1F446}'}</div>
+              <div className="parente-empty-state-icon" aria-hidden>{'\u{1F333}'}</div>
               <p>Sélectionnez deux personnes pour calculer leurs liens de parenté.</p>
+              {suggestions.length > 0 && (
+                <>
+                  <p className="parente-empty-hint">Ou essayez une de ces paires :</p>
+                  <div className="parente-suggestions">
+                    {suggestions.map((s, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        className="parente-suggestion-chip"
+                        onClick={() => { setPersonAId(s.aId); setPersonBId(s.bId); }}
+                      >
+                        <span>{s.aName}</span>
+                        <span className="chip-sep">↔</span>
+                        <span>{s.bName}</span>
+                        {s.hint && <small className="chip-hint">{s.hint}</small>}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           ) : result?.kind === 'same-person' ? (
             <div className="parente-notice">C'est la même personne.</div>

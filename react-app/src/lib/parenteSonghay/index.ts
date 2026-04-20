@@ -10,6 +10,7 @@ export * from './types';
 export { defaultLabels } from './labels';
 export { applyLabels } from './applyLabels';
 export { explainRelation } from './explain';
+export { glossForTerm } from './glossForTerm';
 
 function toPerson(m: Member): Person {
   return { id: m.id, name: m.name, sex: m.gender, fatherId: m.father_id, motherId: m.mother_ref };
