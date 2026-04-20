@@ -193,6 +193,12 @@ describe('computeRelations — dedup via couple marié', () => {
     // Salif♂ père Ali♂, Aya♀ mère Bintou♀ → parents sexes opposés → cross → baassa
     expect(r.relations[0].termForA).toBe('baassa arou');
     expect(r.relations[0].termForB).toBe('baassa woy');
+    // NEW assertions: viaSpouse must reference the OTHER LCA of the couple
+    const rel = r.relations[0];
+    expect(rel.viaSpouse).toBeDefined();
+    // The kept via is either omar or amina; viaSpouse must be the other one.
+    const ids = [rel.via, rel.viaSpouse!.id].sort();
+    expect(ids).toEqual(['amina', 'omar']);
   });
 
   it('does NOT merge relations when the two LCAs are not spouses', () => {

@@ -37,7 +37,11 @@ export default function RelationCard({ index, relation, personA, personB, getMem
             <span className="sep">/</span>
             <em lang="son">{relation.termForB}</em>
           </h3>
-          <p className="parente-card-subtitle">via {relation.viaName} · proximité {relation.proximityScore} · équilibre {relation.balanceScore}</p>
+          <p className="parente-card-subtitle">
+            via {relation.viaName}
+            {relation.viaSpouse && <> <span className="subtle-and">&amp;</span> {relation.viaSpouse.name}</>}
+            {' '}· proximité {relation.proximityScore} · équilibre {relation.balanceScore}
+          </p>
         </div>
         <span className="parente-card-chevron" aria-hidden="true">▸</span>
       </header>

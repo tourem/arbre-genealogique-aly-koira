@@ -7909,4 +7909,5 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
 .parente-card.collapsed .parente-card-chevron { transform: rotate(0deg); }
 .parente-card.expanded .parente-card-chevron { transform: rotate(90deg); }
 .parente-card.collapsed .parente-card-header { padding-bottom: 0; border-bottom: 0; }
+.parente-card-subtitle .subtle-and { color: #4e5370; margin: 0 2px; }
 

@@ -34,10 +34,12 @@ function pickTemplate(r: Relation, L: Labels): string {
 
 export function explainRelation(r: Relation, nameA: string, nameB: string, L: Labels): string {
   const tpl = pickTemplate(r, L);
+  const lcaCouple = r.viaSpouse ? `${r.viaName} & ${r.viaSpouse.name}` : r.viaName;
   return interpolate(tpl, {
     nameA, nameB,
     termA: r.termForA, termB: r.termForB,
     lca: r.viaName,
+    lcaCouple,
     dA: r.distanceA, dB: r.distanceB,
   });
 }

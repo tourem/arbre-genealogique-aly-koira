@@ -43,6 +43,9 @@ export interface Relation {
   kind: RelationKind;
   via: string;
   viaName: string;
+  /** When this relation was deduplicated with another via a married couple,
+   *  this holds the info of the spouse LCA that was dropped. */
+  viaSpouse?: { id: string; name: string };
   pathA: Hop[];
   pathB: Hop[];
   distanceA: number;

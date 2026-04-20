@@ -58,16 +58,25 @@ function dedupCoupleDuplicates(
   members: MemberDict,
 ): Relation[] {
   const dropped = new Set<number>();
-  for (let i = 0; i < relations.length; i++) {
+  // We need to enrich kept relations with viaSpouse info, so work on a mutable copy
+  const result: Relation[] = relations.map((r) => ({ ...r }));
+  for (let i = 0; i < result.length; i++) {
     if (dropped.has(i)) continue;
-    for (let j = i + 1; j < relations.length; j++) {
+    for (let j = i + 1; j < result.length; j++) {
       if (dropped.has(j)) continue;
-      if (areCoupleDuplicates(relations[i], relations[j], members)) {
+      if (areCoupleDuplicates(result[i], result[j], members)) {
         dropped.add(j);
+        // Enrich kept relation i with the dropped LCA's info
+        if (!result[i].viaSpouse) {
+          const droppedLca = members[result[j].via];
+          if (droppedLca) {
+            result[i].viaSpouse = { id: droppedLca.id, name: droppedLca.name };
+          }
+        }
       }
     }
   }
-  return relations.filter((_, i) => !dropped.has(i));
+  return result.filter((_, i) => !dropped.has(i));
 }
 
 export function computeRelations(
