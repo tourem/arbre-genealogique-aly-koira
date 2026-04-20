@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { Relation } from '../../lib/parenteSonghay';
 import type { Member } from '../../lib/types';
+import type { RelationGroup } from './groupRelations';
 import SubTreeSvg from './SubTreeSvg';
 import ReciprocalStatements from './ReciprocalStatements';
 import PedagogicalExplanation from './PedagogicalExplanation';
@@ -8,17 +8,25 @@ import TechnicalDetails from './TechnicalDetails';
 
 interface Props {
   index: number;
-  relation: Relation;
+  group: RelationGroup;
   personA: Member;
   personB: Member;
   getMember: (id: string) => Member | undefined;
   defaultExpanded?: boolean;
 }
 
-export default function RelationCard({ index, relation, personA, personB, getMember, defaultExpanded = false }: Props) {
+export default function RelationCard({ index, group, personA, personB, getMember, defaultExpanded = false }: Props) {
   const [expanded, setExpanded] = useState(defaultExpanded);
+  const [activePathIndex, setActivePathIndex] = useState(0);
   const [showTech, setShowTech] = useState(false);
-  const ancestor = getMember(relation.via);
+
+  const active = group.paths[activePathIndex] ?? group.paths[0];
+  const ancestor = getMember(active.via);
+  const multiPath = group.paths.length > 1;
+
+  const collapsedSubtitle = multiPath
+    ? `${group.paths.length} chemins distincts`
+    : `via ${active.viaName}${active.viaSpouse ? ` & ${active.viaSpouse.name}` : ''}`;
 
   return (
     <article className={`parente-card ${expanded ? 'expanded' : 'collapsed'}`} aria-labelledby={`rel-${index}-title`}>
@@ -33,14 +41,13 @@ export default function RelationCard({ index, relation, personA, personB, getMem
         <span className="parente-card-num">{String(index + 1).padStart(2, '0')}</span>
         <div className="parente-card-title-block">
           <h3 id={`rel-${index}-title`} className="parente-card-title">
-            <em lang="son">{relation.termForA}</em>
+            <em lang="son">{group.termForA}</em>
             <span className="sep">/</span>
-            <em lang="son">{relation.termForB}</em>
+            <em lang="son">{group.termForB}</em>
           </h3>
           <p className="parente-card-subtitle">
-            via {relation.viaName}
-            {relation.viaSpouse && <> <span className="subtle-and">&amp;</span> {relation.viaSpouse.name}</>}
-            {' '}· proximité {relation.proximityScore} · équilibre {relation.balanceScore}
+            {collapsedSubtitle}
+            {expanded && ` · proximité ${active.proximityScore} · équilibre ${active.balanceScore}`}
           </p>
         </div>
         <span className="parente-card-chevron" aria-hidden="true">▸</span>
@@ -48,10 +55,28 @@ export default function RelationCard({ index, relation, personA, personB, getMem
 
       {expanded && (
         <>
+          {multiPath && (
+            <div className="parente-path-selector" role="tablist" aria-label="Chemins de cette relation">
+              {group.paths.map((p, i) => (
+                <button
+                  key={`${p.via}-${i}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === activePathIndex}
+                  className={`parente-path-pill${i === activePathIndex ? ' active' : ''}`}
+                  onClick={(e) => { e.stopPropagation(); setActivePathIndex(i); }}
+                >
+                  via {p.viaName}
+                  {p.viaSpouse && <> &amp; {p.viaSpouse.name}</>}
+                </button>
+              ))}
+            </div>
+          )}
+
           {ancestor && (
             <div className="parente-card-graphic">
               <SubTreeSvg
-                relation={relation}
+                relation={active}
                 personA={personA}
                 personB={personB}
                 ancestor={ancestor}
@@ -59,8 +84,9 @@ export default function RelationCard({ index, relation, personA, personB, getMem
               />
             </div>
           )}
-          <ReciprocalStatements relation={relation} nameA={personA.name} nameB={personB.name} />
-          <PedagogicalExplanation relation={relation} nameA={personA.name} nameB={personB.name} />
+          <ReciprocalStatements relation={active} nameA={personA.name} nameB={personB.name} />
+          <PedagogicalExplanation relation={active} nameA={personA.name} nameB={personB.name} />
+
           <button
             type="button"
             className="parente-card-tech-toggle"
@@ -70,7 +96,7 @@ export default function RelationCard({ index, relation, personA, personB, getMem
             {showTech ? '− Masquer les détails techniques' : '+ Afficher les détails techniques'}
           </button>
           {showTech && (
-            <TechnicalDetails relation={relation} personA={personA} personB={personB} getMember={getMember} />
+            <TechnicalDetails relation={active} personA={personA} personB={personB} getMember={getMember} />
           )}
         </>
       )}

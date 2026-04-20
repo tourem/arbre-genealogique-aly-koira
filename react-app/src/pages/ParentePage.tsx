@@ -4,6 +4,7 @@ import { computeRelations } from '../lib/parenteSonghay';
 import { useParenteLabels } from '../hooks/useParenteLabels';
 import PersonPicker from '../components/relationship/PersonPicker';
 import RelationCard from '../components/relationship/RelationCard';
+import { groupRelations } from '../components/relationship/groupRelations';
 
 const DEFAULT_VISIBLE = 3;
 
@@ -36,8 +37,9 @@ export default function ParentePage() {
   }
 
   const relations = result?.kind === 'relations' ? result.relations : [];
-  const visibleRelations = expanded ? relations : relations.slice(0, DEFAULT_VISIBLE);
-  const hiddenCount = Math.max(0, relations.length - DEFAULT_VISIBLE);
+  const groups = useMemo(() => groupRelations(relations), [relations]);
+  const visibleGroups = expanded ? groups : groups.slice(0, DEFAULT_VISIBLE);
+  const hiddenCount = Math.max(0, groups.length - DEFAULT_VISIBLE);
 
   return (
     <div className="page active parente-page">
@@ -101,20 +103,20 @@ export default function ParentePage() {
           ) : result?.kind === 'relations' && personA && personB ? (
             <>
               <div className="parente-summary">
-                <span className="parente-summary-num">{relations.length}</span>
+                <span className="parente-summary-num">{groups.length}</span>
                 <span>
-                  {relations.length === 1 ? 'lien trouvé' : 'liens trouvés'} · plus proche :{' '}
-                  <em lang="son">{relations[0].termForA}</em>
+                  {groups.length === 1 ? 'lien trouvé' : 'liens trouvés'} · plus proche :{' '}
+                  <em lang="son">{groups[0].termForA}</em>
                   <span className="sep">/</span>
-                  <em lang="son">{relations[0].termForB}</em>
+                  <em lang="son">{groups[0].termForB}</em>
                 </span>
               </div>
 
-              {visibleRelations.map((r, i) => (
+              {visibleGroups.map((g, i) => (
                 <RelationCard
-                  key={`${r.via}-${i}`}
+                  key={`${g.termForA}-${g.termForB}-${i}`}
                   index={i}
-                  relation={r}
+                  group={g}
                   personA={personA}
                   personB={personB}
                   getMember={getMember}

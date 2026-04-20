@@ -7911,3 +7911,8 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
 .parente-card.collapsed .parente-card-header { padding-bottom: 0; border-bottom: 0; }
 .parente-card-subtitle .subtle-and { color: #4e5370; margin: 0 2px; }
 
+.parente-path-selector { display: flex; gap: 8px; flex-wrap: wrap; padding: 4px 0 4px; }
+.parente-path-pill { padding: 6px 12px; border-radius: 999px; background: transparent; border: 1px solid rgba(212,168,83,0.25); color: #9ca3af; font-size: 12px; cursor: pointer; font-family: inherit; transition: background 0.12s, color 0.12s, border-color 0.12s; }
+.parente-path-pill:hover { background: rgba(212,168,83,0.08); color: #ece8e0; }
+.parente-path-pill.active { background: var(--sh-gold, #d4a853); color: #111; border-color: var(--sh-gold, #d4a853); font-weight: 600; }
+
