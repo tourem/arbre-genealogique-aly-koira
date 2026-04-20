@@ -131,6 +131,7 @@ export function computeRelations(
       termForA: classification.termForA,
       termForB: classification.termForB,
       kind: classification.kind,
+      groupTerm: classification.groupTerm,
       via: inst.ancestor,
       viaName: ancestorPerson?.name ?? inst.ancestor,
       pathA: inst.pathA,

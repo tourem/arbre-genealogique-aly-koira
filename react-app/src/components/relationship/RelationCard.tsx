@@ -28,9 +28,44 @@ export default function RelationCard({ index, group, personA, personB, getMember
   const ancestor = getMember(active.via);
   const multiPath = group.paths.length > 1;
 
-  const collapsedSubtitle = multiPath
+  const viaLabel = multiPath
     ? `${group.paths.length} chemins distincts`
     : `via ${active.viaName}${active.viaSpouse ? ` & ${active.viaSpouse.name}` : ''}`;
+  const scoreLabel = expanded
+    ? ` · proximité ${active.proximityScore} · équilibre ${active.balanceScore}`
+    : '';
+
+  const renderTitle = () => {
+    if (group.groupTerm) {
+      return (
+        <h3 id={`rel-${index}-title`} className="parente-card-title">
+          <em lang="son">{group.groupTerm}</em>
+        </h3>
+      );
+    }
+    return (
+      <h3 id={`rel-${index}-title`} className="parente-card-title">
+        <em lang="son">{group.termForA}</em>
+        <span className="sep">/</span>
+        <em lang="son">{group.termForB}</em>
+      </h3>
+    );
+  };
+
+  const renderSubtitle = () => (
+    <p className="parente-card-subtitle">
+      {group.groupTerm && (
+        <span className="parente-card-individual-terms">
+          <em lang="son">{group.termForA}</em>
+          <span className="sep">/</span>
+          <em lang="son">{group.termForB}</em>
+          <span className="middot"> · </span>
+        </span>
+      )}
+      {viaLabel}
+      {scoreLabel}
+    </p>
+  );
 
   return (
     <article className={`parente-card ${expanded ? 'expanded' : 'collapsed'}`} aria-labelledby={`rel-${index}-title`}>
@@ -44,15 +79,8 @@ export default function RelationCard({ index, group, personA, personB, getMember
       >
         <span className="parente-card-num">{String(index + 1).padStart(2, '0')}</span>
         <div className="parente-card-title-block">
-          <h3 id={`rel-${index}-title`} className="parente-card-title">
-            <em lang="son">{group.termForA}</em>
-            <span className="sep">/</span>
-            <em lang="son">{group.termForB}</em>
-          </h3>
-          <p className="parente-card-subtitle">
-            {collapsedSubtitle}
-            {expanded && ` · proximité ${active.proximityScore} · équilibre ${active.balanceScore}`}
-          </p>
+          {renderTitle()}
+          {renderSubtitle()}
         </div>
         <span className="parente-card-chevron" aria-hidden="true">▸</span>
       </header>

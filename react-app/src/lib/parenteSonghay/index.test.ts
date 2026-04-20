@@ -171,6 +171,55 @@ describe('computeRelations — Cas de test du spec', () => {
   });
 });
 
+describe('computeRelations — arrou/woy hinka izey (cousins germains)', () => {
+  it('Cheick ↔ Koniba : fathers are brothers → arrou hinka izey', () => {
+    const r = computeRelations('cheick', 'koniba', members);
+    if (r.kind !== 'relations') throw new Error('expected relations');
+    // First relation : Bourama (Cheick's father) and Tiéman (Koniba's father)
+    // are both sons of Hadja, so they're brothers. dA=dB=2.
+    const first = r.relations[0];
+    expect(first.termForA).toBe('arma');
+    expect(first.termForB).toBe('arma');
+    expect(first.groupTerm).toBe('arrou hinka izey');
+    expect(first.viaName).toBe('Hadja');
+  });
+
+  it('siblings do NOT get arrou/woy hinka izey (only cousins germains do)', () => {
+    const r = computeRelations('modibo', 'hadja', members);
+    if (r.kind !== 'relations') throw new Error('expected relations');
+    expect(r.relations[0].termForA).toBe('arma');
+    expect(r.relations[0].termForB).toBe('woyma');
+    expect(r.relations[0].groupTerm).toBeUndefined();
+  });
+
+  it('distant parallel cousins (dA=dB=3) do NOT get the group term', () => {
+    const r = computeRelations('bakary', 'koniba', members);
+    if (r.kind !== 'relations') throw new Error('expected relations');
+    const first = r.relations[0];
+    expect(first.termForA).toBe('arma');
+    expect(first.termForB).toBe('arma');
+    expect(first.groupTerm).toBeUndefined();
+  });
+
+  it('woy hinka izey : mothers are sisters (synthetic fixture)', () => {
+    const synth: MemberDict = {
+      root:  mkMember('root',  'Root',  'F', null,   null,   []),
+      awa1:  mkMember('awa1',  'Awa1',  'F', null,   'root', []),  // root's daughter
+      awa2:  mkMember('awa2',  'Awa2',  'F', null,   'root', []),  // root's daughter (Awa1's sister)
+      alice: mkMember('alice', 'Alice', 'F', null,   'awa1', []),  // Awa1's daughter
+      bob:   mkMember('bob',   'Bob',   'M', null,   'awa2', []),  // Awa2's son
+    };
+    const r = computeRelations('alice', 'bob', synth);
+    if (r.kind !== 'relations') throw new Error('expected relations');
+    const first = r.relations[0];
+    // Mothers (Awa1, Awa2) are both female, siblings via Root.
+    // dA=dB=2, parallel, groupTerm = woy hinka izey.
+    expect(first.termForA).toBe('woyma');
+    expect(first.termForB).toBe('arma');
+    expect(first.groupTerm).toBe('woy hinka izey');
+  });
+});
+
 describe('computeRelations — dedup via couple marié', () => {
   it('merges duplicate relations coming from husband and wife of the same couple', () => {
     // Fixture : un couple Omar+Amina avec 2 enfants Ali et Bintou.

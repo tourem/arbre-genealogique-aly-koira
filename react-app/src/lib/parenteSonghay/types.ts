@@ -46,6 +46,11 @@ export interface Relation {
   /** When this relation was deduplicated with another via a married couple,
    *  this holds the info of the spouse LCA that was dropped. */
   viaSpouse?: { id: string; name: string };
+  /** Optional group/link label naming the relationship itself
+   *  (ex: "arrou hinka izey" = "enfants de deux frères"). Set when
+   *  the parallel-cousin first-cousin structure (dA=dB=2, same-sex
+   *  parents who are siblings at the LCA level) is detected. */
+  groupTerm?: string;
   pathA: Hop[];
   pathB: Hop[];
   distanceA: number;

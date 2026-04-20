@@ -8016,6 +8016,10 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
 .parente-card.expanded .parente-card-chevron { transform: rotate(90deg); }
 .parente-card.collapsed .parente-card-header { padding-bottom: 0; border-bottom: 0; }
 .parente-card-subtitle .subtle-and { color: #4e5370; margin: 0 2px; }
+.parente-card-individual-terms { font-family: var(--sh-serif, Georgia, serif); }
+.parente-card-individual-terms em { font-style: italic; color: var(--sh-terra, #e0845a); }
+.parente-card-individual-terms .sep { color: #4e5370; font-style: normal; margin: 0 3px; }
+.parente-card-individual-terms .middot { color: #4e5370; }
 
 .parente-path-selector { display: flex; gap: 8px; flex-wrap: wrap; padding: 4px 0 4px; }
 .parente-path-pill { padding: 6px 12px; border-radius: 999px; background: transparent; border: 1px solid rgba(212,168,83,0.25); color: #9ca3af; font-size: 12px; cursor: pointer; font-family: inherit; transition: background 0.12s, color 0.12s, border-color 0.12s; }

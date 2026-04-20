@@ -49,8 +49,25 @@ function classifySameGen(A: Person, B: Person, instance: LCAInstance, dict: Pers
   if (!parentA) missing.push({ personId: A.id, missing: instance.pathA[0] === 'P' ? 'father' : 'mother' });
   if (!parentB) missing.push({ personId: B.id, missing: instance.pathB[0] === 'P' ? 'father' : 'mother' });
   if (missing.length) return { incomplete: true, missing };
+
   if (parentA!.sex === parentB!.sex) {
-    return { kind: 'parallel', termForA: buildSiblingTerm(A.sex, L), termForB: buildSiblingTerm(B.sex, L) };
+    const dA = instance.pathA.length;
+    const dB = instance.pathB.length;
+    // First-cousin level: direct parents are siblings at the LCA.
+    // arrou hinka izey = "enfants de deux frères" (parents both male).
+    // woy hinka izey  = "enfants de deux sœurs" (parents both female).
+    let groupTerm: string | undefined;
+    if (dA === 2 && dB === 2) {
+      groupTerm = parentA!.sex === 'M'
+        ? L['term.arrou_hinka_izey']
+        : L['term.woy_hinka_izey'];
+    }
+    return {
+      kind: 'parallel',
+      termForA: buildSiblingTerm(A.sex, L),
+      termForB: buildSiblingTerm(B.sex, L),
+      groupTerm,
+    };
   }
   return { kind: 'cross', termForA: buildCrossCousinTerm(A.sex, L), termForB: buildCrossCousinTerm(B.sex, L) };
 }

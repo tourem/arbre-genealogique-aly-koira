@@ -4,6 +4,12 @@ export interface RelationGroup {
   termForA: string;
   termForB: string;
   kind: Relation['kind'];
+  /** Optional group/link label naming the relationship itself
+   *  (ex: "arrou hinka izey"). Propagated from Relation.groupTerm and
+   *  included in the grouping key so that structurally-distinct links
+   *  (siblings without a group term vs. first cousins with one) do not
+   *  get merged together. */
+  groupTerm?: string;
   /** All relations sharing the same term pair, sorted by proximity. The first
    *  is the closest (used to represent the group in the collapsed header). */
   paths: Relation[];
@@ -12,10 +18,16 @@ export interface RelationGroup {
 export function groupRelations(relations: Relation[]): RelationGroup[] {
   const byKey = new Map<string, RelationGroup>();
   for (const r of relations) {
-    const key = `${r.termForA}|${r.termForB}`;
+    const key = `${r.termForA}|${r.termForB}|${r.groupTerm ?? ''}`;
     let g = byKey.get(key);
     if (!g) {
-      g = { termForA: r.termForA, termForB: r.termForB, kind: r.kind, paths: [] };
+      g = {
+        termForA: r.termForA,
+        termForB: r.termForB,
+        kind: r.kind,
+        groupTerm: r.groupTerm,
+        paths: [],
+      };
       byKey.set(key, g);
     }
     g.paths.push(r);
