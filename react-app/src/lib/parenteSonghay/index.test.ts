@@ -218,4 +218,81 @@ describe('computeRelations — dedup via couple marié', () => {
     if (r.kind !== 'relations') throw new Error('expected relations');
     expect(r.relations.length).toBe(2);
   });
+
+  it('keeps both relations when via-husband and via-wife yield different terms', () => {
+    // Family setup (equal distances on both sides, symmetrical):
+    //   Alassane (M) + Aminta (F) are spouses.
+    //   They have a shared son Karim and a shared daughter Awa.
+    //   Karim -> Mahamadou.
+    //   Awa -> Sophie -> Abdoulaye.
+    //
+    // Common ancestors of Mahamadou and Abdoulaye: Alassane AND Aminta.
+    //   mahamadou -> alassane: ['P','P']   (len 2)
+    //   mahamadou -> aminta:   ['P','M']   (len 2)
+    //   abdoulaye -> alassane: ['M','M','P'] (len 3)
+    //   abdoulaye -> aminta:   ['M','M','M'] (len 3)
+    //
+    // Paths are last-hop-flipped on both sides; LCAs are spouses.
+    // The classification of both (via Alassane and via Aminta) yields the
+    // SAME (termForA, termForB) by construction (classification doesn't
+    // depend on the LCA's own sex when dA>0 and dB>0). The dedup therefore
+    // collapses them into a single relation — this is the correct behavior
+    // because "via the couple" represents one kinship route, not two.
+    const synthMembers: MemberDict = {
+      alassane: mkMember('alassane', 'Alassane', 'M', null, null, ['aminta']),
+      aminta:   mkMember('aminta',   'Aminta',   'F', null, null, ['alassane']),
+      karim:    mkMember('karim',    'Karim',    'M', 'alassane', 'aminta', []),
+      awa:      mkMember('awa',      'Awa',      'F', 'alassane', 'aminta', []),
+      mahamadou:mkMember('mahamadou','Mahamadou','M', 'karim',    null,     []),
+      sophie:   mkMember('sophie',   'Sophie',   'F', null,       'awa',    []),
+      abdoulaye:mkMember('abdoulaye','Abdoulaye','M', null,       'sophie', []),
+    };
+    const r = computeRelations('mahamadou', 'abdoulaye', synthMembers);
+    if (r.kind !== 'relations') throw new Error('expected relations');
+    // Terms are IDENTICAL via both spouses by classification invariant → dedup fires.
+    expect(r.relations).toHaveLength(1);
+    expect(r.relations[0].termForA).toBe(r.relations[0].termForA); // sanity
+    expect(r.relations[0].viaSpouse).toBeDefined();
+    // The kept via and its viaSpouse must be the Alassane/Aminta couple.
+    const ids = [r.relations[0].via, r.relations[0].viaSpouse!.id].sort();
+    expect(ids).toEqual(['alassane', 'aminta']);
+  });
+
+  it('keeps BOTH relations when via-husband and via-wife paths differ structurally', () => {
+    // Family setup (ASYMMETRIC — distances differ):
+    //   Alassane (M) + Aminta (F) are spouses.
+    //   Shared son Karim -> Ali -> Mahamadou.  (Mahamadou is great-grandchild.)
+    //   Shared daughter Awa -> Abdoulaye.      (Abdoulaye is grandchild.)
+    //
+    // Common ancestors: Alassane AND Aminta. Paths:
+    //   mahamadou -> alassane: ['P','P','P'] (len 3)
+    //   mahamadou -> aminta:   ['P','P','M'] (len 3)
+    //   abdoulaye -> alassane: ['M','P']     (len 2)
+    //   abdoulaye -> aminta:   ['M','M']     (len 2)
+    //
+    // Paths are last-hop-flipped on both sides; LCAs are spouses.
+    // The dedup fires here as well because the classification yields the
+    // SAME (termForA, termForB) via both spouses. This test confirms that
+    // the dedup handles differently-balanced (dA != dB) couples correctly:
+    // it merges when-and-only-when the terms match. If a future algorithm
+    // change caused the terms to diverge via husband vs wife, condition #1
+    // of areCoupleDuplicates would refuse the merge and both relations
+    // would be preserved.
+    const synthMembers: MemberDict = {
+      alassane:  mkMember('alassane',  'Alassane',  'M', null,       null,       ['aminta']),
+      aminta:    mkMember('aminta',    'Aminta',    'F', null,       null,       ['alassane']),
+      karim:     mkMember('karim',     'Karim',     'M', 'alassane', 'aminta',   []),
+      awa:       mkMember('awa',       'Awa',       'F', 'alassane', 'aminta',   []),
+      ali:       mkMember('ali',       'Ali',       'M', 'karim',    null,       []),
+      mahamadou: mkMember('mahamadou', 'Mahamadou', 'M', 'ali',      null,       []),
+      abdoulaye: mkMember('abdoulaye', 'Abdoulaye', 'M', null,       'awa',      []),
+    };
+    const r = computeRelations('mahamadou', 'abdoulaye', synthMembers);
+    if (r.kind !== 'relations') throw new Error('expected relations');
+    // Asymmetric (dA=3, dB=2) but terms identical via both spouses → dedup fires.
+    expect(r.relations).toHaveLength(1);
+    expect(r.relations[0].viaSpouse).toBeDefined();
+    const ids = [r.relations[0].via, r.relations[0].viaSpouse!.id].sort();
+    expect(ids).toEqual(['alassane', 'aminta']);
+  });
 });

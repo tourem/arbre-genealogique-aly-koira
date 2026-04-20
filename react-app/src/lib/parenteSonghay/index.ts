@@ -21,6 +21,27 @@ function toPersonDict(members: MemberDict): PersonDict {
   return out;
 }
 
+/**
+ * Two relations are "duplicates via a married couple" IFF:
+ *   1. They have the same (termForA, termForB). This is the primary gate: if
+ *      passing via the husband yields one kinship (e.g. hassa/touba) and via
+ *      the wife yields a different kinship (e.g. baba/izé), these are NOT
+ *      duplicates and both MUST be preserved.
+ *   2. The two structural paths are identical except for their LAST hop, which
+ *      is flipped (P <-> M) on both sides. This is the structural signature of
+ *      a couple: child of the couple is the same, only the LCA parent differs.
+ *   3. The two LCAs are mutually spouses in the member dictionary.
+ *
+ * Conditions 2 and 3 without 1 should never occur by construction of the
+ * classification algorithm (the classification depends on sibling-equivalents,
+ * not on the LCA's own sex when dA>0 and dB>0). Condition 1 is the safety net
+ * that guarantees correctness even if the algorithm evolves.
+ *
+ * Songhay cultural note: marriage is structurally meaningful; a married couple
+ * forms one reproductive unit when the link transits both spouses identically.
+ * But when the link differs via husband vs wife, the two relations represent
+ * distinct kinship routes and must both be surfaced to the user.
+ */
 function areCoupleDuplicates(
   r1: Relation,
   r2: Relation,
