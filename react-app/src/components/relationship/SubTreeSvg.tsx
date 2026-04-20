@@ -1,5 +1,6 @@
 // react-app/src/components/relationship/SubTreeSvg.tsx
 import { useEffect, useMemo, useRef, useState, useCallback, type PointerEvent, type WheelEvent } from 'react';
+import { createPortal } from 'react-dom';
 import type { Member } from '../../lib/types';
 import type { Relation } from '../../lib/parenteSonghay';
 import { useParenteLabels } from '../../hooks/useParenteLabels';
@@ -54,6 +55,7 @@ export default function SubTreeSvg({ relation, personA, personB, ancestor, getMe
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState<{ startX: number; startY: number; startPan: { x: number; y: number } } | null>(null);
+  const [fullscreen, setFullscreen] = useState(false);
 
   const resetView = useCallback(() => {
     requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -69,6 +71,19 @@ export default function SubTreeSvg({ relation, personA, personB, ancestor, getMe
   }, [width, height]);
 
   useEffect(() => { resetView(); }, [resetView]);
+
+  // Recadrer à l'entrée / la sortie du plein écran (le viewport change de taille).
+  useEffect(() => { resetView(); }, [fullscreen, resetView]);
+
+  // Escape pour sortir du plein écran.
+  useEffect(() => {
+    if (!fullscreen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setFullscreen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [fullscreen]);
 
   const onPointerDown = (e: PointerEvent) => {
     (e.target as Element).setPointerCapture?.(e.pointerId);
@@ -87,8 +102,8 @@ export default function SubTreeSvg({ relation, personA, personB, ancestor, getMe
     setZoom((z) => Math.max(0.3, Math.min(3, z * delta)));
   };
 
-  return (
-    <div className="parente-subtree-wrap">
+  const content = (
+    <>
       <div
         ref={viewportRef}
         className={`parente-subtree-viewport${dragging ? ' dragging' : ''}`}
@@ -141,6 +156,16 @@ export default function SubTreeSvg({ relation, personA, personB, ancestor, getMe
         <span>{Math.round(zoom * 100)}%</span>
         <button onClick={() => setZoom((z) => Math.min(3, z * 1.15))} aria-label="Zoomer">+</button>
         <button onClick={resetView} aria-label="Réinitialiser">⟲</button>
+        {!fullscreen && (
+          <button
+            className="parente-zoom-fullscreen"
+            onClick={() => setFullscreen(true)}
+            aria-label="Plein écran"
+            title="Plein écran"
+          >
+            ⤢
+          </button>
+        )}
       </div>
 
       <div className="parente-legend">
@@ -150,8 +175,36 @@ export default function SubTreeSvg({ relation, personA, personB, ancestor, getMe
         <span className="legend-item"><span className="dot-pm">P</span> chaîne paternelle</span>
         <span className="legend-item"><span className="dot-pm">M</span> chaîne maternelle</span>
       </div>
-    </div>
+    </>
   );
+
+  if (fullscreen) {
+    return createPortal(
+      <div className="parente-fullscreen" role="dialog" aria-modal="true" aria-label="Sous-arbre en plein écran">
+        <div className="parente-fullscreen-header">
+          <h3 className="parente-fullscreen-title">
+            {personA.name} ↔ {personB.name} · via {relation.viaName}
+          </h3>
+          <button
+            type="button"
+            className="parente-fullscreen-close"
+            onClick={() => setFullscreen(false)}
+            aria-label="Fermer le plein écran"
+          >
+            ×
+          </button>
+        </div>
+        <div className="parente-fullscreen-body">
+          <div className="parente-subtree-wrap">
+            {content}
+          </div>
+        </div>
+      </div>,
+      document.body,
+    );
+  }
+
+  return <div className="parente-subtree-wrap">{content}</div>;
 }
 
 function layout(
