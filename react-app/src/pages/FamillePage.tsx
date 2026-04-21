@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useMembersContext } from '../context/MembersContext';
 import { useAuth } from '../context/AuthContext';
 import { genColors } from '../lib/constants';
-import PersonCard from '../components/family/PersonCard';
+import PersonHero from '../components/family/PersonHero';
 import ParentCard from '../components/family/ParentCard';
 import SpouseCard from '../components/family/SpouseCard';
 import ChildrenByMother from '../components/family/ChildrenByMother';
@@ -126,7 +126,6 @@ export default function FamillePage() {
 
   const spouseCount = new Set(person.spouses || []).size;
   const childrenCount = kids.length;
-  const maxGeneration = Math.max(...Object.values(members).map((m) => m.generation ?? 0));
 
   const handleAddSaved = async () => {
     setAddModal(null);
@@ -178,11 +177,11 @@ export default function FamillePage() {
             />
 
             <div className={`person-view-container ${animClass}`} key={currentPersonId}>
-              <PersonCard
+              <PersonHero
                 person={person}
+                members={members}
                 spouseCount={spouseCount}
                 childrenCount={childrenCount}
-                maxGeneration={maxGeneration}
               />
 
               <ParentCard

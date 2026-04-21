@@ -8355,3 +8355,206 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
     padding: 10px 12px;
   }
 }
+
+/* ============================================================
+   Phase 6 — PersonHero (refonte fiche personne en-tête)
+   ============================================================ */
+.person-hero {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 8px 24px;
+  align-items: start;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--bdr-subtle, rgba(244,236,216,0.06));
+  margin-bottom: 28px;
+}
+.person-hero-avatar { grid-row: 1 / span 2; grid-column: 1; }
+
+.person-hero-main {
+  grid-row: 1;
+  grid-column: 2;
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.person-hero-name-block {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  line-height: 1.05;
+}
+.person-hero-name {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  font-size: 36px;
+  color: var(--ink-hi, #f4ecd8);
+  letter-spacing: -0.02em;
+  font-variation-settings: var(--fraunces-display, "opsz" 144, "SOFT" 30);
+}
+.person-hero-clan {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--ocre, #d4a84a);
+}
+.person-hero-clan em { font-style: italic; font-weight: 500; }
+
+.person-hero-meta {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  color: var(--ink-mid, #d0c4a8);
+  font-size: 13px;
+}
+.person-hero-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.person-hero-meta-sep {
+  color: var(--ink-dim, #5a5447);
+  user-select: none;
+}
+.person-hero-alias {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: italic;
+  color: var(--ocre, #d4a84a);
+}
+.sex-glyph {
+  font-size: 14px;
+  line-height: 1;
+}
+.sex-glyph--male { color: #7090ff; }
+.sex-glyph--female { color: var(--prune, #8b5a75); }
+
+/* Cultural tags — dot distinguishes explicit vs inferred */
+.person-hero-tags { display: inline-flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.cultural-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px 2px 6px;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--ocre-soft, rgba(212,168,74,0.14));
+  border: 1px solid var(--ocre-edge, rgba(212,168,74,0.28));
+  font-size: 12px;
+}
+.cultural-tag-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.cultural-tag--explicit .cultural-tag-dot {
+  background: var(--ocre, #d4a84a);
+}
+.cultural-tag--inferred {
+  background: transparent;
+  border-style: dashed;
+}
+.cultural-tag--inferred .cultural-tag-dot {
+  background: transparent;
+  border: 1px solid var(--ink-mute, #8b8471);
+}
+.cultural-tag--inferred .songhay-term {
+  opacity: 0.85;
+}
+.cultural-tag-source-hint {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-mute, #8b8471);
+  margin-left: 2px;
+}
+
+/* Stats éditoriales alignées à droite */
+.person-hero-stats {
+  grid-row: 1;
+  grid-column: 3;
+  display: flex;
+  gap: 28px;
+  padding-top: 8px;
+}
+.person-hero-stat {
+  text-align: right;
+}
+.person-hero-stat-num {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ocre, #d4a84a);
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 48, "SOFT" 30;
+  font-feature-settings: "tnum";
+}
+.person-hero-stat-label {
+  margin-top: 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-mute, #8b8471);
+}
+
+/* Encart culturel ("citation de livre", pas "notification système") */
+.person-cultural-note {
+  grid-row: 2;
+  grid-column: 2 / span 2;
+  margin-top: 8px;
+  padding: 16px 18px;
+  background: linear-gradient(
+    135deg,
+    var(--ocre-soft, rgba(212,168,74,0.10)) 0%,
+    transparent 70%
+  );
+  border-left: 2px solid var(--ocre, #d4a84a);
+  border-radius: 0 var(--radius-md, 12px) var(--radius-md, 12px) 0;
+}
+.person-cultural-note p {
+  margin: 0;
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-hi, #f4ecd8);
+  font-variation-settings: "opsz" 14, "SOFT" 80;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .person-hero {
+    grid-template-columns: 64px 1fr;
+    gap: 6px 16px;
+  }
+  .person-hero-avatar .avatar { width: 64px; height: 64px; font-size: 22px; }
+  .person-hero-main { padding-top: 2px; }
+  .person-hero-name { font-size: 26px; }
+  .person-hero-clan { font-size: 15px; }
+  .person-hero-stats {
+    grid-row: auto;
+    grid-column: 1 / span 2;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--bdr-subtle, rgba(244,236,216,0.06));
+    gap: 20px;
+    justify-content: flex-start;
+  }
+  .person-hero-stat { text-align: left; }
+  .person-hero-stat-num { font-size: 22px; }
+  .person-cultural-note {
+    grid-column: 1 / span 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .person-hero { padding-bottom: 20px; margin-bottom: 20px; }
+  .person-hero-name { font-size: 22px; }
+  .person-hero-clan { font-size: 13px; }
+  .person-hero-meta { font-size: 12px; }
+  .person-hero-stat-num { font-size: 20px; }
+}

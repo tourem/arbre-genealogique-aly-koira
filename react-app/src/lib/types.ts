@@ -14,6 +14,8 @@ export interface Member {
   birth_city: string | null;
   birth_country: string | null;
   village: string | null;
+  /** Tags culturels saisis explicitement (enum contrôlé : 'koda', 'konkobey'...). */
+  cultural_tags?: string[];
   // Soft delete fields for merge
   merged?: boolean;
   merged_into_id?: string | null;
