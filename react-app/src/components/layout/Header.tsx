@@ -50,7 +50,7 @@ export default function Header() {
             onClick={() => setSearchOpen(true)}
             aria-label="Rechercher un membre"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.35-4.35" />
             </svg>
@@ -128,8 +128,12 @@ export default function Header() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <button className="search-overlay-close" onClick={() => setSearchOpen(false)}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <button
+              className="search-overlay-close"
+              onClick={() => setSearchOpen(false)}
+              aria-label="Fermer la recherche"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
