@@ -9218,3 +9218,221 @@ button.parent-card { width: 100%; }
   letter-spacing: 0.08em;
 }
 .fab-menu-item--new .fab-menu-foyer-name { font-style: italic; }
+
+/* ============================================================
+   Phase 10 — PlusSheet (bottom-sheet mobile / popover desktop)
+   Replaces the old .profile-menu* styles (kept orphaned for safety).
+   ============================================================ */
+.plus-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(13, 11, 8, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  animation: plus-sheet-fade 160ms var(--ease-out, ease-out);
+}
+:root[data-theme='light'] .plus-sheet-backdrop {
+  background: rgba(42, 31, 18, 0.30);
+}
+@keyframes plus-sheet-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.plus-sheet {
+  background: var(--bg-elev-1, #1d1812);
+  border: 1px solid var(--bdr-soft, rgba(244,236,216,0.10));
+  box-shadow: var(--shadow-lg, 0 16px 48px rgba(0,0,0,0.44));
+  display: flex; flex-direction: column;
+  color: var(--ink-hi, #f4ecd8);
+  font-family: inherit;
+}
+
+/* MOBILE (default) : bottom-sheet plein-largeur jusqu'a 440px */
+.plus-sheet {
+  width: 100%;
+  max-width: 440px;
+  padding: 0 0 calc(env(safe-area-inset-bottom, 0px) + 12px);
+  border-radius: 18px 18px 0 0;
+  animation: plus-sheet-up 220ms var(--ease-out, ease-out);
+}
+@keyframes plus-sheet-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.plus-sheet-handle {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 4px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  width: 100%;
+}
+.plus-sheet-handle-grip {
+  width: 40px; height: 4px;
+  border-radius: 2px;
+  background: var(--ink-dim, #5a5447);
+  transition: background-color 140ms var(--ease-out, ease-out);
+}
+.plus-sheet-handle:hover .plus-sheet-handle-grip,
+.plus-sheet-handle:focus-visible .plus-sheet-handle-grip {
+  background: var(--ocre, #d4a84a);
+}
+.plus-sheet-handle:focus-visible {
+  outline: 2px solid var(--ocre, #d4a84a);
+  outline-offset: -8px;
+  border-radius: 18px 18px 0 0;
+}
+
+.plus-sheet-user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px 14px;
+}
+.plus-sheet-user-main { min-width: 0; flex: 1; }
+.plus-sheet-user-name {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--ink-hi, #f4ecd8);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.plus-sheet-user-stats {
+  margin-top: 4px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 11px;
+  color: var(--ink-mute, #8b8471);
+  font-feature-settings: "tnum";
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.plus-sheet-user-stats-sep { opacity: 0.6; }
+
+.plus-sheet-badge {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill, 999px);
+  flex-shrink: 0;
+  font-weight: 600;
+}
+.plus-sheet-badge--admin {
+  background: var(--ocre-soft, rgba(212,168,74,0.14));
+  color: var(--ocre, #d4a84a);
+  border: 1px solid var(--ocre-edge, rgba(212,168,74,0.28));
+}
+.plus-sheet-badge--member {
+  background: var(--prune-soft, rgba(139,90,117,0.14));
+  color: var(--prune, #8b5a75);
+  border: 1px solid var(--prune-edge, rgba(139,90,117,0.28));
+}
+
+.plus-sheet-separator {
+  height: 1px;
+  background: var(--bdr-soft, rgba(244,236,216,0.10));
+  margin: 0 12px;
+}
+
+.plus-sheet-items {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.plus-sheet-item {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  color: var(--ink-hi, #f4ecd8);
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 140ms var(--ease-out, ease-out), color 140ms var(--ease-out, ease-out);
+}
+.plus-sheet-item:hover {
+  background: var(--ocre-soft, rgba(212,168,74,0.14));
+}
+.plus-sheet-item:focus-visible {
+  outline: 2px solid var(--ocre, #d4a84a);
+  outline-offset: -1px;
+}
+.plus-sheet-item-icon {
+  display: grid; place-items: center;
+  color: var(--ocre, #d4a84a);
+}
+.plus-sheet-item-icon svg { width: 16px; height: 16px; }
+.plus-sheet-item-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+.plus-sheet-item--danger {
+  color: var(--terracotta, #c25c3a);
+}
+.plus-sheet-item--danger .plus-sheet-item-icon {
+  color: var(--terracotta, #c25c3a);
+}
+.plus-sheet-item--danger:hover {
+  background: var(--terracotta-soft, rgba(194,92,58,0.14));
+}
+
+.plus-sheet-version {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 9px;
+  color: var(--ink-dim, #5a5447);
+  text-align: center;
+  padding: 10px 0 6px;
+  opacity: 0.7;
+  letter-spacing: 0.05em;
+}
+
+/* DESKTOP (>=720px) : popover ancre bottom-right */
+@media (min-width: 720px) {
+  .plus-sheet-backdrop {
+    background: rgba(13, 11, 8, 0.25);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 74px 24px 24px 24px; /* top offset = topbar height */
+  }
+  :root[data-theme='light'] .plus-sheet-backdrop {
+    background: rgba(42, 31, 18, 0.15);
+  }
+  .plus-sheet {
+    width: 320px;
+    max-width: 320px;
+    padding: 0 0 12px;
+    border-radius: var(--radius-lg, 16px);
+    animation: plus-sheet-pop 180ms var(--ease-out, ease-out);
+  }
+  .plus-sheet-handle {
+    display: none;
+  }
+  @keyframes plus-sheet-pop {
+    from { opacity: 0; transform: scale(0.96) translateY(-4px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+}
+
+@media (max-width: 360px) {
+  .plus-sheet-user { padding: 14px 16px 12px; }
+  .plus-sheet-user-name { font-size: 16px; }
+  .plus-sheet-item { padding: 11px 12px; font-size: 13px; }
+}
+
