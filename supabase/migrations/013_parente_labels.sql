@@ -10,6 +10,12 @@ CREATE TABLE IF NOT EXISTS parente_labels (
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Privilèges de base (indispensable avant que la RLS ne filtre les lignes).
+-- Sans ces GRANT, les utilisateurs authentifiés obtiennent
+-- "permission denied for table parente_labels" même s'ils sont admin.
+GRANT SELECT, INSERT, UPDATE, DELETE ON parente_labels TO authenticated;
+GRANT SELECT ON parente_labels TO anon;
+
 CREATE OR REPLACE FUNCTION update_parente_labels_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN NEW.updated_at = now(); RETURN NEW; END;
