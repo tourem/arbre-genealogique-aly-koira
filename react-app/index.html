@@ -21,7 +21,9 @@
     </noscript>
   </head>
   <body>
-    <script>try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
+    <!-- Theme hydration (avant le 1er render, évite le flash).
+         Priorité : localStorage > prefers-color-scheme > dark par défaut. -->
+    <script>(function(){try{var s=localStorage.getItem('theme');var t=(s==='light'||s==='dark')?s:(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();</script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

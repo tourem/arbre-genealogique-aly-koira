@@ -16,6 +16,10 @@ function getInitialTheme(): Theme {
   } catch {
     // localStorage unavailable
   }
+  // Premier chargement : respecter la préférence système si disponible.
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    if (window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+  }
   return 'dark';
 }
 
