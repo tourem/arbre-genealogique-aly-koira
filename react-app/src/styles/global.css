@@ -8083,3 +8083,103 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
   .header-theme-toggle { width: 34px; height: 34px; margin-left: 6px; }
   .header-theme-toggle svg { width: 16px; height: 16px; }
 }
+
+/* ============================================================
+   Phase 3 — Topbar refonte v2 (logo ocre, nav intégrée, backdrop)
+   ============================================================ */
+
+/* Logo mark + text (overrides the old .header-logo-icon) */
+.header-logo {
+  display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0; text-decoration: none; color: inherit; cursor: pointer;
+}
+.header-logo-mark {
+  width: 32px; height: 32px; border-radius: 7px;
+  background: var(--grad-ocre, linear-gradient(135deg, #e8c472, #a07d2b));
+  display: grid; place-items: center;
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 600; color: var(--bg-base, #15120e);
+  font-size: 14px; letter-spacing: -0.02em;
+}
+.header-logo-text {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500; font-size: 17px; letter-spacing: -0.01em;
+  color: var(--ink-hi, #f4ecd8);
+}
+.header-logo-text em {
+  font-style: italic; color: var(--ocre, #d4a84a); font-weight: 400;
+}
+
+/* Topbar sticky with backdrop blur — refine existing .header */
+.header {
+  background: color-mix(in srgb, var(--bg-base, #15120e) 88%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--bdr-subtle, rgba(255,255,255,0.06));
+}
+
+/* Search trigger restyled */
+.header-search-trigger {
+  flex: 1;
+  max-width: 420px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px;
+  background: var(--bg-elev-1, #1d1812);
+  border: 1px solid var(--bdr-soft, rgba(255,255,255,0.1));
+  border-radius: var(--radius-md, 12px);
+  color: var(--ink-mute, #8b8471);
+  cursor: pointer; font-family: inherit; font-size: 13px; text-align: left;
+  transition: border-color 160ms var(--ease-out, ease), background-color 160ms var(--ease-out, ease);
+  margin-left: auto;
+}
+.header-search-trigger:hover {
+  border-color: var(--ocre-edge, rgba(212,168,74,0.28));
+  background: var(--bg-elev-2, #252018);
+  color: var(--ink-hi, #f4ecd8);
+}
+.header-search-trigger svg { width: 16px; height: 16px; flex-shrink: 0; }
+.header-search-placeholder { flex: 1; }
+
+/* Main nav tabs (desktop only) */
+.header-nav {
+  display: flex; gap: 4px;
+  background: var(--bg-elev-1, #1d1812);
+  border: 1px solid var(--bdr-soft, rgba(255,255,255,0.1));
+  border-radius: var(--radius-md, 12px);
+  padding: 4px;
+}
+.header-nav-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px;
+  background: transparent; border: 0; border-radius: 8px;
+  color: var(--ink-mute, #8b8471);
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  cursor: pointer; text-decoration: none;
+  transition: background-color 140ms var(--ease-out, ease), color 140ms var(--ease-out, ease);
+  white-space: nowrap;
+}
+.header-nav-item svg { width: 15px; height: 15px; }
+.header-nav-item:hover {
+  background: var(--bg-elev-2, #252018); color: var(--ink-hi, #f4ecd8);
+}
+.header-nav-item.active {
+  background: var(--ocre-soft, rgba(212,168,74,0.14));
+  color: var(--ocre, #d4a84a);
+}
+.header-nav-item:focus-visible {
+  outline: 2px solid var(--ocre, #d4a84a); outline-offset: 2px;
+}
+
+/* ---- Responsive rules ---- */
+/* Hide main nav in topbar below 720px (replaced by BottomNav) */
+@media (max-width: 719px) {
+  .header-nav { display: none; }
+  .header-search-trigger { max-width: none; margin-left: 0; }
+  .header-logo-text { font-size: 15px; }
+  .header-logo-mark { width: 28px; height: 28px; font-size: 12px; }
+}
+
+/* Hide BottomNav on desktop ≥720px (replaced by header-nav) */
+@media (min-width: 720px) {
+  .nav { display: none !important; }
+}
