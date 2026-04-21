@@ -9612,3 +9612,375 @@ button.parent-card { width: 100%; }
   .parente-page .parente-empty-state-icon svg { width: 26px; height: 26px; }
   .parente-page .parente-empty-state-text { font-size: 14px; }
 }
+
+/* ============================================================
+   Phase 12 — Admin refonte v2 (shell + 5 sous-vues)
+   Override des styles admin existants via tokens v2.
+   ============================================================ */
+
+/* ── Shell ── */
+.admin-page.admin-v2 {
+  color: var(--ink-hi, #f4ecd8);
+}
+.admin-v2 .admin-header {
+  margin: 0 0 20px;
+}
+.admin-v2 .admin-title {
+  margin: 0;
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  color: var(--ink-hi, #f4ecd8);
+  line-height: 1.1;
+  font-variation-settings: "opsz" 72, "SOFT" 30;
+}
+
+/* ── Onglets avec underline indicator ── */
+.admin-v2 .admin-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--bdr-subtle, rgba(244,236,216,0.06));
+  margin: 0 0 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.admin-v2 .admin-tabs::-webkit-scrollbar { display: none; }
+.admin-v2 .admin-tab {
+  position: relative;
+  background: transparent;
+  border: 0;
+  padding: 10px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-mute, #8b8471);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 140ms var(--ease-out, ease-out);
+}
+.admin-v2 .admin-tab:hover { color: var(--ink-hi, #f4ecd8); }
+.admin-v2 .admin-tab.is-active { color: var(--ocre, #d4a84a); }
+.admin-v2 .admin-tab.is-active::after {
+  content: '';
+  position: absolute;
+  left: 8px; right: 8px; bottom: -1px;
+  height: 2px;
+  background: var(--ocre, #d4a84a);
+  border-radius: 2px;
+}
+.admin-v2 .admin-tab:focus-visible {
+  outline: 2px solid var(--ocre, #d4a84a);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Stats cards compactes ── */
+.admin-v2 .adm-stats,
+.admin-v2 .mh-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.admin-v2 .adm-stat,
+.admin-v2 .mh-stat {
+  padding: 14px 16px;
+  background: var(--bg-elev-1, #1d1812);
+  border: 1px solid var(--bdr-subtle, rgba(244,236,216,0.06));
+  border-radius: var(--radius-md, 12px);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.admin-v2 .adm-stat-val,
+.admin-v2 .mh-stat-val,
+.admin-v2 .adm-stat-num {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--ocre, #d4a84a);
+  font-variation-settings: "opsz" 48, "SOFT" 30;
+  font-feature-settings: "tnum";
+}
+.admin-v2 .adm-stat-label,
+.admin-v2 .mh-stat-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-mute, #8b8471);
+  font-weight: 500;
+}
+
+/* Stat color variants (applied via subclasses like .adm-stat.is-blue, .is-prune, .is-terra) */
+.admin-v2 .adm-stat.is-blue .adm-stat-val,
+.admin-v2 .adm-stat.is-blue .adm-stat-num { color: #7090ff; }
+.admin-v2 .adm-stat.is-prune .adm-stat-val,
+.admin-v2 .adm-stat.is-prune .adm-stat-num { color: var(--prune, #8b5a75); }
+.admin-v2 .adm-stat.is-terra .adm-stat-val,
+.admin-v2 .adm-stat.is-terra .adm-stat-num { color: var(--terracotta, #c25c3a); }
+.admin-v2 .adm-stat.is-sauge .adm-stat-val,
+.admin-v2 .adm-stat.is-sauge .adm-stat-num { color: var(--sauge, #7a8868); }
+
+/* ── Search + filter pills ── */
+.admin-v2 .adm-toolbar,
+.admin-v2 .adm-search-row,
+.admin-v2 .mh-filters {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.admin-v2 .adm-search,
+.admin-v2 input[type="search"],
+.admin-v2 .adm-search-input {
+  flex: 1 1 220px;
+  padding: 9px 14px;
+  background: var(--bg-elev-1, #1d1812);
+  border: 1px solid var(--bdr-soft, rgba(244,236,216,0.10));
+  border-radius: var(--radius-md, 12px);
+  color: var(--ink-hi, #f4ecd8);
+  font-family: inherit;
+  font-size: 13px;
+}
+.admin-v2 .adm-search:focus,
+.admin-v2 input[type="search"]:focus,
+.admin-v2 .adm-search-input:focus {
+  outline: none;
+  border-color: var(--ocre-edge, rgba(212,168,74,0.28));
+}
+.admin-v2 .adm-filter-pills {
+  display: inline-flex; gap: 6px;
+  background: var(--bg-elev-1, #1d1812);
+  border: 1px solid var(--bdr-soft, rgba(244,236,216,0.10));
+  border-radius: var(--radius-pill, 999px);
+  padding: 4px;
+}
+.admin-v2 .adm-filter-pill {
+  padding: 6px 12px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-pill, 999px);
+  color: var(--ink-mute, #8b8471);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 140ms var(--ease-out, ease-out), color 140ms var(--ease-out, ease-out);
+}
+.admin-v2 .adm-filter-pill:hover { color: var(--ink-hi, #f4ecd8); }
+.admin-v2 .adm-filter-pill.is-active {
+  background: var(--ocre-soft, rgba(212,168,74,0.14));
+  color: var(--ocre, #d4a84a);
+}
+/* Primary button (+ Ajouter) */
+.admin-v2 .adm-btn-primary,
+.admin-v2 button.adm-add,
+.admin-v2 .btn-add-member {
+  padding: 9px 16px;
+  border: 0;
+  border-radius: var(--radius-md, 12px);
+  background: var(--grad-ocre, linear-gradient(135deg, #e8c472, #a07d2b));
+  color: var(--bg-base, #15120e);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 140ms var(--ease-out, ease-out), filter 140ms var(--ease-out, ease-out);
+  box-shadow:
+    0 4px 14px rgba(212, 168, 74, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20);
+}
+.admin-v2 .adm-btn-primary:hover,
+.admin-v2 button.adm-add:hover,
+.admin-v2 .btn-add-member:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+/* ── Group-by-generation labels ── */
+.admin-v2 .adm-group-label,
+.admin-v2 .adm-gen-group-label {
+  display: flex; align-items: center; gap: 10px;
+  margin: 22px 0 10px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-mute, #8b8471);
+}
+.admin-v2 .adm-group-label::before,
+.admin-v2 .adm-group-label::after,
+.admin-v2 .adm-gen-group-label::before,
+.admin-v2 .adm-gen-group-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--bdr-subtle, rgba(244,236,216,0.06));
+}
+.admin-v2 .adm-group-label strong,
+.admin-v2 .adm-gen-group-label strong {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: normal;
+  font-weight: 500;
+  color: var(--ocre, #d4a84a);
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── Member cards (already-existing .adm-member classes restylees) ── */
+.admin-v2 .adm-member,
+.admin-v2 .adm-user-row,
+.admin-v2 .adm-suggestion-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 14px;
+  background: var(--bg-elev-1, #1d1812);
+  border: 1px solid var(--bdr-subtle, rgba(244,236,216,0.06));
+  border-radius: var(--radius-md, 12px);
+  margin-bottom: 8px;
+  transition: background-color 140ms var(--ease-out, ease-out), border-color 140ms var(--ease-out, ease-out);
+}
+.admin-v2 .adm-member:hover,
+.admin-v2 .adm-user-row:hover,
+.admin-v2 .adm-suggestion-card:hover {
+  background: var(--bg-elev-2, #252018);
+  border-color: var(--bdr-soft, rgba(244,236,216,0.10));
+}
+.admin-v2 .adm-member-name,
+.admin-v2 .adm-user-name,
+.admin-v2 .adm-suggestion-title {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--ink-hi, #f4ecd8);
+  letter-spacing: -0.01em;
+}
+.admin-v2 .adm-member-alias,
+.admin-v2 .adm-user-alias {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: italic;
+  color: var(--ocre, #d4a84a);
+  font-size: 13px;
+  margin-left: 6px;
+  font-weight: 400;
+}
+.admin-v2 .adm-member-meta,
+.admin-v2 .adm-user-email,
+.admin-v2 .adm-suggestion-meta {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 11px;
+  color: var(--ink-mute, #8b8471);
+  margin-top: 2px;
+}
+.admin-v2 .adm-gen-tag,
+.admin-v2 .adm-member-gen {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  padding: 3px 8px;
+  background: var(--terracotta-soft, rgba(194,92,58,0.14));
+  color: var(--terracotta, #c25c3a);
+  border: 1px solid var(--terracotta-edge, rgba(194,92,58,0.22));
+  border-radius: var(--radius-pill, 999px);
+  letter-spacing: 0.05em;
+  font-feature-settings: "tnum";
+}
+.admin-v2 .adm-role-badge,
+.admin-v2 .adm-user-role {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill, 999px);
+  font-weight: 600;
+}
+.admin-v2 .adm-role-badge.is-admin,
+.admin-v2 .adm-user-role.admin {
+  background: var(--ocre-soft, rgba(212,168,74,0.14));
+  color: var(--ocre, #d4a84a);
+  border: 1px solid var(--ocre-edge, rgba(212,168,74,0.28));
+}
+.admin-v2 .adm-role-badge.is-member,
+.admin-v2 .adm-user-role.user {
+  background: var(--prune-soft, rgba(139,90,117,0.14));
+  color: var(--prune, #8b5a75);
+  border: 1px solid var(--prune-edge, rgba(139,90,117,0.28));
+}
+
+/* Icon-buttons (edit crayon, more dots, etc.) */
+.admin-v2 .adm-icon-btn,
+.admin-v2 .adm-btn-edit,
+.admin-v2 .adm-btn-more {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm, 8px);
+  background: transparent;
+  border: 1px solid var(--bdr-soft, rgba(244,236,216,0.10));
+  color: var(--ink-mute, #8b8471);
+  cursor: pointer;
+  display: grid; place-items: center;
+  transition: background-color 140ms var(--ease-out, ease-out), color 140ms var(--ease-out, ease-out), border-color 140ms var(--ease-out, ease-out);
+}
+.admin-v2 .adm-icon-btn:hover,
+.admin-v2 .adm-btn-edit:hover,
+.admin-v2 .adm-btn-more:hover {
+  background: var(--ocre-soft, rgba(212,168,74,0.14));
+  color: var(--ocre, #d4a84a);
+  border-color: var(--ocre-edge, rgba(212,168,74,0.28));
+}
+
+/* ── Empty state éditorial ── */
+.admin-v2 .admin-empty {
+  padding: 60px 20px 40px;
+  text-align: center;
+  color: var(--ink-mute, #8b8471);
+}
+.admin-v2 .admin-empty-icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: var(--ocre-soft, rgba(212,168,74,0.12));
+  border: 1px solid var(--ocre-edge, rgba(212,168,74,0.22));
+  color: var(--ocre, #d4a84a);
+  display: grid; place-items: center;
+}
+.admin-v2 .admin-empty-icon svg { width: 26px; height: 26px; }
+.admin-v2 .admin-empty-title {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--ink-hi, #f4ecd8);
+  margin-bottom: 6px;
+}
+.admin-v2 .admin-empty-hint {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-mute, #8b8471);
+  max-width: 380px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* ── Responsive ── */
+@media (max-width: 767px) {
+  .admin-v2 .admin-title { font-size: 22px; }
+  .admin-v2 .admin-tab { padding: 10px 12px; font-size: 12px; }
+  .admin-v2 .adm-stat,
+  .admin-v2 .mh-stat { padding: 12px 14px; }
+  .admin-v2 .adm-stat-val,
+  .admin-v2 .mh-stat-val,
+  .admin-v2 .adm-stat-num { font-size: 20px; }
+  .admin-v2 .adm-member,
+  .admin-v2 .adm-user-row,
+  .admin-v2 .adm-suggestion-card {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px;
+  }
+  .admin-v2 .adm-gen-tag,
+  .admin-v2 .adm-role-badge {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
