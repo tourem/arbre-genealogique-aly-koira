@@ -10,7 +10,9 @@ import ExtendedFamily from '../components/family/ExtendedFamily';
 import TreeView from '../components/tree/TreeView';
 import TreePopup from '../components/tree/TreePopup';
 import AddMemberModal from '../components/family/AddMemberModal';
+import FicheFAB from '../components/family/FicheFAB';
 import FicheSkeleton from '../components/layout/FicheSkeleton';
+import { computeFoyers } from '../lib/foyers';
 import type { Member } from '../lib/types';
 
 // Find the best default person (lowest generation, or first member)
@@ -122,6 +124,8 @@ export default function FamillePage() {
     .filter((c) => members[c])
     .length;
 
+  const foyersForFab = person ? computeFoyers(person, members) : [];
+
   const handleAddSaved = async () => {
     setAddModal(null);
     await refetchMembers();
@@ -217,6 +221,42 @@ export default function FamillePage() {
                 onSaved={handleAddSaved}
               />
             )}
+
+            <FicheFAB
+              person={person}
+              foyers={foyersForFab}
+              onEdit={() => {
+                // TODO: wire edit modal in a future phase
+                console.log('edit', person.id);
+              }}
+              onAddSpouse={() => setAddModal({ mode: 'spouse' })}
+              onAddChild={(_foyerSpouseId) => {
+                // The existing AddMemberModal child flow handles foyer selection internally.
+                // TODO: pre-fill the foyer when AddMemberModal accepts a spouseId.
+                setAddModal({ mode: 'child' });
+              }}
+              onAddParent={() => setAddModal({ mode: 'parent' })}
+              onViewTree={() => setViewMode('tree')}
+              onShare={async () => {
+                const url = `${window.location.origin}/?person=${person.id}`;
+                try {
+                  if (navigator.share) {
+                    await navigator.share({ title: `${person.name} — Aly Koïra`, url });
+                  } else {
+                    await navigator.clipboard.writeText(url);
+                    alert('Lien copié dans le presse-papier');
+                  }
+                } catch {
+                  // User canceled share or clipboard denied — silent.
+                }
+              }}
+              onDelete={() => {
+                // TODO: wire a real delete flow in a future phase.
+                if (window.confirm(`Supprimer la fiche de ${person.name} ?`)) {
+                  console.log('delete', person.id);
+                }
+              }}
+            />
           </>
         )}
       </div>
