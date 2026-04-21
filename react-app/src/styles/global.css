@@ -8183,3 +8183,65 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
 @media (min-width: 720px) {
   .nav { display: none !important; }
 }
+
+/* ============================================================
+   Phase 4 — Unified Avatar component (ui/Avatar)
+   ============================================================ */
+.avatar {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--bg-base, #15120e);
+  position: relative;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* Gender gradients (using tokens-v2) */
+.avatar.avatar--male {
+  background: linear-gradient(135deg, var(--male-from, #e8c472) 0%, var(--male-to, #a07d2b) 100%);
+}
+.avatar.avatar--female {
+  background: linear-gradient(135deg, var(--female-from, #c48da5) 0%, var(--female-to, #6a4060) 100%);
+}
+
+/* Size variants */
+.avatar.avatar--sm { width: 26px; height: 26px; font-size: 10px; }
+.avatar.avatar--md { width: 42px; height: 42px; font-size: 15px; }
+.avatar.avatar--lg { width: 80px; height: 80px; font-size: 28px; }
+
+/* Generation badge — bottom-right corner, Mono font, subtle */
+.avatar-gen-badge {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  background: var(--bg-base, #15120e);
+  color: var(--ocre, #d4a84a);
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-weight: 500;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  border: 1.5px solid var(--bg-base, #15120e);
+  letter-spacing: 0.05em;
+  line-height: 1;
+  font-feature-settings: "tnum";
+}
+
+/* Smaller badge for md size */
+.avatar.avatar--md .avatar-gen-badge {
+  font-size: 8px;
+  padding: 1px 5px;
+  bottom: -2px;
+  right: -2px;
+}
+
+/* Light-theme contrast: invert badge colors so it stays readable */
+:root[data-theme='light'] .avatar-gen-badge {
+  background: var(--ink-hi, #2a1f12);
+  color: var(--bg-base, #faf5e8);
+  border-color: var(--bg-base, #faf5e8);
+}
