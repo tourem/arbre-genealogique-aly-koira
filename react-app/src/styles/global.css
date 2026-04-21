@@ -8026,3 +8026,31 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
 .parente-path-pill:hover { background: rgba(212,168,83,0.08); color: #ece8e0; }
 .parente-path-pill.active { background: var(--sh-gold, #d4a853); color: #111; border-color: var(--sh-gold, #d4a853); font-weight: 600; }
 
+/* Search history */
+.parente-history { margin-top: 24px; width: 100%; max-width: 640px; margin-left: auto; margin-right: auto; text-align: left; }
+.parente-history-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; padding: 0 4px; }
+.parente-history-title { font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+.parente-history-clear { background: transparent; border: 0; color: #6b7280; font-size: 11px; cursor: pointer; font-family: inherit; padding: 2px 6px; border-radius: 4px; }
+.parente-history-clear:hover { color: #f87171; background: rgba(248,113,113,0.06); }
+.parente-history-chips { display: flex; flex-direction: column; gap: 6px; }
+.parente-history-chip { display: flex; align-items: stretch; border-radius: 999px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); transition: background 0.15s, border-color 0.15s; overflow: hidden; }
+.parente-history-chip:hover { background: rgba(212,168,83,0.06); border-color: rgba(212,168,83,0.2); }
+.parente-history-chip-main { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: transparent; border: 0; padding: 10px 16px; text-align: left; cursor: pointer; font-family: inherit; color: #ece8e0; font-size: 13px; }
+.parente-history-chip-main .chip-names { display: inline-flex; align-items: center; gap: 8px; }
+.parente-history-chip-main .chip-sep { color: #6b7280; }
+.parente-history-chip-main .chip-term { font-family: var(--sh-serif, Georgia, serif); font-style: italic; color: var(--sh-terra, #e0845a); font-size: 11px; opacity: 0.85; white-space: nowrap; }
+.parente-history-chip-remove { background: transparent; border: 0; border-left: 1px solid rgba(255,255,255,0.06); color: #6b7280; font-size: 18px; cursor: pointer; padding: 0 12px; line-height: 1; transition: color 0.15s, background 0.15s; }
+.parente-history-chip-remove:hover { color: #f87171; background: rgba(248,113,113,0.08); }
+
+@media (max-width: 767px) {
+  .parente-history { max-width: 100%; margin-top: 18px; }
+  .parente-history-chip-main { padding: 9px 12px; font-size: 12px; gap: 8px; }
+  .parente-history-chip-main .chip-term { font-size: 10px; }
+  .parente-history-chip-remove { padding: 0 10px; font-size: 16px; }
+}
+
+@media (max-width: 480px) {
+  .parente-history-chip-main { flex-wrap: wrap; gap: 4px; }
+  .parente-history-chip-main .chip-term { width: 100%; }
+}
+

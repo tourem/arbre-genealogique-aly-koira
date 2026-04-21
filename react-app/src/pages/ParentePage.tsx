@@ -3,8 +3,10 @@ import { useSearchParams } from 'react-router-dom';
 import { useMembersContext } from '../context/MembersContext';
 import { computeRelations } from '../lib/parenteSonghay';
 import { useParenteLabels } from '../hooks/useParenteLabels';
+import { useParenteHistory } from '../hooks/useParenteHistory';
 import PersonPicker from '../components/relationship/PersonPicker';
 import RelationCard from '../components/relationship/RelationCard';
+import RelationHistoryChips from '../components/relationship/RelationHistoryChips';
 import { groupRelations } from '../components/relationship/groupRelations';
 import { suggestPairs } from '../components/relationship/suggestPairs';
 
@@ -13,6 +15,7 @@ const DEFAULT_VISIBLE = 3;
 export default function ParentePage() {
   const { members, loading } = useMembersContext();
   const { labels, loading: labelsLoading } = useParenteLabels();
+  const { history, add: addHistory, remove: removeHistory, clear: clearHistory } = useParenteHistory();
   const [searchParams, setSearchParams] = useSearchParams();
   const [personAId, setPersonAIdState] = useState<string | null>(searchParams.get('a'));
   const [personBId, setPersonBIdState] = useState<string | null>(searchParams.get('b'));
@@ -52,6 +55,23 @@ export default function ParentePage() {
   const personA = personAId ? members[personAId] : null;
   const personB = personBId ? members[personBId] : null;
   const getMember = (id: string) => members[id];
+
+  useEffect(() => {
+    if (!personAId || !personBId) return;
+    if (!personA || !personB) return;
+    if (!result || result.kind !== 'relations') return;
+    const topTerm =
+      result.relations[0]?.groupTerm ??
+      `${result.relations[0]?.termForA} / ${result.relations[0]?.termForB}`;
+    addHistory({
+      aId: personAId,
+      aName: personA.name,
+      bId: personBId,
+      bName: personB.name,
+      topTerm,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [personAId, personBId, result?.kind === 'relations' ? result.relations[0]?.via : null]);
 
   if (loading || labelsLoading) {
     return (
@@ -101,6 +121,17 @@ export default function ParentePage() {
             <div className="parente-empty-state">
               <div className="parente-empty-state-icon" aria-hidden>{'\u{1F333}'}</div>
               <p>Sélectionnez deux personnes pour calculer leurs liens de parenté.</p>
+              {history.length > 0 && (
+                <RelationHistoryChips
+                  history={history}
+                  onSelect={(entry) => {
+                    setPersonAId(entry.aId);
+                    setPersonBId(entry.bId);
+                  }}
+                  onRemove={removeHistory}
+                  onClear={clearHistory}
+                />
+              )}
               {suggestions.length > 0 && (
                 <>
                   <p className="parente-empty-hint">Ou essayez une de ces paires :</p>
