@@ -160,9 +160,13 @@ describe('computeRelations — Cas de test du spec', () => {
   });
 
   it('Khadidia ↔ Djéneba → baassa woy / baassa woy', () => {
-    const { termA, termB } = firstTerms('khadidia', 'djeneba');
-    expect(termA).toBe('baassa woy');
-    expect(termB).toBe('baassa woy');
+    const r = computeRelations('khadidia', 'djeneba', members);
+    if (r.kind !== 'relations') throw new Error();
+    const first = r.relations[0];
+    expect(first.termForA).toBe('baassa woy');
+    expect(first.termForB).toBe('baassa woy');
+    // Cross first cousins (dA=dB=2, parents opposite sex) → group term set
+    expect(first.groupTerm).toBe("hassey-zee n'da hawey-zee");
   });
 
   it('returns same-person when idA === idB', () => {
@@ -171,7 +175,7 @@ describe('computeRelations — Cas de test du spec', () => {
   });
 });
 
-describe('computeRelations — arrou/woy hinka izey (cousins germains)', () => {
+describe('computeRelations — arrou/woy/hassey group terms (cousins germains)', () => {
   it('Cheick ↔ Koniba : fathers are brothers → arrou hinka izey', () => {
     const r = computeRelations('cheick', 'koniba', members);
     if (r.kind !== 'relations') throw new Error('expected relations');
@@ -217,6 +221,48 @@ describe('computeRelations — arrou/woy hinka izey (cousins germains)', () => {
     expect(first.termForA).toBe('woyma');
     expect(first.termForB).toBe('arma');
     expect(first.groupTerm).toBe('woy hinka izey');
+  });
+
+  it("hassey-zee n'da hawey-zee : father of one + mother of other are siblings (synthetic)", () => {
+    // Setup: Jean (M) has two children: Marc (M) and Claire (F).
+    // Marc has daughter Léa. Claire has son Paul.
+    // Léa's father is Marc (M), Paul's mother is Claire (F).
+    // Marc and Claire are siblings, OPPOSITE sexes → cross cousins, dA=dB=2.
+    const synth: MemberDict = {
+      jean:   mkMember('jean',   'Jean',   'M', null,   null,     []),
+      marc:   mkMember('marc',   'Marc',   'M', 'jean', null,     []),
+      claire: mkMember('claire', 'Claire', 'F', 'jean', null,     []),
+      lea:    mkMember('lea',    'Léa',    'F', 'marc', null,     []),
+      paul:   mkMember('paul',   'Paul',   'M', null,   'claire', []),
+    };
+    const r = computeRelations('lea', 'paul', synth);
+    if (r.kind !== 'relations') throw new Error('expected relations');
+    const first = r.relations[0];
+    expect(first.termForA).toBe('baassa woy');  // Léa F
+    expect(first.termForB).toBe('baassa arou'); // Paul M
+    expect(first.groupTerm).toBe("hassey-zee n'da hawey-zee");
+  });
+
+  it("cross cousins at dA=dB=3 do NOT get hassey-zee n'da hawey-zee group term", () => {
+    // 3 generations deep: common great-grandparent with male and female lines
+    // diverging at the grandparent level (to stay cross), and another generation below.
+    //   gp → son (M) → son_c (M) → gc1 (M)           pathA=['P','P','P'] len 3
+    //   gp → dau (F) → dau_c (F) → gc2 (F)           pathB=['M','M','P'] len 3
+    // parents on path[0]: son_c (M) vs dau_c (F) → cross. dA=dB=3 → NO group term.
+    const synth: MemberDict = {
+      gp:     mkMember('gp',     'GP',       'M', null,    null,     []),
+      son:    mkMember('son',    'Son',      'M', 'gp',    null,     []),
+      dau:    mkMember('dau',    'Dau',      'F', 'gp',    null,     []),
+      son_c:  mkMember('son_c',  'SonChild', 'M', 'son',   null,     []),
+      dau_c:  mkMember('dau_c',  'DauChild', 'F', null,    'dau',    []),
+      gc1:    mkMember('gc1',    'GC1',      'M', 'son_c', null,     []),
+      gc2:    mkMember('gc2',    'GC2',      'F', null,    'dau_c',  []),
+    };
+    const r = computeRelations('gc1', 'gc2', synth);
+    if (r.kind !== 'relations') throw new Error('expected relations');
+    expect(r.relations[0].termForA).toBe('baassa arou');
+    expect(r.relations[0].termForB).toBe('baassa woy');
+    expect(r.relations[0].groupTerm).toBeUndefined();
   });
 });
 

@@ -69,7 +69,21 @@ function classifySameGen(A: Person, B: Person, instance: LCAInstance, dict: Pers
       groupTerm,
     };
   }
-  return { kind: 'cross', termForA: buildCrossCousinTerm(A.sex, L), termForB: buildCrossCousinTerm(B.sex, L) };
+  // Cross branch : direct parents are of opposite sexes (siblings at LCA).
+  // hassey-zee n'da hawey-zee = "enfants d'un frère et d'une sœur"
+  // (applies only at the first-cousin level, dA=dB=2).
+  const dA = instance.pathA.length;
+  const dB = instance.pathB.length;
+  let groupTerm: string | undefined;
+  if (dA === 2 && dB === 2) {
+    groupTerm = L['term.hassey_zee_nda_hawey_zee'];
+  }
+  return {
+    kind: 'cross',
+    termForA: buildCrossCousinTerm(A.sex, L),
+    termForB: buildCrossCousinTerm(B.sex, L),
+    groupTerm,
+  };
 }
 
 function classifyDelta(
