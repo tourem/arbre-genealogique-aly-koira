@@ -188,7 +188,7 @@ describe('computeRelations — arrou/woy/hassey group terms (cousins germains)',
     expect(first.viaName).toBe('Hadja');
   });
 
-  it('siblings do NOT get arrou/woy hinka izey (only cousins germains do)', () => {
+  it('siblings do NOT get arrou/woy hinka izey (only cousins do, dA=dB>=2)', () => {
     const r = computeRelations('modibo', 'hadja', members);
     if (r.kind !== 'relations') throw new Error('expected relations');
     expect(r.relations[0].termForA).toBe('arma');
@@ -196,13 +196,14 @@ describe('computeRelations — arrou/woy/hassey group terms (cousins germains)',
     expect(r.relations[0].groupTerm).toBeUndefined();
   });
 
-  it('distant parallel cousins (dA=dB=3) do NOT get the group term', () => {
+  it('distant parallel cousins (dA=dB=3) get arrou hinka izey via reset rule', () => {
     const r = computeRelations('bakary', 'koniba', members);
     if (r.kind !== 'relations') throw new Error('expected relations');
     const first = r.relations[0];
     expect(first.termForA).toBe('arma');
     expect(first.termForB).toBe('arma');
-    expect(first.groupTerm).toBeUndefined();
+    // Direct parents Sékou (M) and Tiéman (M) — parallel, both male → arrou hinka izey.
+    expect(first.groupTerm).toBe('arrou hinka izey');
   });
 
   it('woy hinka izey : mothers are sisters (synthetic fixture)', () => {
@@ -243,12 +244,12 @@ describe('computeRelations — arrou/woy/hassey group terms (cousins germains)',
     expect(first.groupTerm).toBe("hassey-zee n'da hawey-zee");
   });
 
-  it("cross cousins at dA=dB=3 do NOT get hassey-zee n'da hawey-zee group term", () => {
+  it("cross cousins at dA=dB=3 get hassey-zee n'da hawey-zee via reset rule", () => {
     // 3 generations deep: common great-grandparent with male and female lines
     // diverging at the grandparent level (to stay cross), and another generation below.
     //   gp → son (M) → son_c (M) → gc1 (M)           pathA=['P','P','P'] len 3
     //   gp → dau (F) → dau_c (F) → gc2 (F)           pathB=['M','M','P'] len 3
-    // parents on path[0]: son_c (M) vs dau_c (F) → cross. dA=dB=3 → NO group term.
+    // parents on path[0]: son_c (M) vs dau_c (F) → cross. dA=dB=3 → reset rule applies.
     const synth: MemberDict = {
       gp:     mkMember('gp',     'GP',       'M', null,    null,     []),
       son:    mkMember('son',    'Son',      'M', 'gp',    null,     []),
@@ -262,7 +263,7 @@ describe('computeRelations — arrou/woy/hassey group terms (cousins germains)',
     if (r.kind !== 'relations') throw new Error('expected relations');
     expect(r.relations[0].termForA).toBe('baassa arou');
     expect(r.relations[0].termForB).toBe('baassa woy');
-    expect(r.relations[0].groupTerm).toBeUndefined();
+    expect(r.relations[0].groupTerm).toBe("hassey-zee n'da hawey-zee");
   });
 });
 

@@ -53,11 +53,15 @@ function classifySameGen(A: Person, B: Person, instance: LCAInstance, dict: Pers
   if (parentA!.sex === parentB!.sex) {
     const dA = instance.pathA.length;
     const dB = instance.pathB.length;
-    // First-cousin level: direct parents are siblings at the LCA.
-    // arrou hinka izey = "enfants de deux frères" (parents both male).
-    // woy hinka izey  = "enfants de deux sœurs" (parents both female).
+    // Songhay "reset" rule: at ANY same-generation depth (dA=dB>=2), direct
+    // parents of A and B are sibling-equivalents. Same sex → parallel group:
+    //   arrou hinka izey = "enfants de deux frères" (parents both male).
+    //   woy hinka izey   = "enfants de deux sœurs" (parents both female).
+    // Only true siblings (dA=dB=1, sharing a single direct parent) are
+    // excluded — they have ONE parent, not "two brothers / two sisters".
     let groupTerm: string | undefined;
-    if (dA === 2 && dB === 2) {
+    const hasGroupTerm = dA === dB && dA >= 2;
+    if (hasGroupTerm) {
       groupTerm = parentA!.sex === 'M'
         ? L['term.arrou_hinka_izey']
         : L['term.woy_hinka_izey'];
@@ -70,12 +74,14 @@ function classifySameGen(A: Person, B: Person, instance: LCAInstance, dict: Pers
     };
   }
   // Cross branch : direct parents are of opposite sexes (siblings at LCA).
-  // hassey-zee n'da hawey-zee = "enfants d'un frère et d'une sœur"
-  // (applies only at the first-cousin level, dA=dB=2).
+  // hassey-zee n'da hawey-zee = "enfants d'un frère et d'une sœur".
+  // Songhay reset rule: applies at ANY same-generation depth (dA=dB>=2),
+  // not only at the first-cousin level.
   const dA = instance.pathA.length;
   const dB = instance.pathB.length;
   let groupTerm: string | undefined;
-  if (dA === 2 && dB === 2) {
+  const hasGroupTerm = dA === dB && dA >= 2;
+  if (hasGroupTerm) {
     groupTerm = L['term.hassey_zee_nda_hawey_zee'];
   }
   return {
