@@ -4,7 +4,7 @@ import { useMembersContext } from '../context/MembersContext';
 import { useAuth } from '../context/AuthContext';
 import { genColors } from '../lib/constants';
 import PersonHero from '../components/family/PersonHero';
-import ParentCard from '../components/family/ParentCard';
+import ParentsSection from '../components/family/ParentsSection';
 import SpouseCard from '../components/family/SpouseCard';
 import ChildrenByMother from '../components/family/ChildrenByMother';
 import Breadcrumb from '../components/family/Breadcrumb';
@@ -184,12 +184,11 @@ export default function FamillePage() {
                 childrenCount={childrenCount}
               />
 
-              <ParentCard
+              <ParentsSection
                 person={person}
                 members={members}
                 onNavigate={navigateTo}
                 onInfo={setPopupMember}
-                onAddParent={isAdmin ? () => setAddModal({ mode: 'parent' }) : undefined}
               />
 
               <SpouseCard

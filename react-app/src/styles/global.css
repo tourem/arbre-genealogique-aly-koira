@@ -8558,3 +8558,172 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
   .person-hero-meta { font-size: 12px; }
   .person-hero-stat-num { font-size: 20px; }
 }
+
+/* ============================================================
+   Phase 7 — ParentsSection (refonte fiche personne)
+   ============================================================ */
+.parents-section {
+  margin: 0 0 32px;
+}
+.parents-section-title {
+  margin: 0 0 14px;
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--ink-hi, #f4ecd8);
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 24, "SOFT" 30;
+}
+.parents-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.parent-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  background: var(--bg-elev-1, #1d1812);
+  border: 1px solid var(--bdr-soft, rgba(244,236,216,0.10));
+  border-radius: var(--radius-md, 12px);
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 160ms var(--ease-out, ease-out),
+              border-color 160ms var(--ease-out, ease-out),
+              transform 160ms var(--ease-out, ease-out);
+}
+button.parent-card { width: 100%; }
+.parent-card:hover {
+  background: var(--bg-elev-2, #252018);
+  border-color: var(--ocre-edge, rgba(212,168,74,0.28));
+  transform: translateY(-1px);
+}
+.parent-card:focus-visible {
+  outline: 2px solid var(--ocre, #d4a84a);
+  outline-offset: 2px;
+}
+.parent-card--static { cursor: default; }
+.parent-card--static:hover {
+  background: var(--bg-elev-1, #1d1812);
+  border-color: var(--bdr-soft, rgba(244,236,216,0.10));
+  transform: none;
+}
+.parent-card--unknown {
+  cursor: default;
+  opacity: 0.7;
+  border-style: dashed;
+}
+.parent-card--unknown:hover {
+  background: var(--bg-elev-1, #1d1812);
+  transform: none;
+}
+
+.parent-card-avatar {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  align-self: start;
+}
+.parent-card-avatar--placeholder {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px dashed var(--ink-mute, #8b8471);
+  color: var(--ink-mute, #8b8471);
+  display: grid; place-items: center;
+  font-family: var(--font-serif, serif);
+  font-size: 18px;
+  font-style: italic;
+}
+
+.parent-card-main {
+  grid-column: 2;
+  min-width: 0;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.parent-card-role {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-mute, #8b8471);
+  font-weight: 500;
+}
+.parent-card-role-sep { opacity: 0.5; }
+.parent-card-role .songhay-term {
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 13px;
+}
+.parent-card-name {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--ink-hi, #f4ecd8);
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.parent-card-name--muted {
+  color: var(--ink-mute, #8b8471);
+  font-style: italic;
+}
+.parent-card-alias {
+  font-style: italic;
+  color: var(--ocre, #d4a84a);
+  font-weight: 400;
+  font-size: 13px;
+  margin-left: 4px;
+}
+.parent-card-lineage {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--ink-mid, #d0c4a8);
+  line-height: 1.45;
+  /* Non tronqué — lignage complet visible quel que soit l'espace. */
+  overflow-wrap: anywhere;
+}
+.parent-card-lineage--muted { color: var(--ink-mute, #8b8471); font-style: italic; }
+
+.parent-card-arrow {
+  grid-column: 3;
+  grid-row: 1 / span 3;
+  align-self: center;
+  width: 16px; height: 16px;
+  color: var(--ink-mute, #8b8471);
+  transition: color 160ms var(--ease-out, ease-out), transform 160ms var(--ease-out, ease-out);
+}
+.parent-card:hover .parent-card-arrow {
+  color: var(--ocre, #d4a84a);
+  transform: translateX(2px);
+}
+
+.parent-card-info {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--bdr-strong, rgba(244,236,216,0.18));
+  color: var(--ink-mute, #8b8471);
+  cursor: pointer;
+  display: grid; place-items: center;
+  transition: background-color 140ms var(--ease-out, ease-out), color 140ms var(--ease-out, ease-out);
+}
+.parent-card-info:hover { background: var(--ocre-soft, rgba(212,168,74,0.14)); color: var(--ocre, #d4a84a); }
+.parent-card-info svg { width: 12px; height: 12px; }
+
+/* Responsive */
+@media (max-width: 767px) {
+  .parents-grid { grid-template-columns: 1fr; }
+  .parent-card { padding: 12px 14px; gap: 12px; }
+  .parent-card-name { font-size: 15px; }
+  .parent-card-lineage { font-size: 11px; }
+}

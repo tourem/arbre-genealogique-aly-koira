@@ -1,0 +1,176 @@
+import type { Member, MemberDict } from '../../lib/types';
+import { buildLineage } from '../../lib/lineage';
+import Avatar from '../ui/Avatar';
+import SonghayTerm from '../ui/SonghayTerm';
+
+interface Props {
+  person: Member;
+  members: MemberDict;
+  onNavigate: (id: string) => void;
+  onInfo?: (member: Member) => void;
+}
+
+interface ParentCardProps {
+  parent: Member | null;
+  /** Quand on n'a qu'un nom (mother_ref texte plutôt qu'ID), fallback affichable. */
+  fallbackName?: string | null;
+  /** Position dans le foyer parental, pour calculer le rôle + terme. */
+  role: 'father' | 'mother';
+  members: MemberDict;
+  onNavigate?: (id: string) => void;
+  onInfo?: (member: Member) => void;
+  fallbackMotherRef?: string;
+  personGeneration?: number;
+}
+
+function ParentCard({
+  parent, fallbackName, role, members, onNavigate, onInfo, fallbackMotherRef, personGeneration,
+}: ParentCardProps) {
+  const isFather = role === 'father';
+  const roleLabel = isFather ? 'Père' : 'Mère';
+  const songhayTerm = isFather ? 'baba' : 'gna';
+  const genderClass = isFather ? 'M' : 'F';
+
+  // Parent réel en DB : version enrichie avec lignage + navigation.
+  if (parent) {
+    const lineage = buildLineage(parent, members);
+    return (
+      <button
+        type="button"
+        className={`parent-card parent-card--${role}`}
+        onClick={() => onNavigate?.(parent.id)}
+        aria-label={`Voir la fiche de ${parent.name}`}
+      >
+        <div className="parent-card-avatar">
+          <Avatar name={parent.name} gender={parent.gender} generation={parent.generation} size="md" />
+        </div>
+        <div className="parent-card-main">
+          <div className="parent-card-role">
+            <span>{roleLabel}</span>
+            <span className="parent-card-role-sep" aria-hidden="true">·</span>
+            <SonghayTerm term={songhayTerm} variant="inline" />
+          </div>
+          <div className="parent-card-name">
+            {parent.name}
+            {parent.alias && <span className="parent-card-alias"> « {parent.alias} »</span>}
+          </div>
+          {lineage && <div className="parent-card-lineage">{lineage}</div>}
+        </div>
+        {onInfo && (
+          <button
+            type="button"
+            className="parent-card-info"
+            onClick={(e) => { e.stopPropagation(); onInfo(parent); }}
+            aria-label={`Informations sur ${parent.name}`}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+          </button>
+        )}
+        <svg className="parent-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+    );
+  }
+
+  // Parent sans ID (simple nom libre) : carte statique, pas de navigation.
+  if (fallbackName) {
+    const gen = typeof personGeneration === 'number' ? personGeneration - 1 : 0;
+    const orphanMember: Member = {
+      id: fallbackMotherRef ?? 'orphan',
+      name: fallbackName,
+      first_name: null,
+      alias: null,
+      gender: genderClass,
+      generation: gen,
+      father_id: null, mother_ref: null,
+      spouses: [], children: [],
+      photo_url: null, note: null,
+      birth_city: null, birth_country: null, village: null,
+    };
+    return (
+      <div className={`parent-card parent-card--${role} parent-card--static`}>
+        <div className="parent-card-avatar">
+          <Avatar name={fallbackName} gender={genderClass} size="md" />
+        </div>
+        <div className="parent-card-main">
+          <div className="parent-card-role">
+            <span>{roleLabel}</span>
+            <span className="parent-card-role-sep" aria-hidden="true">·</span>
+            <SonghayTerm term={songhayTerm} variant="inline" />
+          </div>
+          <div className="parent-card-name">{fallbackName}</div>
+          <div className="parent-card-lineage parent-card-lineage--muted">Sans fiche détaillée</div>
+        </div>
+        {onInfo && (
+          <button
+            type="button"
+            className="parent-card-info"
+            onClick={() => onInfo(orphanMember)}
+            aria-label={`Informations sur ${fallbackName}`}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  // Parent inconnu : carte placeholder discrète.
+  return (
+    <div className={`parent-card parent-card--${role} parent-card--unknown`} aria-label={`${roleLabel} inconnu`}>
+      <div className="parent-card-avatar parent-card-avatar--placeholder" aria-hidden="true">?</div>
+      <div className="parent-card-main">
+        <div className="parent-card-role">
+          <span>{roleLabel}</span>
+          <span className="parent-card-role-sep" aria-hidden="true">·</span>
+          <SonghayTerm term={songhayTerm} variant="inline" />
+        </div>
+        <div className="parent-card-name parent-card-name--muted">Non renseigné</div>
+      </div>
+    </div>
+  );
+}
+
+export default function ParentsSection({ person, members, onNavigate, onInfo }: Props) {
+  const father = person.father_id && members[person.father_id] ? members[person.father_id] : null;
+  const mother = person.mother_ref && members[person.mother_ref] ? members[person.mother_ref] : null;
+  const motherFallback = typeof person.mother_ref === 'string' && !mother ? person.mother_ref : null;
+
+  // Si aucune donnée parent, ne pas rendre la section.
+  if (!father && !mother && !motherFallback) return null;
+
+  return (
+    <section className="parents-section" aria-label="Parents">
+      <h2 className="parents-section-title">Parents</h2>
+      <div className="parents-grid">
+        <ParentCard
+          parent={father}
+          role="father"
+          members={members}
+          onNavigate={onNavigate}
+          onInfo={onInfo}
+          personGeneration={person.generation}
+        />
+        <ParentCard
+          parent={mother}
+          fallbackName={motherFallback}
+          fallbackMotherRef={person.mother_ref ?? undefined}
+          role="mother"
+          members={members}
+          onNavigate={onNavigate}
+          onInfo={onInfo}
+          personGeneration={person.generation}
+        />
+      </div>
+    </section>
+  );
+}
