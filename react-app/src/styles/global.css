@@ -8245,3 +8245,113 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
   color: var(--bg-base, #faf5e8);
   border-color: var(--bg-base, #faf5e8);
 }
+
+/* ============================================================
+   Phase 5 — SonghayTerm component (ui/SonghayTerm)
+   ============================================================ */
+.songhay-term {
+  position: relative;
+  display: inline;
+  color: var(--ocre, #d4a84a);
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: italic;
+  cursor: help;
+  outline: none;
+}
+.songhay-term:focus-visible {
+  outline: 2px solid var(--ocre, #d4a84a);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+.songhay-term-text { font-style: italic; }
+
+/* Inline variant — naked italic text */
+.songhay-term--inline { padding: 0; }
+
+/* Tag variant — rounded pill with diamond prefix */
+.songhay-term--tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 2px 10px 2px 8px;
+  background: var(--ocre-soft, rgba(212,168,74,0.14));
+  border: 1px solid var(--ocre-edge, rgba(212,168,74,0.28));
+  border-radius: var(--radius-pill, 999px);
+  font-size: 0.85em;
+}
+.songhay-term--tag::before {
+  content: '◆';
+  color: var(--ocre, #d4a84a);
+  font-style: normal;
+  font-size: 0.7em;
+  line-height: 1;
+}
+
+/* Tooltip — positioned below the term, non-blocking */
+.songhay-term-tooltip {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  min-width: 260px;
+  max-width: 340px;
+  padding: 12px 14px;
+  background: var(--bg-elev-3, #2d2720);
+  color: var(--ink-hi, #f4ecd8);
+  border: 1px solid var(--bdr-strong, rgba(244,236,216,0.18));
+  border-radius: var(--radius-md, 12px);
+  box-shadow: var(--shadow-md, 0 6px 20px rgba(0,0,0,0.32));
+  font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1.45;
+  pointer-events: none;
+  animation: songhay-tooltip-in 140ms var(--ease-out, ease-out);
+  display: grid;
+  gap: 6px;
+}
+@keyframes songhay-tooltip-in {
+  from { opacity: 0; transform: translate(-50%, -4px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+.songhay-term-tooltip-head {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--bdr-soft, rgba(244,236,216,0.10));
+}
+.songhay-term-tooltip-term {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: italic;
+  color: var(--ocre, #d4a84a);
+  font-size: 14px;
+  font-weight: 500;
+}
+.songhay-term-tooltip-short {
+  color: var(--ink-mid, #d0c4a8);
+  font-size: 11px;
+}
+.songhay-term-tooltip-long {
+  color: var(--ink-hi, #f4ecd8);
+}
+.songhay-term-tooltip-category {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-mute, #8b8471);
+  justify-self: start;
+}
+
+/* Responsive — tooltip stays readable on mobile */
+@media (max-width: 480px) {
+  .songhay-term-tooltip {
+    min-width: 220px;
+    max-width: calc(100vw - 24px);
+    font-size: 11px;
+    padding: 10px 12px;
+  }
+}
