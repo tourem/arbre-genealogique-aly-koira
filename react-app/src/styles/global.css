@@ -9436,3 +9436,179 @@ button.parent-card { width: 100%; }
   .plus-sheet-item { padding: 11px 12px; font-size: 13px; }
 }
 
+/* ============================================================
+   Phase 11 — Parenté chrome refonte v2
+   Only the HEADER, PersonPicker stripes/labels, empty state
+   and suggestion chips are touched. Result cards untouched.
+   ============================================================ */
+
+/* ── Header éditorial ── */
+.parente-page .parente-hdr {
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--bdr-subtle, rgba(244,236,216,0.06));
+  margin-bottom: 22px;
+}
+.parente-page .parente-hdr-i {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-md, 12px);
+  background: var(--grad-ocre, linear-gradient(135deg, #e8c472 0%, #a07d2b 100%));
+  color: var(--bg-base, #15120e);
+  display: grid; place-items: center;
+  box-shadow:
+    0 4px 14px rgba(212, 168, 74, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20);
+  flex-shrink: 0;
+}
+.parente-page .parente-hdr-i svg { width: 22px; height: 22px; }
+.parente-page .parente-hdr h1 {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  color: var(--ink-hi, #f4ecd8);
+  line-height: 1.1;
+  font-variation-settings: "opsz" 72, "SOFT" 30;
+  margin: 0;
+}
+.parente-page .parente-hdr small {
+  display: block;
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-mute, #8b8471);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
+.parente-page .parente-hdr small em {
+  font-style: normal;
+  color: var(--ocre, #d4a84a);
+  margin: 0 4px;
+}
+
+/* ── Field A (sauge) / Field B (terracotta) ── */
+.parente-page .parente-pc.a::before {
+  background: var(--grad-sahel-sage-ocre, linear-gradient(90deg, #7a8868, #d4a84a));
+}
+.parente-page .parente-pc.b::before {
+  background: var(--grad-sahel-ocre-terra, linear-gradient(90deg, #d4a84a, #c25c3a));
+}
+.parente-page .parente-pc.a .parente-pc-l {
+  color: var(--sauge, #7a8868);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+}
+.parente-page .parente-pc.b .parente-pc-l {
+  color: var(--terracotta, #c25c3a);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+}
+.parente-page .parente-pc {
+  border-radius: var(--radius-lg, 16px);
+  background: var(--bg-elev-1, #1d1812);
+  border: 1px solid var(--bdr-soft, rgba(244,236,216,0.10));
+}
+.parente-page .parente-pc:hover {
+  background: var(--bg-elev-2, #252018);
+  border-color: var(--bdr-strong, rgba(244,236,216,0.18));
+}
+.parente-page .parente-pc-nm {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+
+/* ── Empty state éditorial ── */
+.parente-page .parente-empty-state {
+  padding: 56px 20px 40px;
+  color: var(--ink-mute, #8b8471);
+}
+.parente-page .parente-empty-state-icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: var(--ocre-soft, rgba(212,168,74,0.12));
+  border: 1px solid var(--ocre-edge, rgba(212,168,74,0.22));
+  color: var(--ocre, #d4a84a);
+  display: grid; place-items: center;
+  font-size: 0;
+  opacity: 1;
+}
+.parente-page .parente-empty-state-icon svg { width: 30px; height: 30px; }
+.parente-page .parente-empty-state-text {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-mid, #d0c4a8);
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* ── Suggestion pills repolies ── */
+.parente-page .parente-empty-hint {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: italic;
+  color: var(--ink-mute, #8b8471);
+  margin-top: 28px;
+  font-size: 13px;
+}
+.parente-page .parente-suggestion-chip {
+  padding: 9px 16px;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--bg-elev-1, #1d1812);
+  border: 1px solid var(--bdr-soft, rgba(244,236,216,0.10));
+  color: var(--ink-hi, #f4ecd8);
+  font-size: 13px;
+  transition: background-color 140ms var(--ease-out, ease-out), border-color 140ms var(--ease-out, ease-out), transform 140ms var(--ease-out, ease-out);
+}
+.parente-page .parente-suggestion-chip:hover {
+  background: var(--bg-elev-2, #252018);
+  border-color: var(--ocre-edge, rgba(212,168,74,0.28));
+  transform: translateY(-1px);
+}
+.parente-page .parente-suggestion-chip .chip-sep {
+  color: var(--ocre, #d4a84a);
+  font-size: 13px;
+  margin: 0 2px;
+}
+.parente-page .parente-suggestion-chip .chip-hint {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: italic;
+  color: var(--ocre, #d4a84a);
+  font-size: 11px;
+  margin-left: 4px;
+  letter-spacing: 0;
+}
+
+/* ── Summary line polish ── */
+.parente-page .parente-summary {
+  background: var(--ocre-soft, rgba(212,168,74,0.10));
+  border: 1px solid var(--ocre-edge, rgba(212,168,74,0.22));
+  border-radius: var(--radius-md, 12px);
+}
+.parente-page .parente-summary-num {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-variation-settings: "opsz" 72, "SOFT" 30;
+  color: var(--ocre, #d4a84a);
+}
+.parente-page .parente-summary em {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  color: var(--ocre, #d4a84a);
+}
+
+/* ── Responsive ── */
+@media (max-width: 767px) {
+  .parente-page .parente-hdr { gap: 12px; margin-bottom: 18px; padding-bottom: 14px; }
+  .parente-page .parente-hdr-i { width: 38px; height: 38px; }
+  .parente-page .parente-hdr-i svg { width: 18px; height: 18px; }
+  .parente-page .parente-hdr h1 { font-size: 22px; }
+  .parente-page .parente-hdr small { font-size: 12px; }
+  .parente-page .parente-empty-state { padding: 40px 14px 30px; }
+  .parente-page .parente-empty-state-icon { width: 48px; height: 48px; margin-bottom: 14px; }
+  .parente-page .parente-empty-state-icon svg { width: 26px; height: 26px; }
+  .parente-page .parente-empty-state-text { font-size: 14px; }
+}
