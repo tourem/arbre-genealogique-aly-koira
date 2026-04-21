@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS relation_terms;
 DROP TABLE IF EXISTS relation_categories;
 DROP FUNCTION IF EXISTS update_relation_terms_updated_at();
 
-CREATE TABLE parente_labels (
+CREATE TABLE IF NOT EXISTS parente_labels (
   key         TEXT PRIMARY KEY,
   value       TEXT NOT NULL,
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
