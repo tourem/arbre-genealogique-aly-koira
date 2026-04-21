@@ -1,12 +1,10 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useMembersContext } from '../context/MembersContext';
-import { useAuth } from '../context/AuthContext';
 import { genColors } from '../lib/constants';
 import PersonHero from '../components/family/PersonHero';
 import ParentsSection from '../components/family/ParentsSection';
-import SpouseCard from '../components/family/SpouseCard';
-import ChildrenByMother from '../components/family/ChildrenByMother';
+import FoyersSection from '../components/family/FoyersSection';
 import Breadcrumb from '../components/family/Breadcrumb';
 import ExtendedFamily from '../components/family/ExtendedFamily';
 import TreeView from '../components/tree/TreeView';
@@ -34,7 +32,6 @@ function getDefaultPerson(members: Record<string, Member>): string {
 
 export default function FamillePage() {
   const { members, loading, refetchMembers } = useMembersContext();
-  const { isAdmin } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPersonId, setCurrentPersonId] = useState(
     searchParams.get('person') || '',
@@ -120,12 +117,10 @@ export default function FamillePage() {
   const person = members[currentPersonId];
   if (!person) return null;
 
-  const kids = [...new Set(person.children || [])]
-    .filter((c) => members[c])
-    .map((c) => members[c]);
-
   const spouseCount = new Set(person.spouses || []).size;
-  const childrenCount = kids.length;
+  const childrenCount = [...new Set(person.children || [])]
+    .filter((c) => members[c])
+    .length;
 
   const handleAddSaved = async () => {
     setAddModal(null);
@@ -191,45 +186,12 @@ export default function FamillePage() {
                 onInfo={setPopupMember}
               />
 
-              <SpouseCard
+              <FoyersSection
                 person={person}
                 members={members}
                 onNavigate={navigateTo}
                 onInfo={setPopupMember}
-                onAddSpouse={isAdmin ? () => setAddModal({ mode: 'spouse' }) : undefined}
               />
-
-              {kids.length > 0 ? (
-                <ChildrenByMother
-                  person={person}
-                  kids={kids}
-                  members={members}
-                  onNavigate={navigateTo}
-                  onInfo={setPopupMember}
-                  onAddChild={isAdmin ? () => setAddModal({ mode: 'child' }) : undefined}
-                />
-              ) : (
-                <div className="fiche-section">
-                  <div className="fiche-conn c-green"></div>
-                  <div className="fiche-sh-header children">
-                    <div className="fiche-sh-txt">
-                      <span className="fiche-sh-ico">{'\u25BC'}</span> Enfants
-                    </div>
-                  </div>
-                  {isAdmin ? (
-                    <button
-                      className="fiche-add-btn"
-                      onClick={() => setAddModal({ mode: 'child' })}
-                      type="button"
-                    >
-                      <span className="fiche-add-ico">+</span>
-                      Ajouter un enfant
-                    </button>
-                  ) : (
-                    <div className="no-data">Pas d&apos;enfants enregistr&eacute;s</div>
-                  )}
-                </div>
-              )}
 
               <ExtendedFamily
                 person={person}
