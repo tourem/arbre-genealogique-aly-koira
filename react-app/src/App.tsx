@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { MembersProvider } from './context/MembersContext';
+import { ParenteLabelsProvider } from './hooks/useParenteLabels';
 import LoginScreen from './components/layout/LoginScreen';
 import PendingActivationScreen from './components/layout/PendingActivationScreen';
 import Header from './components/layout/Header';
@@ -47,30 +48,32 @@ function AppContent() {
 
   return (
     <MembersProvider>
-      <BrowserRouter>
-        <div className="app">
-          <Header />
-          <ConnStatus />
-          <main>
-            <Routes>
-              <Route path="/" element={<FamillePage />} />
-              <Route path="/recherche" element={<RecherchePage />} />
-              <Route path="/parente" element={<ParentePage />} />
-              <Route path="/contribuer" element={<ContribuerPage />} />
-              <Route path="/mes-suggestions" element={<MesSuggestionsPage />} />
-              <Route
-                path="/admin"
-                element={
-                  <AdminRoute>
-                    <AdminPage />
-                  </AdminRoute>
-                }
-              />
-            </Routes>
-          </main>
-          <BottomNav />
-        </div>
-      </BrowserRouter>
+      <ParenteLabelsProvider>
+        <BrowserRouter>
+          <div className="app">
+            <Header />
+            <ConnStatus />
+            <main>
+              <Routes>
+                <Route path="/" element={<FamillePage />} />
+                <Route path="/recherche" element={<RecherchePage />} />
+                <Route path="/parente" element={<ParentePage />} />
+                <Route path="/contribuer" element={<ContribuerPage />} />
+                <Route path="/mes-suggestions" element={<MesSuggestionsPage />} />
+                <Route
+                  path="/admin"
+                  element={
+                    <AdminRoute>
+                      <AdminPage />
+                    </AdminRoute>
+                  }
+                />
+              </Routes>
+            </main>
+            <BottomNav />
+          </div>
+        </BrowserRouter>
+      </ParenteLabelsProvider>
     </MembersProvider>
   );
 }

@@ -1,289 +1,143 @@
 import { useState } from 'react';
-import type { SonghoyRelationResult, RelationTerm } from '../../lib/types';
-import RelationPathGraph from './RelationPathGraph';
-import TreePathModal from './TreePathModal';
+import { useNavigate } from 'react-router-dom';
+import type { Member } from '../../lib/types';
+import type { RelationGroup } from './groupRelations';
+import SubTreeSvg from './SubTreeSvg';
+import ReciprocalStatements from './ReciprocalStatements';
+import PedagogicalExplanation from './PedagogicalExplanation';
+import TechnicalDetails from './TechnicalDetails';
 
 interface Props {
-  result: SonghoyRelationResult;
-  personAName: string;
-  personBName: string;
   index: number;
+  group: RelationGroup;
+  personA: Member;
+  personB: Member;
+  getMember: (id: string) => Member | undefined;
+  defaultExpanded?: boolean;
 }
 
-function getInitials(name: string): string {
-  const words = name.trim().split(/\s+/);
-  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
-  return name.slice(0, 2).toUpperCase();
-}
+export default function RelationCard({ index, group, personA, personB, getMember, defaultExpanded = false }: Props) {
+  const [expanded, setExpanded] = useState(defaultExpanded);
+  const [activePathIndex, setActivePathIndex] = useState(0);
+  const [showTech, setShowTech] = useState(false);
+  const navigate = useNavigate();
+  const handleClickPersonA = () => navigate(`/?person=${personA.id}`);
+  const handleClickPersonB = () => navigate(`/?person=${personB.id}`);
 
-// Render term with age annotation for BABA and NIA
-// On affiche juste le terme principal + annotation car on ne connaît pas l'âge relatif
-function renderTermSonghoy(term: RelationTerm): React.ReactNode {
-  const songhoy = (term.term_songhoy || '').trim();
-  const songhoyUpper = songhoy.toUpperCase();
+  const active = group.paths[activePathIndex] ?? group.paths[0];
+  const ancestor = getMember(active.via);
+  const multiPath = group.paths.length > 1;
 
-  // BABA (avec ou sans BERO/KATCHA) → afficher "BABA" + annotation
-  if (songhoyUpper.startsWith('BABA')) {
+  const viaLabel = multiPath
+    ? `${group.paths.length} chemins distincts`
+    : `via ${active.viaName}${active.viaSpouse ? ` & ${active.viaSpouse.name}` : ''}`;
+  const scoreLabel = expanded
+    ? ` · proximité ${active.proximityScore} · équilibre ${active.balanceScore}`
+    : '';
+
+  const renderTitle = () => {
+    if (group.groupTerm) {
+      return (
+        <h3 id={`rel-${index}-title`} className="parente-card-title">
+          <em lang="son">{group.groupTerm}</em>
+        </h3>
+      );
+    }
     return (
-      <>
-        BABA
-        <span className="term-age-hint">(BERO/KATCHA)</span>
-      </>
+      <h3 id={`rel-${index}-title`} className="parente-card-title">
+        <em lang="son">{group.termForA}</em>
+        <span className="sep">/</span>
+        <em lang="son">{group.termForB}</em>
+      </h3>
     );
-  }
+  };
 
-  // NIA/NIAN (avec ou sans BERO/KEYNA) → afficher "NIA" + annotation
-  if (songhoyUpper.startsWith('NIA')) {
-    return (
-      <>
-        NIA
-        <span className="term-age-hint">(BERO/KEYNA)</span>
-      </>
-    );
-  }
-
-  // Pour les autres termes, afficher normalement
-  return term.term_songhoy;
-}
-
-function getCategoryClass(code: string): string {
-  if (code === 'GRANDPARENT' || code === 'PARENT') return 'kaaga';
-  if (code === 'COUSINS_PATRI') return 'cousin';
-  if (code === 'COUSINS_CROSS') return 'cross';
-  if (code === 'UNCLE_AUNT' || code === 'NEPHEW_NIECE') return 'uncle';
-  if (code === 'COUSINS_MATRI') return 'matri';
-  if (code === 'SIBLINGS' || code === 'HALF_SIBLINGS') return 'sibling';
-  return 'kaaga';
-}
-
-function getCategoryIcon(code: string): string {
-  if (code === 'GRANDPARENT' || code === 'PARENT') return '\uD83D\uDC51';
-  if (code === 'SIBLINGS' || code === 'HALF_SIBLINGS') return '\uD83D\uDC65';
-  if (
-    code === 'COUSINS_PATRI' ||
-    code === 'COUSINS_MATRI' ||
-    code === 'COUSINS_CROSS'
-  )
-    return '\uD83D\uDD17';
-  if (code === 'UNCLE_AUNT' || code === 'NEPHEW_NIECE') return '\uD83D\uDC6A';
-  return '\uD83D\uDC51';
-}
-
-const ArrowSvg = () => (
-  <svg viewBox="0 0 24 24" fill="none" style={{ width: 24, height: 24 }}>
-    <path
-      d="M4 12h16m-5-5 5 5-5 5"
-      stroke="currentColor"
-      strokeWidth={1.3}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-export default function RelationCard({
-  result,
-  personAName,
-  personBName,
-  index,
-}: Props) {
-  const {
-    commonAncestor,
-    category,
-    termAtoB,
-    termBtoA,
-    additionalTermAtoB,
-    additionalTermBtoA,
-    pathA,
-    pathB,
-    details,
-  } = result;
-
-  const [showTree, setShowTree] = useState(false);
-  const [expanded, setExpanded] = useState(index === 0);
-  const catClass = getCategoryClass(category.code);
-  const catIcon = getCategoryIcon(category.code);
-  const distance = details.distanceA + details.distanceB;
-  const personAGender = pathA.length > 0 ? pathA[0].gender : 'M';
-  const personBGender = pathB.length > 0 ? pathB[0].gender : 'M';
+  const renderSubtitle = () => (
+    <p className="parente-card-subtitle">
+      {group.groupTerm && (
+        <span className="parente-card-individual-terms">
+          <em lang="son">{group.termForA}</em>
+          <span className="sep">/</span>
+          <em lang="son">{group.termForB}</em>
+          <span className="middot"> · </span>
+        </span>
+      )}
+      {viaLabel}
+      {scoreLabel}
+    </p>
+  );
 
   return (
-    <div
-      className={`parente-rc${index > 0 ? ' dim' : ''}${expanded ? ' expanded' : ' collapsed'}`}
-      style={index > 0 ? { animationDelay: `${index * 0.12}s` } : undefined}
-    >
-      {/* Card header with colored band — clickable to toggle */}
-      <div className={`parente-rh ${catClass}`} onClick={() => setExpanded(!expanded)}>
-        <div className="parente-rh-l">
-          <div className="parente-ci">{catIcon}</div>
-          <div>
-            <div className="parente-cn">
-              {category.label_songhoy || category.label_fr.toUpperCase()}
-            </div>
-            <div className="parente-ct">{category.label_fr}</div>
-          </div>
+    <article className={`parente-card ${expanded ? 'expanded' : 'collapsed'}`} aria-labelledby={`rel-${index}-title`}>
+      <header
+        className="parente-card-header"
+        role="button"
+        tabIndex={0}
+        aria-expanded={expanded}
+        onClick={() => setExpanded((v) => !v)}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded((v) => !v); } }}
+      >
+        <span className="parente-card-num">{String(index + 1).padStart(2, '0')}</span>
+        <div className="parente-card-title-block">
+          {renderTitle()}
+          {renderSubtitle()}
         </div>
-        <div className="parente-rh-right">
-          <div className="parente-db">
-            <div className="parente-dv">{distance}</div>
-            <div className="parente-dl">distance</div>
-          </div>
-          <svg className={`parente-chevron${expanded ? ' open' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </div>
-      </div>
+        <span className="parente-card-chevron" aria-hidden="true">▸</span>
+      </header>
 
-      {/* Card body — collapsible */}
-      <div className={`parente-rb${expanded ? '' : ' hidden'}`}>
-        {/* Relation A → B */}
-        {termAtoB && (
-          <>
-            <div className="parente-rr">
-              <div className="parente-rw">
-                <div
-                  className={`parente-ra ${personAGender === 'F' ? 'f' : 'm'}`}
+      {expanded && (
+        <>
+          {multiPath && (
+            <div className="parente-path-selector" role="tablist" aria-label="Chemins de cette relation">
+              {group.paths.map((p, i) => (
+                <button
+                  key={`${p.via}-${i}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === activePathIndex}
+                  className={`parente-path-pill${i === activePathIndex ? ' active' : ''}`}
+                  onClick={(e) => { e.stopPropagation(); setActivePathIndex(i); }}
                 >
-                  {getInitials(personAName)}
-                </div>
-                <div className="parente-rn" title={personAName}>
-                  {personAName}
-                </div>
-              </div>
-              <div className="parente-arrow">
-                <ArrowSvg />
-              </div>
-              <div className="parente-rt">
-                <div className="parente-sg xl c1">
-                  {renderTermSonghoy(termAtoB)}
-                </div>
-                <div className="parente-td">{termAtoB.label_fr}</div>
-              </div>
+                  via {p.viaName}
+                  {p.viaSpouse && <> &amp; {p.viaSpouse.name}</>}
+                </button>
+              ))}
             </div>
-            <div className="parente-sp" />
-          </>
-        )}
+          )}
 
-        {/* Relation B → A */}
-        {termBtoA && (
-          <div className="parente-rr">
-            <div className="parente-rw">
-              <div
-                className={`parente-ra ${personBGender === 'F' ? 'f' : 'm'}`}
-              >
-                {getInitials(personBName)}
-              </div>
-              <div className="parente-rn" title={personBName}>
-                {personBName}
-              </div>
+          {ancestor && (
+            <div className="parente-card-graphic">
+              <SubTreeSvg
+                relation={active}
+                personA={personA}
+                personB={personB}
+                ancestor={ancestor}
+                getMember={getMember}
+              />
             </div>
-            <div className="parente-arrow">
-              <ArrowSvg />
-            </div>
-            <div className="parente-rt">
-              <div className="parente-sg lg c2">{renderTermSonghoy(termBtoA)}</div>
-              <div className="parente-td">{termBtoA.label_fr}</div>
-            </div>
-          </div>
-        )}
-
-        {/* No terms */}
-        {!termAtoB && !termBtoA && (
-          <div className="parente-rr">
-            <div className="parente-rt">
-              <div className="parente-td">{details.labelFr}</div>
-            </div>
-          </div>
-        )}
-
-        {/* Additional terms */}
-        {(additionalTermAtoB || additionalTermBtoA) && (
-          <div className="parente-add">
-            <div className="parente-add-label">S'appellent aussi :</div>
-            {additionalTermAtoB && (
-              <div className="parente-rr">
-                <div className="parente-rw">
-                  <div
-                    className={`parente-ra ${personAGender === 'F' ? 'f' : 'm'}`}
-                  >
-                    {getInitials(personAName)}
-                  </div>
-                  <div className="parente-rn">{personAName}</div>
-                </div>
-                <div className="parente-arrow">
-                  <ArrowSvg />
-                </div>
-                <div className="parente-rt">
-                  <div className="parente-sg lg c1">
-                    {renderTermSonghoy(additionalTermAtoB)}
-                  </div>
-                  <div className="parente-td">
-                    {additionalTermAtoB.label_fr}
-                  </div>
-                </div>
-              </div>
-            )}
-            {additionalTermBtoA && (
-              <div className="parente-rr">
-                <div className="parente-rw">
-                  <div
-                    className={`parente-ra ${personBGender === 'F' ? 'f' : 'm'}`}
-                  >
-                    {getInitials(personBName)}
-                  </div>
-                  <div className="parente-rn">{personBName}</div>
-                </div>
-                <div className="parente-arrow">
-                  <ArrowSvg />
-                </div>
-                <div className="parente-rt">
-                  <div className="parente-sg lg c2">
-                    {renderTermSonghoy(additionalTermBtoA)}
-                  </div>
-                  <div className="parente-td">
-                    {additionalTermBtoA.label_fr}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Heritage Path */}
-        <RelationPathGraph
-          pathA={pathA}
-          pathB={pathB}
-          ancestor={commonAncestor}
-        />
-
-        {/* Tree view button */}
-        <button
-          className="parente-tree-btn"
-          onClick={() => setShowTree(true)}
-        >
-          {'\uD83C\uDF33'} Voir sous forme d&apos;arbre
-        </button>
-
-        {showTree && (
-          <TreePathModal
-            pathA={pathA}
-            pathB={pathB}
-            ancestor={commonAncestor}
-            personAName={personAName}
-            personBName={personBName}
-            onClose={() => setShowTree(false)}
+          )}
+          <ReciprocalStatements
+            relation={active}
+            nameA={personA.name}
+            nameB={personB.name}
+            onClickA={handleClickPersonA}
+            onClickB={handleClickPersonB}
           />
-        )}
+          <PedagogicalExplanation relation={active} nameA={personA.name} nameB={personB.name} />
 
-        {/* Ancestor box */}
-        <div className="parente-ab">
-          <span className="parente-ab-st">{'\u2605'}</span>
-          <p>
-            Ancetre commun : <b>{commonAncestor.name}</b> — Distance{' '}
-            {details.distanceA} {'\u2192'} {details.distanceB}
-          </p>
-        </div>
-      </div>
-    </div>
+          <button
+            type="button"
+            className="parente-card-tech-toggle"
+            onClick={(e) => { e.stopPropagation(); setShowTech((v) => !v); }}
+            aria-expanded={showTech}
+          >
+            {showTech ? '− Masquer les détails techniques' : '+ Afficher les détails techniques'}
+          </button>
+          {showTech && (
+            <TechnicalDetails relation={active} personA={personA} personB={personB} getMember={getMember} />
+          )}
+        </>
+      )}
+    </article>
   );
 }
