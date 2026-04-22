@@ -10386,6 +10386,10 @@ html[data-theme="light"] .parente-edge-pm-bg {
 html[data-theme="light"] .parente-edge-pm-text {
   fill: #92700C;
 }
+html[data-theme="light"] .parente-edge {
+  stroke: rgba(146,112,12,0.85);
+  stroke-width: 2;
+}
 
 /* B.4 — Bloc subtree groupé avec légende collée */
 .parente-subtree-block {
@@ -10646,5 +10650,50 @@ html[data-theme="light"] .parente-metric-chip-tooltip {
     max-width: calc(100vw - 48px);
   }
 }
+
+/* =============================================================
+ * Multi-groupe : chaque relation a son propre Answer + Reciprocity + Card
+ * ============================================================= */
+.parente-multi-intro {
+  margin: 0 0 16px;
+  padding: 14px 18px;
+  background: color-mix(in srgb, var(--sh-gold, #d4a84a) 6%, transparent);
+  border-left: 2px solid color-mix(in srgb, var(--sh-gold, #d4a84a) 40%, transparent);
+  border-radius: 0 8px 8px 0;
+  font-family: var(--sh-sans, 'Inter', sans-serif);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--sh-t2, #b5a891);
+}
+.parente-multi-intro strong {
+  color: var(--sh-gold, #d4a84a);
+  font-weight: 600;
+}
+.parente-result-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-bottom: 28px;
+  margin-bottom: 28px;
+  border-bottom: 1px dashed color-mix(in srgb, var(--sh-gold, #d4a84a) 18%, transparent);
+}
+.parente-result-section:last-of-type {
+  border-bottom: 0;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
+
+html[data-theme="light"] .parente-multi-intro {
+  background: rgba(146,112,12,0.08);
+  border-left-color: rgba(146,112,12,0.45);
+  color: #5a5f7a;
+}
+html[data-theme="light"] .parente-multi-intro strong {
+  color: #92700C;
+}
+html[data-theme="light"] .parente-result-section {
+  border-bottom-color: rgba(146,112,12,0.22);
+}
+
 
 

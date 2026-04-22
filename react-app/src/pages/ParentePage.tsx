@@ -207,41 +207,52 @@ export default function ParentePage() {
             </div>
           ) : result?.kind === 'relations' && personA && personB && primaryGroup ? (
             <>
-              <AnswerBlock
-                group={primaryGroup}
-                personA={personA}
-                personB={personB}
-                onClickA={gotoPersonA}
-                onClickB={gotoPersonB}
-              />
-              <ReciprocityLine
-                group={primaryGroup}
-                personA={personA}
-                personB={personB}
-                onClickA={gotoPersonA}
-                onClickB={gotoPersonB}
-              />
+              {groups.length > 1 && (
+                <p className="parente-multi-intro">
+                  <strong>{groups.length} liens distincts</strong> relient{' '}
+                  {personA.name} et {personB.name}. Voici chacun d'entre eux :
+                </p>
+              )}
 
               {visibleGroups.map((g, i) => (
-                <RelationCard
+                <section
                   key={`${g.termForA}-${g.termForB}-${i}`}
-                  index={i}
-                  group={g}
-                  personA={personA}
-                  personB={personB}
-                  getMember={getMember}
-                  defaultExpanded={i === 0}
-                />
+                  className="parente-result-section"
+                  aria-label={`Lien ${i + 1} sur ${groups.length}`}
+                >
+                  <AnswerBlock
+                    group={g}
+                    personA={personA}
+                    personB={personB}
+                    onClickA={gotoPersonA}
+                    onClickB={gotoPersonB}
+                  />
+                  <ReciprocityLine
+                    group={g}
+                    personA={personA}
+                    personB={personB}
+                    onClickA={gotoPersonA}
+                    onClickB={gotoPersonB}
+                  />
+                  <RelationCard
+                    index={i}
+                    group={g}
+                    personA={personA}
+                    personB={personB}
+                    getMember={getMember}
+                    defaultExpanded={i === 0}
+                  />
+                </section>
               ))}
 
               {hiddenCount > 0 && !expanded && (
                 <button type="button" className="parente-show-more" onClick={() => setExpanded(true)}>
-                  + Voir les {hiddenCount} autre{hiddenCount > 1 ? 's' : ''} relation{hiddenCount > 1 ? 's' : ''}
+                  + Voir les {hiddenCount} autre{hiddenCount > 1 ? 's' : ''} lien{hiddenCount > 1 ? 's' : ''}
                 </button>
               )}
               {expanded && hiddenCount > 0 && (
                 <button type="button" className="parente-show-more" onClick={() => setExpanded(false)}>
-                  − Masquer les relations additionnelles
+                  − Masquer les liens additionnels
                 </button>
               )}
 
