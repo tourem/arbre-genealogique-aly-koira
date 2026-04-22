@@ -151,3 +151,38 @@ describe('RelationHistoryMenu — callbacks', () => {
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 });
+
+describe('RelationHistoryMenu — fermeture', () => {
+  it('ferme le panneau sur Escape', () => {
+    render(
+      <RelationHistoryMenu history={[makeEntry()]} onSelect={noop} onRemove={noop} onClear={noop} onNewSearch={noop} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+
+  it('ferme le panneau au clic en dehors', () => {
+    render(
+      <div>
+        <RelationHistoryMenu history={[makeEntry()]} onSelect={noop} onRemove={noop} onClear={noop} onNewSearch={noop} />
+        <div data-testid="outside">outside</div>
+      </div>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+    fireEvent.mouseDown(screen.getByTestId('outside'));
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+
+  it('ne ferme pas le panneau au clic a l\'interieur', () => {
+    render(
+      <RelationHistoryMenu history={[makeEntry()]} onSelect={noop} onRemove={noop} onClear={noop} onNewSearch={noop} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    const menu = screen.getByRole('menu');
+    fireEvent.mouseDown(menu);
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+  });
+});

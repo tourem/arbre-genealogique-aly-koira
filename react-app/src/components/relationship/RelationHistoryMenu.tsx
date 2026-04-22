@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { HistoryEntry } from '../../hooks/useParenteHistory';
 import { formatRelativeTime } from '../../lib/formatRelativeTime';
 
@@ -16,9 +16,29 @@ interface Props {
  * flottant listant les paires passees (plus recente en haut), avec
  * horodatage relatif, bouton de retrait par entree, et footer "Nouvelle
  * recherche".
+ *
+ * Ferme sur Escape, clic exterieur, ou apres toute action (select,
+ * clear, new search).
  */
 export default function RelationHistoryMenu({ history, onSelect, onRemove, onClear, onNewSearch }: Props) {
   const [open, setOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    const onClickOutside = (e: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onClickOutside);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('mousedown', onClickOutside);
+    };
+  }, [open]);
 
   if (history.length === 0) return null;
 
@@ -40,7 +60,7 @@ export default function RelationHistoryMenu({ history, onSelect, onRemove, onCle
   };
 
   return (
-    <div className="parente-history-menu">
+    <div className="parente-history-menu" ref={wrapperRef}>
       <button
         type="button"
         className="parente-history-menu-trigger"
