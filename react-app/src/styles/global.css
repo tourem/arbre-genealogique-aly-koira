@@ -10440,4 +10440,211 @@ html[data-theme="light"] .parente-legend--attached .dot-pm {
   color: #92700C;
 }
 
+/* =============================================================
+ * Parenté v2 — Phase C (métriques tooltips + collapse + responsive)
+ * ============================================================= */
+
+/* Header structure : bouton-body + bouton-collapse */
+.parente-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--sh-bdr, rgba(244,236,216,0.10));
+}
+.parente-card-header-main {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+  border-radius: 6px;
+}
+.parente-card-header-main:focus-visible {
+  outline: 2px solid var(--sh-gold, #d4a84a);
+  outline-offset: 3px;
+}
+.parente-card.collapsed .parente-card-header {
+  border-bottom: 0;
+}
+.parente-card-title-block {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.parente-card-collapse {
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid var(--sh-bdr, rgba(244,236,216,0.10));
+  color: var(--sh-t2, #b5a891);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, color 0.15s;
+}
+.parente-card-collapse svg {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s;
+}
+.parente-card.collapsed .parente-card-collapse svg {
+  transform: rotate(-90deg);
+}
+.parente-card-collapse:hover,
+.parente-card-collapse:focus-visible {
+  border-color: var(--sh-gold, #d4a84a);
+  color: var(--sh-gold, #d4a84a);
+  outline: none;
+}
+.parente-card-body {
+  padding: 14px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Metric chips : nombre de chemins, proximite, equilibre avec tooltip */
+.parente-metric-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+.parente-metric-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 10px;
+  border: 1px solid var(--sh-bdr, rgba(244,236,216,0.10));
+  border-radius: 12px;
+  background: transparent;
+  font-family: var(--sh-sans, 'Inter', sans-serif);
+  font-size: 12px;
+  color: var(--sh-t2, #b5a891);
+  cursor: help;
+  transition: border-color 0.15s, background 0.15s;
+  outline: none;
+}
+.parente-metric-chip:hover,
+.parente-metric-chip:focus-visible,
+.parente-metric-chip.is-open {
+  border-color: var(--sh-gold, #d4a84a);
+  background: color-mix(in srgb, var(--sh-gold, #d4a84a) 6%, transparent);
+}
+.parente-metric-chip-label {
+  white-space: nowrap;
+}
+.parente-metric-chip-value {
+  font-family: var(--sh-mono, 'JetBrains Mono', monospace);
+  font-weight: 500;
+  color: var(--sh-gold, #d4a84a);
+}
+.parente-metric-chip-info {
+  color: var(--sh-t3, #746a5a);
+  font-size: 10px;
+  margin-left: 2px;
+}
+.parente-metric-chip-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 50;
+  min-width: 220px;
+  max-width: 300px;
+  padding: 10px 12px;
+  background: var(--sh-elev, #252018);
+  border: 1px solid var(--sh-bdr, rgba(244,236,216,0.14));
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.40);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--sh-txt, #f4ecd8);
+  font-weight: 400;
+  white-space: normal;
+  text-align: left;
+  cursor: default;
+  animation: parente-metric-tooltip-in 0.14s ease-out;
+}
+@keyframes parente-metric-tooltip-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Light theme */
+html[data-theme="light"] .parente-card-header {
+  border-bottom-color: rgba(0,0,0,0.08);
+}
+html[data-theme="light"] .parente-card-collapse {
+  border-color: rgba(0,0,0,0.14);
+  color: #5a5f7a;
+}
+html[data-theme="light"] .parente-card-collapse:hover,
+html[data-theme="light"] .parente-card-collapse:focus-visible {
+  border-color: #92700C;
+  color: #92700C;
+}
+html[data-theme="light"] .parente-metric-chip {
+  border-color: rgba(0,0,0,0.12);
+  color: #5a5f7a;
+}
+html[data-theme="light"] .parente-metric-chip:hover,
+html[data-theme="light"] .parente-metric-chip:focus-visible,
+html[data-theme="light"] .parente-metric-chip.is-open {
+  border-color: #92700C;
+  background: rgba(146,112,12,0.08);
+}
+html[data-theme="light"] .parente-metric-chip-value {
+  color: #92700C;
+}
+html[data-theme="light"] .parente-metric-chip-info {
+  color: #8a8fa5;
+}
+html[data-theme="light"] .parente-metric-chip-tooltip {
+  background: #FFFFFF;
+  border-color: rgba(0,0,0,0.12);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.14);
+  color: #1c1c28;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .parente-card-header {
+    padding: 14px;
+    gap: 8px;
+  }
+  .parente-card-header-main {
+    gap: 10px;
+  }
+  .parente-card-num {
+    font-size: 26px;
+  }
+  .parente-metric-chips {
+    gap: 4px;
+  }
+  .parente-metric-chip {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+  .parente-metric-chip-tooltip {
+    min-width: 180px;
+    max-width: calc(100vw - 48px);
+  }
+}
+
 
