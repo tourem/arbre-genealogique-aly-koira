@@ -13,7 +13,7 @@ interface Props {
   showRank: boolean;
 }
 
-export default function FoyerBlock({ foyer, personGender, members: _members, onNavigate, onInfo, showRank }: Props) {
+export default function FoyerBlock({ foyer, personGender, members: _members, onNavigate, onInfo: _onInfo, showRank }: Props) {
   const { rank, spouse, spouseName, children, orphan } = foyer;
   const count = children.length;
 
@@ -57,20 +57,6 @@ export default function FoyerBlock({ foyer, personGender, members: _members, onN
               <div className="foyer-spouse-rank">{spouseGender === 'M' ? 'Époux' : 'Épouse'}</div>
             )}
           </div>
-          {spouse && onInfo && (
-            <button
-              type="button"
-              className="foyer-info-btn"
-              onClick={(e) => { e.stopPropagation(); onInfo(spouse); }}
-              aria-label={`Informations sur ${spouse.name}`}
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="16" x2="12" y2="12" />
-                <line x1="12" y1="8" x2="12.01" y2="8" />
-              </svg>
-            </button>
-          )}
         </div>
         <div className="foyer-count" aria-label={`${count} enfant${count > 1 ? 's' : ''}`}>
           <span className="foyer-count-num">{count}</span>

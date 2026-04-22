@@ -38,17 +38,27 @@ export default function Avatar({
   const initials = computeInitials(name);
   const genderClass = gender === 'F' ? 'avatar--female' : 'avatar--male';
   const sizeClass = `avatar--${size}`;
-  const showBadge = generation != null && size !== 'sm';
+  // Symétrie visuelle : le badge est toujours présent sur md/lg, même
+  // quand la génération est inconnue (affichée "G?"). Ça évite qu'un
+  // parent apparaisse "nu" à côté d'un autre avec badge.
+  const showBadge = size !== 'sm';
+  const badgeText = generation != null ? `G${generation}` : 'G?';
+  const genAria = generation != null ? `, génération ${generation}` : ', génération inconnue';
 
   return (
     <div
       className={`avatar ${sizeClass} ${genderClass}${className ? ' ' + className : ''}`}
       style={style}
-      aria-label={`${name}${generation != null ? `, génération ${generation}` : ''}`}
+      aria-label={`${name}${size !== 'sm' ? genAria : ''}`}
     >
       {initials}
       {showBadge && (
-        <span className="avatar-gen-badge" aria-hidden="true">G{generation}</span>
+        <span
+          className={`avatar-gen-badge${generation == null ? ' avatar-gen-badge--unknown' : ''}`}
+          aria-hidden="true"
+        >
+          {badgeText}
+        </span>
       )}
     </div>
   );

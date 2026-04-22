@@ -3,6 +3,7 @@ import { resolveTags } from '../../lib/culturalTags';
 import { formatOrdinal } from '../../lib/ordinal';
 import Avatar from '../ui/Avatar';
 import SonghayTerm from '../ui/SonghayTerm';
+import CulturalNote from './CulturalNote';
 
 interface Props {
   person: Member;
@@ -85,11 +86,7 @@ export default function PersonHero({ person, members, spouseCount = 0, childrenC
         </div>
       </div>
 
-      {person.note && (
-        <aside className="person-cultural-note" role="note">
-          <p>{person.note}</p>
-        </aside>
-      )}
+      <CulturalNote person={person} tags={tags} />
     </section>
   );
 }

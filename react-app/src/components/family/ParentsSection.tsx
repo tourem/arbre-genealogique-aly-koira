@@ -21,10 +21,13 @@ interface ParentCardProps {
   onInfo?: (member: Member) => void;
   fallbackMotherRef?: string;
   personGeneration?: number;
+  /** ID de l'autre parent affiché dans la même rangée, pour éviter la
+   *  redondance "époux/épouse de [autre parent déjà visible]". */
+  otherParentId?: string | null;
 }
 
 function ParentCard({
-  parent, fallbackName, role, members, onNavigate, onInfo, fallbackMotherRef, personGeneration,
+  parent, fallbackName, role, members, onNavigate, onInfo: _onInfo, fallbackMotherRef: _fallbackMotherRef, personGeneration, otherParentId,
 }: ParentCardProps) {
   const isFather = role === 'father';
   const roleLabel = isFather ? 'Père' : 'Mère';
@@ -33,7 +36,7 @@ function ParentCard({
 
   // Parent réel en DB : version enrichie avec lignage + navigation.
   if (parent) {
-    const lineage = buildLineage(parent, members);
+    const lineage = buildLineage(parent, members, { excludeSpouseId: otherParentId ?? null });
     return (
       <button
         type="button"
@@ -56,20 +59,6 @@ function ParentCard({
           </div>
           {lineage && <div className="parent-card-lineage">{lineage}</div>}
         </div>
-        {onInfo && (
-          <button
-            type="button"
-            className="parent-card-info"
-            onClick={(e) => { e.stopPropagation(); onInfo(parent); }}
-            aria-label={`Informations sur ${parent.name}`}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="16" x2="12" y2="12" />
-              <line x1="12" y1="8" x2="12.01" y2="8" />
-            </svg>
-          </button>
-        )}
         <svg className="parent-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
           <polyline points="9 18 15 12 9 6" />
         </svg>
@@ -79,23 +68,11 @@ function ParentCard({
 
   // Parent sans ID (simple nom libre) : carte statique, pas de navigation.
   if (fallbackName) {
-    const gen = typeof personGeneration === 'number' ? personGeneration - 1 : 0;
-    const orphanMember: Member = {
-      id: fallbackMotherRef ?? 'orphan',
-      name: fallbackName,
-      first_name: null,
-      alias: null,
-      gender: genderClass,
-      generation: gen,
-      father_id: null, mother_ref: null,
-      spouses: [], children: [],
-      photo_url: null, note: null,
-      birth_city: null, birth_country: null, village: null,
-    };
+    const gen = typeof personGeneration === 'number' ? personGeneration - 1 : null;
     return (
       <div className={`parent-card parent-card--${role} parent-card--static`}>
         <div className="parent-card-avatar">
-          <Avatar name={fallbackName} gender={genderClass} size="md" />
+          <Avatar name={fallbackName} gender={genderClass} generation={gen} size="md" />
         </div>
         <div className="parent-card-main">
           <div className="parent-card-role">
@@ -106,20 +83,6 @@ function ParentCard({
           <div className="parent-card-name">{fallbackName}</div>
           <div className="parent-card-lineage parent-card-lineage--muted">Sans fiche détaillée</div>
         </div>
-        {onInfo && (
-          <button
-            type="button"
-            className="parent-card-info"
-            onClick={() => onInfo(orphanMember)}
-            aria-label={`Informations sur ${fallbackName}`}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="16" x2="12" y2="12" />
-              <line x1="12" y1="8" x2="12.01" y2="8" />
-            </svg>
-          </button>
-        )}
       </div>
     );
   }
@@ -178,6 +141,7 @@ export default function ParentsSection({ person, members, onNavigate, onInfo }: 
           onNavigate={onNavigate}
           onInfo={onInfo}
           personGeneration={person.generation}
+          otherParentId={mother?.id ?? null}
         />
         <ParentCard
           parent={mother}
@@ -188,6 +152,7 @@ export default function ParentsSection({ person, members, onNavigate, onInfo }: 
           onNavigate={onNavigate}
           onInfo={onInfo}
           personGeneration={person.generation}
+          otherParentId={father?.id ?? null}
         />
       </div>
     </section>

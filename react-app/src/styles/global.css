@@ -5362,24 +5362,30 @@ flex-shrink:0;
   font-size: .78rem;
   font-weight: 600;
   letter-spacing: .5px;
-  color: var(--text-muted);
+  color: var(--ink-mute, #8b8471);
   cursor: pointer;
   position: relative;
-  transition: color .2s;
-  border-bottom: 2px solid var(--border);
+  transition: color .2s, background-color .2s;
+  border-bottom: 2px solid var(--bdr-subtle, rgba(244,236,216,0.06));
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
+  background: transparent;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .fiche-sh .fiche-tab.on {
-  color: var(--gold);
-  border-bottom-color: var(--gold);
+  color: var(--ocre, #d4a84a);
+  border-bottom-color: var(--ocre, #d4a84a);
+  background: color-mix(in srgb, var(--ocre, #d4a84a) 10%, transparent);
 }
 
 .fiche-sh .fiche-tab:hover:not(.on) {
-  color: var(--sh-t2);
+  color: var(--ink-hi, #f4ecd8);
+  background: var(--bg-elev-1, #1d1812);
+  border-bottom-color: var(--bdr-soft, rgba(244,236,216,0.10));
 }
 
 .fiche-sh .fiche-tab-ico {
@@ -6492,6 +6498,7 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
 
 /* ========== Theme toggle button (Phase 2 redesign v2) ========== */
 .header-theme-toggle {
+  position: relative;
   display: inline-grid; place-items: center;
   width: 36px; height: 36px;
   background: transparent;
@@ -6499,11 +6506,27 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
   border-radius: var(--radius-md, 12px);
   color: var(--ink-mute, #8b8471);
   cursor: pointer;
-  margin-left: 8px;
+  margin-left: 14px;
   transition: background-color 160ms var(--ease-out, ease-out),
               border-color 160ms var(--ease-out, ease-out),
               color 160ms var(--ease-out, ease-out);
   flex-shrink: 0;
+}
+/* Séparateur vertical fin entre la nav et le theme toggle (desktop).
+   Indique visuellement que les tabs et le toggle sont deux groupes d'actions distincts. */
+.header-theme-toggle::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 16px;
+  background: var(--bdr-soft, rgba(244,236,216,0.10));
+}
+@media (max-width: 719px) {
+  .header-theme-toggle::before { display: none; }
+  .header-theme-toggle { margin-left: 8px; }
 }
 .header-theme-toggle:hover {
   background: var(--bg-elev-1, #1d1812);
@@ -6684,6 +6707,16 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
   border-color: var(--bg-base, #faf5e8);
 }
 
+/* Generation inconnue : badge moins saturé pour signaler l'absence
+   de donnée sans casser la symétrie visuelle entre deux avatars. */
+.avatar-gen-badge--unknown {
+  background: var(--ink-dim, #5a5447);
+  color: var(--bg-base, #15120e);
+}
+:root[data-theme='light'] .avatar-gen-badge--unknown {
+  background: var(--ink-mute, #8a7a5a);
+}
+
 /* ============================================================
    Phase 5 — SonghayTerm component (ui/SonghayTerm)
    ============================================================ */
@@ -6836,8 +6869,9 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
   font-family: var(--font-serif, 'Fraunces', serif);
   font-style: italic;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 22px;
   color: var(--ocre, #d4a84a);
+  letter-spacing: -0.01em;
 }
 .person-hero-clan em { font-style: italic; font-weight: 500; }
 
@@ -6961,6 +6995,32 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
   line-height: 1.55;
   color: var(--ink-hi, #f4ecd8);
   font-variation-settings: "opsz" 14, "SOFT" 80;
+}
+
+/* Mots-clés éditoriaux dans la note culturelle */
+.person-cultural-note .cultural-note-emph {
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-style: normal;
+  font-weight: 500;
+  color: var(--ink-hi, #f4ecd8);
+  font-variation-settings: "opsz" 14, "SOFT" 30;
+}
+.person-cultural-note .cultural-note-term {
+  display: inline-block;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  padding: 1px 7px;
+  margin: 0 1px;
+  background: var(--ocre-soft, rgba(212,168,74,0.14));
+  color: var(--ocre, #d4a84a);
+  border-radius: var(--radius-sm, 8px);
+  letter-spacing: 0.02em;
+  vertical-align: baseline;
+}
+.person-cultural-note .cultural-note-def {
+  /* hérite de l'italique du <p> */
 }
 
 /* Responsive */
@@ -7355,7 +7415,10 @@ button.parent-card { width: 100%; }
 .foyer-descendants-grid {
   padding-left: 10px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  /* max-content empêche un chip unique de s'étirer sur toute la largeur.
+     justify-content: start aligne les chips à gauche quand peu nombreux. */
+  grid-template-columns: repeat(auto-fill, minmax(150px, max-content));
+  justify-content: start;
   gap: 6px;
 }
 
