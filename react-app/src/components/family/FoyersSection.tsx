@@ -8,9 +8,15 @@ interface Props {
   members: MemberDict;
   onNavigate: (id: string) => void;
   onInfo?: (member: Member) => void;
+  /** Admin uniquement : affiche les menus ⋯ sur les foyers et les enfants. */
+  showActions?: boolean;
+  onDissolveFoyer?: (spouseId: string) => void;
+  onDetachChild?: (childId: string) => void;
 }
 
-export default function FoyersSection({ person, members, onNavigate, onInfo }: Props) {
+export default function FoyersSection({
+  person, members, onNavigate, onInfo, showActions, onDissolveFoyer, onDetachChild,
+}: Props) {
   const foyers = computeFoyers(person, members);
   if (foyers.length === 0) return null;
 
@@ -45,6 +51,9 @@ export default function FoyersSection({ person, members, onNavigate, onInfo }: P
             onNavigate={onNavigate}
             onInfo={onInfo}
             showRank={showRank}
+            showActions={showActions}
+            onDissolve={f.spouse && onDissolveFoyer ? () => onDissolveFoyer(f.spouse!.id) : undefined}
+            onDetachChild={onDetachChild}
           />
         ))}
       </div>

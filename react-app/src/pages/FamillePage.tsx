@@ -13,9 +13,24 @@ import TreePopup from '../components/tree/TreePopup';
 import AddMemberModal from '../components/family/AddMemberModal';
 import EditPanel from '../components/family/EditPanel';
 import FicheFAB from '../components/family/FicheFAB';
+import RelationDeleteDialog from '../components/family/RelationDeleteDialog';
 import FicheSkeleton from '../components/layout/FicheSkeleton';
 import { computeFoyers } from '../lib/foyers';
+import {
+  describeDetachParent,
+  describeDissolveMarriage,
+  describeDetachChildFromFoyer,
+  detachParent as rpcDetachParent,
+  dissolveMarriage as rpcDissolveMarriage,
+  detachChildFromFoyer as rpcDetachChildFromFoyer,
+  type RelationConsequence,
+} from '../lib/relationOps';
 import type { Member } from '../lib/types';
+
+type PendingRelationOp =
+  | { kind: 'detach-parent'; role: 'father' | 'mother'; consequence: RelationConsequence }
+  | { kind: 'dissolve-marriage'; spouseId: string; consequence: RelationConsequence }
+  | { kind: 'detach-child'; childId: string; consequence: RelationConsequence };
 
 // Find the best default person (lowest generation, or first member)
 function getDefaultPerson(members: Record<string, Member>): string {
@@ -48,6 +63,7 @@ export default function FamillePage() {
   const [popupMember, setPopupMember] = useState<Member | null>(null);
   const [addModal, setAddModal] = useState<{ mode: 'child' | 'spouse' | 'parent' } | null>(null);
   const [editPanelOpen, setEditPanelOpen] = useState(false);
+  const [pendingOp, setPendingOp] = useState<PendingRelationOp | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Handle query param navigation from search page
@@ -170,6 +186,49 @@ export default function FamillePage() {
     }
   };
 
+  const handleDetachParent = (role: 'father' | 'mother') => {
+    const parent = role === 'father'
+      ? (person.father_id ? members[person.father_id] ?? null : null)
+      : (person.mother_ref ? members[person.mother_ref] ?? null : null);
+    const fallback = role === 'mother' && !parent && person.mother_ref ? person.mother_ref : null;
+    const consequence = describeDetachParent(person, parent ?? fallback, role);
+    setPendingOp({ kind: 'detach-parent', role, consequence });
+  };
+
+  const handleDissolveFoyer = (spouseId: string) => {
+    const spouse = members[spouseId];
+    if (!spouse) return;
+    const consequence = describeDissolveMarriage(person, spouse, members);
+    setPendingOp({ kind: 'dissolve-marriage', spouseId, consequence });
+  };
+
+  const handleDetachChild = (childId: string) => {
+    const child = members[childId];
+    if (!child) return;
+    const father = child.father_id ? members[child.father_id] ?? null : null;
+    const mother = child.mother_ref ? (members[child.mother_ref] ?? child.mother_ref) : null;
+    const consequence = describeDetachChildFromFoyer(child, father, mother);
+    setPendingOp({ kind: 'detach-child', childId, consequence });
+  };
+
+  const confirmPendingOp = async () => {
+    if (!pendingOp) return;
+    let result: { error: string | null } = { error: null };
+    if (pendingOp.kind === 'detach-parent') {
+      result = await rpcDetachParent(person.id, pendingOp.role);
+    } else if (pendingOp.kind === 'dissolve-marriage') {
+      result = await rpcDissolveMarriage(person.id, pendingOp.spouseId);
+    } else {
+      result = await rpcDetachChildFromFoyer(pendingOp.childId);
+    }
+    if (result.error) {
+      alert(`Échec : ${result.error}`);
+      return;
+    }
+    setPendingOp(null);
+    await refetchMembers();
+  };
+
   return (
     <div className="page active fiche-sh">
       <div className="scroll" ref={scrollRef} tabIndex={0}>
@@ -232,6 +291,8 @@ export default function FamillePage() {
                 members={members}
                 onNavigate={navigateTo}
                 onInfo={setPopupMember}
+                showActions={isAdmin}
+                onDetachParent={handleDetachParent}
               />
 
               <FoyersSection
@@ -239,6 +300,9 @@ export default function FamillePage() {
                 members={members}
                 onNavigate={navigateTo}
                 onInfo={setPopupMember}
+                showActions={isAdmin}
+                onDissolveFoyer={handleDissolveFoyer}
+                onDetachChild={handleDetachChild}
               />
 
               <ExtendedFamily
@@ -295,6 +359,18 @@ export default function FamillePage() {
             }}
           />
         )}
+
+        <RelationDeleteDialog
+          open={!!pendingOp}
+          consequence={pendingOp?.consequence ?? null}
+          confirmLabel={
+            pendingOp?.kind === 'dissolve-marriage' ? 'Dissoudre le mariage' :
+            pendingOp?.kind === 'detach-child' ? 'Détacher l\u2019enfant' :
+            'Retirer la relation'
+          }
+          onConfirm={confirmPendingOp}
+          onClose={() => setPendingOp(null)}
+        />
       </div>
     </div>
   );

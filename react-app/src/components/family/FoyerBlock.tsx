@@ -1,26 +1,45 @@
 import type { Member, MemberDict } from '../../lib/types';
 import { rankLabel, type Foyer } from '../../lib/foyers';
 import Avatar from '../ui/Avatar';
+import CardActionsMenu from './CardActionsMenu';
 
 interface Props {
   foyer: Foyer;
-  /** Genre du person parent — utilisé pour déduire le rôle du conjoint (époux/épouse). */
   personGender: 'M' | 'F';
   members: MemberDict;
   onNavigate: (id: string) => void;
   onInfo?: (member: Member) => void;
-  /** True si le person a plusieurs foyers — influe sur l'affichage du rang. */
   showRank: boolean;
+  /** Admin uniquement : affiche les menus ⋯ (header + chaque enfant). */
+  showActions?: boolean;
+  /** Dissolution du mariage ; undefined si foyer orphelin (pas de conjoint). */
+  onDissolve?: () => void;
+  /** Detach un enfant de ce foyer. */
+  onDetachChild?: (childId: string) => void;
 }
 
-export default function FoyerBlock({ foyer, personGender, members: _members, onNavigate, onInfo: _onInfo, showRank }: Props) {
+export default function FoyerBlock({
+  foyer, personGender, members: _members, onNavigate, onInfo: _onInfo, showRank,
+  showActions, onDissolve, onDetachChild,
+}: Props) {
   const { rank, spouse, spouseName, children, orphan } = foyer;
   const count = children.length;
 
-  // Header content depends on whether we have a member or just a name or nothing
   const spouseDisplayName = spouse?.name ?? spouseName ?? '';
   const spouseGender: 'M' | 'F' = spouse?.gender ?? (personGender === 'M' ? 'F' : 'M');
   const rankText = orphan ? null : rankLabel(rank, spouseGender);
+
+  const headerActions = showActions && !orphan ? [
+    ...(spouse ? [{
+      label: 'Voir sa fiche',
+      onClick: () => onNavigate(spouse.id),
+    }] : []),
+    ...(onDissolve ? [{
+      label: 'Retirer ce foyer',
+      onClick: onDissolve,
+      danger: true,
+    }] : []),
+  ] : null;
 
   return (
     <article className={`foyer-block${orphan ? ' foyer-block--orphan' : ''}`} aria-label={orphan ? 'Enfants sans conjoint identifié' : `Foyer avec ${spouseDisplayName}`}>
@@ -62,6 +81,12 @@ export default function FoyerBlock({ foyer, personGender, members: _members, onN
           <span className="foyer-count-num">{count}</span>
           <span className="foyer-count-label">enfant{count > 1 ? 's' : ''}</span>
         </div>
+        {headerActions && headerActions.length > 0 && (
+          <CardActionsMenu
+            actions={headerActions}
+            label={`Actions sur le foyer avec ${spouseDisplayName}`}
+          />
+        )}
       </header>
 
       {children.length > 0 && (
@@ -69,27 +94,40 @@ export default function FoyerBlock({ foyer, personGender, members: _members, onN
           <div className="foyer-descendants-label">Descendance</div>
           <div className="foyer-descendants-grid">
             {children.map((c) => (
-              <button
+              <div
                 key={c.id}
-                type="button"
-                className="child-chip"
-                onClick={() => onNavigate(c.id)}
+                className={`child-chip${showActions && onDetachChild ? ' child-chip--has-menu' : ''}`}
                 role="listitem"
-                aria-label={`Voir la fiche de ${c.name}`}
               >
-                <Avatar name={c.name} gender={c.gender} size="sm" />
-                <span className="child-chip-main">
-                  <span className="child-chip-name">{c.first_name ?? c.name.split(' ')[0] ?? c.name}</span>
-                  {c.alias && <span className="child-chip-alias">« {c.alias} »</span>}
-                </span>
-                <span className="child-chip-meta">
-                  <span className="child-chip-gen">G{c.generation}</span>
-                  <span className="child-chip-sep" aria-hidden="true">·</span>
-                  <span className={`child-chip-gender child-chip-gender--${c.gender === 'M' ? 'm' : 'f'}`} aria-hidden="true">
-                    {c.gender === 'M' ? '♂' : '♀'}
+                <button
+                  type="button"
+                  className="child-chip-body"
+                  onClick={() => onNavigate(c.id)}
+                  aria-label={`Voir la fiche de ${c.name}`}
+                >
+                  <Avatar name={c.name} gender={c.gender} size="sm" />
+                  <span className="child-chip-main">
+                    <span className="child-chip-name">{c.first_name ?? c.name.split(' ')[0] ?? c.name}</span>
+                    {c.alias && <span className="child-chip-alias">« {c.alias} »</span>}
                   </span>
-                </span>
-              </button>
+                  <span className="child-chip-meta">
+                    <span className="child-chip-gen">G{c.generation}</span>
+                    <span className="child-chip-sep" aria-hidden="true">·</span>
+                    <span className={`child-chip-gender child-chip-gender--${c.gender === 'M' ? 'm' : 'f'}`} aria-hidden="true">
+                      {c.gender === 'M' ? '♂' : '♀'}
+                    </span>
+                  </span>
+                </button>
+                {showActions && onDetachChild && (
+                  <CardActionsMenu
+                    actions={[
+                      { label: 'Voir sa fiche', onClick: () => onNavigate(c.id) },
+                      { label: 'Retirer de ce foyer', onClick: () => onDetachChild(c.id), danger: true },
+                    ]}
+                    label={`Actions sur ${c.name}`}
+                  />
+                )}
+              </div>
             ))}
           </div>
         </div>

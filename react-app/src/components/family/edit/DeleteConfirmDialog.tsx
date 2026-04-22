@@ -60,10 +60,13 @@ export default function DeleteConfirmDialog({
         onClick={(e) => e.stopPropagation()}
       >
         <h3 id="edit-delete-title" className="edit-delete-title">
-          Supprimer {personName} ?
+          Archiver {personName} ?
         </h3>
         <p className="edit-delete-text">
-          Cette action est définitive et irréversible. Les relations familiales seront cassées.
+          La fiche sera masquée de l'arbre et des recherches. Ses relations
+          familiales restent conservées pendant <strong>30 jours</strong>,
+          pour permettre une restauration si besoin. Passé ce délai,
+          la fiche sera définitivement supprimée.
         </p>
         <form onSubmit={handleSubmit}>
           <label htmlFor="edit-delete-confirm" className="edit-delete-label">
@@ -94,7 +97,7 @@ export default function DeleteConfirmDialog({
               className="edit-danger-btn edit-danger-btn--filled"
               disabled={!canConfirm}
             >
-              {busy ? 'Suppression…' : 'Supprimer définitivement'}
+              {busy ? 'Archivage…' : 'Archiver la fiche'}
             </button>
           </div>
         </form>

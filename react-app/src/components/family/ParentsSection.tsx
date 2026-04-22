@@ -2,67 +2,97 @@ import type { Member, MemberDict } from '../../lib/types';
 import { buildLineage } from '../../lib/lineage';
 import Avatar from '../ui/Avatar';
 import SonghayTerm from '../ui/SonghayTerm';
+import CardActionsMenu from './CardActionsMenu';
 
 interface Props {
   person: Member;
   members: MemberDict;
   onNavigate: (id: string) => void;
   onInfo?: (member: Member) => void;
+  /** Admin uniquement : affiche le menu ⋯ avec "Retirer cette relation". */
+  showActions?: boolean;
+  onDetachParent?: (role: 'father' | 'mother') => void;
 }
 
 interface ParentCardProps {
   parent: Member | null;
-  /** Quand on n'a qu'un nom (mother_ref texte plutôt qu'ID), fallback affichable. */
   fallbackName?: string | null;
-  /** Position dans le foyer parental, pour calculer le rôle + terme. */
   role: 'father' | 'mother';
   members: MemberDict;
   onNavigate?: (id: string) => void;
   onInfo?: (member: Member) => void;
   fallbackMotherRef?: string;
   personGeneration?: number;
-  /** ID de l'autre parent affiché dans la même rangée, pour éviter la
-   *  redondance "époux/épouse de [autre parent déjà visible]". */
   otherParentId?: string | null;
+  showActions?: boolean;
+  onDetach?: () => void;
 }
 
 function ParentCard({
-  parent, fallbackName, role, members, onNavigate, onInfo: _onInfo, fallbackMotherRef: _fallbackMotherRef, personGeneration, otherParentId,
+  parent, fallbackName, role, members, onNavigate, onInfo: _onInfo,
+  fallbackMotherRef: _fallbackMotherRef, personGeneration, otherParentId,
+  showActions, onDetach,
 }: ParentCardProps) {
   const isFather = role === 'father';
   const roleLabel = isFather ? 'Père' : 'Mère';
   const songhayTerm = isFather ? 'baba' : 'gna';
   const genderClass = isFather ? 'M' : 'F';
 
+  // Helper : menu ⋯ avec actions sur la relation parent-enfant.
+  const renderMenu = (labelTarget: string) => {
+    if (!showActions || !onDetach) return null;
+    const actions = [];
+    if (parent && onNavigate) {
+      actions.push({
+        label: 'Voir sa fiche',
+        onClick: () => onNavigate(parent.id),
+      });
+    }
+    actions.push({
+      label: `Retirer ${role === 'father' ? 'le père' : 'la mère'}`,
+      onClick: onDetach,
+      danger: true,
+    });
+    return (
+      <CardActionsMenu
+        actions={actions}
+        label={`Actions sur ${labelTarget}`}
+      />
+    );
+  };
+
   // Parent réel en DB : version enrichie avec lignage + navigation.
   if (parent) {
     const lineage = buildLineage(parent, members, { excludeSpouseId: otherParentId ?? null });
     return (
-      <button
-        type="button"
-        className={`parent-card parent-card--${role}`}
-        onClick={() => onNavigate?.(parent.id)}
-        aria-label={`Voir la fiche de ${parent.name}`}
-      >
-        <div className="parent-card-avatar">
-          <Avatar name={parent.name} gender={parent.gender} generation={parent.generation} size="md" />
-        </div>
-        <div className="parent-card-main">
-          <div className="parent-card-role">
-            <span>{roleLabel}</span>
-            <span className="parent-card-role-sep" aria-hidden="true">·</span>
-            <SonghayTerm term={songhayTerm} variant="inline" />
+      <div className={`parent-card parent-card--${role}${showActions ? ' parent-card--has-menu' : ''}`}>
+        <button
+          type="button"
+          className="parent-card-body"
+          onClick={() => onNavigate?.(parent.id)}
+          aria-label={`Voir la fiche de ${parent.name}`}
+        >
+          <div className="parent-card-avatar">
+            <Avatar name={parent.name} gender={parent.gender} generation={parent.generation} size="md" />
           </div>
-          <div className="parent-card-name">
-            {parent.name}
-            {parent.alias && <span className="parent-card-alias"> « {parent.alias} »</span>}
+          <div className="parent-card-main">
+            <div className="parent-card-role">
+              <span>{roleLabel}</span>
+              <span className="parent-card-role-sep" aria-hidden="true">·</span>
+              <SonghayTerm term={songhayTerm} variant="inline" />
+            </div>
+            <div className="parent-card-name">
+              {parent.name}
+              {parent.alias && <span className="parent-card-alias"> « {parent.alias} »</span>}
+            </div>
+            {lineage && <div className="parent-card-lineage">{lineage}</div>}
           </div>
-          {lineage && <div className="parent-card-lineage">{lineage}</div>}
-        </div>
-        <svg className="parent-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      </button>
+          <svg className="parent-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+        {renderMenu(parent.name)}
+      </div>
     );
   }
 
@@ -70,19 +100,22 @@ function ParentCard({
   if (fallbackName) {
     const gen = typeof personGeneration === 'number' ? personGeneration - 1 : null;
     return (
-      <div className={`parent-card parent-card--${role} parent-card--static`}>
-        <div className="parent-card-avatar">
-          <Avatar name={fallbackName} gender={genderClass} generation={gen} size="md" />
-        </div>
-        <div className="parent-card-main">
-          <div className="parent-card-role">
-            <span>{roleLabel}</span>
-            <span className="parent-card-role-sep" aria-hidden="true">·</span>
-            <SonghayTerm term={songhayTerm} variant="inline" />
+      <div className={`parent-card parent-card--${role} parent-card--static${showActions ? ' parent-card--has-menu' : ''}`}>
+        <div className="parent-card-body parent-card-body--static">
+          <div className="parent-card-avatar">
+            <Avatar name={fallbackName} gender={genderClass} generation={gen} size="md" />
           </div>
-          <div className="parent-card-name">{fallbackName}</div>
-          <div className="parent-card-lineage parent-card-lineage--muted">Sans fiche détaillée</div>
+          <div className="parent-card-main">
+            <div className="parent-card-role">
+              <span>{roleLabel}</span>
+              <span className="parent-card-role-sep" aria-hidden="true">·</span>
+              <SonghayTerm term={songhayTerm} variant="inline" />
+            </div>
+            <div className="parent-card-name">{fallbackName}</div>
+            <div className="parent-card-lineage parent-card-lineage--muted">Sans fiche détaillée</div>
+          </div>
         </div>
+        {renderMenu(fallbackName)}
       </div>
     );
   }
@@ -122,13 +155,18 @@ function ParentCard({
   );
 }
 
-export default function ParentsSection({ person, members, onNavigate, onInfo }: Props) {
+export default function ParentsSection({
+  person, members, onNavigate, onInfo, showActions, onDetachParent,
+}: Props) {
   const father = person.father_id && members[person.father_id] ? members[person.father_id] : null;
   const mother = person.mother_ref && members[person.mother_ref] ? members[person.mother_ref] : null;
   const motherFallback = typeof person.mother_ref === 'string' && !mother ? person.mother_ref : null;
 
-  // Si aucune donnée parent, ne pas rendre la section.
   if (!father && !mother && !motherFallback) return null;
+
+  // Les cartes "Retirer" n'ont de sens que si un parent (ID ou ref texte) est présent.
+  const hasFather = !!father || !!person.father_id;
+  const hasMother = !!mother || !!motherFallback;
 
   return (
     <section className="parents-section" aria-label="Parents">
@@ -142,6 +180,8 @@ export default function ParentsSection({ person, members, onNavigate, onInfo }: 
           onInfo={onInfo}
           personGeneration={person.generation}
           otherParentId={mother?.id ?? null}
+          showActions={showActions && hasFather}
+          onDetach={() => onDetachParent?.('father')}
         />
         <ParentCard
           parent={mother}
@@ -153,6 +193,8 @@ export default function ParentsSection({ person, members, onNavigate, onInfo }: 
           onInfo={onInfo}
           personGeneration={person.generation}
           otherParentId={father?.id ?? null}
+          showActions={showActions && hasMother}
+          onDetach={() => onDetachParent?.('mother')}
         />
       </div>
     </section>

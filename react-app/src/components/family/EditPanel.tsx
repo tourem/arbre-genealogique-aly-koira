@@ -184,16 +184,21 @@ export default function EditPanel({ person, onClose, onSaved, onDeleted }: Props
   ]);
 
   // ── Delete flow ────────────────────────────────────────────────────────
+  // Archivage doux (soft delete) : archived_at = now(). Un job quotidien
+  // purge reellement les lignes > 30 jours. L'annulation est possible
+  // dans l'intervalle via restore_member().
   const handleDelete = useCallback(async () => {
     setDeleting(true);
-    const { error: delErr } = await supabase.from('members').delete().eq('id', person.id);
+    const { error: rpcErr } = await supabase.rpc('archive_member', {
+      p_member_id: person.id,
+    });
     setDeleting(false);
-    if (delErr) {
-      setError(delErr.message);
+    if (rpcErr) {
+      setError(rpcErr.message);
       setDeleteOpen(false);
       return;
     }
-    toast.show('Fiche supprimée');
+    toast.show('Fiche archivée — 30 jours pour annuler');
     setDeleteOpen(false);
     if (onDeleted) onDeleted();
     onClose();
