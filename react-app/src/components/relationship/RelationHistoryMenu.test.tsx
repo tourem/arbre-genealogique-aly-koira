@@ -186,3 +186,53 @@ describe('RelationHistoryMenu — fermeture', () => {
     expect(screen.getByRole('menu')).toBeInTheDocument();
   });
 });
+
+describe('RelationHistoryMenu — clavier', () => {
+  it('ArrowDown/ArrowUp naviguent entre les entrees', () => {
+    const e1 = makeEntry({ aId: 'a', bId: 'b', aName: 'Alice', bName: 'Bob' });
+    const e2 = makeEntry({ aId: 'c', bId: 'd', aName: 'Cora', bName: 'Dina' });
+    render(
+      <RelationHistoryMenu history={[e1, e2]} onSelect={noop} onRemove={noop} onClear={noop} onNewSearch={noop} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    const first = screen.getByRole('menuitem', { name: /rouvrir Alice et Bob/i });
+    const second = screen.getByRole('menuitem', { name: /rouvrir Cora et Dina/i });
+    // La premiere entree a tabindex 0, la seconde -1 au moment de l'ouverture
+    expect(first).toHaveAttribute('tabindex', '0');
+    expect(second).toHaveAttribute('tabindex', '-1');
+    // ArrowDown depuis la premiere
+    fireEvent.keyDown(first, { key: 'ArrowDown' });
+    expect(second).toHaveAttribute('tabindex', '0');
+    // ArrowUp revient a la premiere
+    fireEvent.keyDown(second, { key: 'ArrowUp' });
+    expect(first).toHaveAttribute('tabindex', '0');
+  });
+
+  it('Delete sur une entree appelle onRemove sans la selectionner', () => {
+    const onSelect = vi.fn();
+    const onRemove = vi.fn();
+    render(
+      <RelationHistoryMenu
+        history={[makeEntry({ aId: 'x', bId: 'y', aName: 'Alice', bName: 'Bob' })]}
+        onSelect={onSelect} onRemove={onRemove} onClear={noop} onNewSearch={noop}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    const item = screen.getByRole('menuitem', { name: /rouvrir Alice et Bob/i });
+    fireEvent.keyDown(item, { key: 'Delete' });
+    expect(onRemove).toHaveBeenCalledWith('x', 'y');
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+
+  it('Escape ferme le panneau ET rend focus au bouton trigger', () => {
+    render(
+      <RelationHistoryMenu history={[makeEntry()]} onSelect={noop} onRemove={noop} onClear={noop} onNewSearch={noop} />,
+    );
+    const trigger = screen.getByRole('button', { name: /historique/i });
+    fireEvent.click(trigger);
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
+  });
+});
