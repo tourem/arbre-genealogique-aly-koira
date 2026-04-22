@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useMembersContext } from '../context/MembersContext';
+import { useAuth } from '../context/AuthContext';
 import { genColors } from '../lib/constants';
 import PersonHero from '../components/family/PersonHero';
 import ParentsSection from '../components/family/ParentsSection';
@@ -35,6 +36,7 @@ function getDefaultPerson(members: Record<string, Member>): string {
 
 export default function FamillePage() {
   const { members, loading, refetchMembers } = useMembersContext();
+  const { isAdmin } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [currentPersonId, setCurrentPersonId] = useState(
@@ -112,6 +114,7 @@ export default function FamillePage() {
   // Global keyboard shortcut: "E" opens the edit panel when nothing else is
   // focused inside a text field and the panel is not already open.
   useEffect(() => {
+    if (!isAdmin) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key !== 'e' && e.key !== 'E') return;
       if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
@@ -126,7 +129,7 @@ export default function FamillePage() {
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [editPanelOpen, currentPersonId, members]);
+  }, [isAdmin, editPanelOpen, currentPersonId, members]);
 
   if (loading) {
     return (
@@ -244,7 +247,7 @@ export default function FamillePage() {
               />
             )}
 
-            <FicheFAB
+            {isAdmin && <FicheFAB
               person={person}
               foyers={foyersForFab}
               onEdit={() => setEditPanelOpen(true)}
@@ -270,11 +273,11 @@ export default function FamillePage() {
                 }
               }}
               onDelete={() => setEditPanelOpen(true)}
-            />
+            />}
           </>
         )}
 
-        {editPanelOpen && person && (
+        {isAdmin && editPanelOpen && person && (
           <EditPanel
             person={person}
             onClose={() => setEditPanelOpen(false)}
