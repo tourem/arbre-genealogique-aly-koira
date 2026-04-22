@@ -10346,3 +10346,98 @@ html[data-theme="light"] .parente-explain-savant em {
   }
 }
 
+/* =============================================================
+ * Parenté v2 — Phase B (détails d'exécution)
+ * ============================================================= */
+
+/* B.1 — Annotation "aïeul commun" / "aïeule commune" dans le nœud LCA */
+.parente-node.role-LCA {
+  min-height: 80px;
+}
+.parente-node-lca-label {
+  font-family: var(--sh-serif, 'Fraunces', serif);
+  font-style: italic;
+  color: var(--sh-gold, #d4a84a);
+  font-size: 11px;
+  line-height: 1;
+  margin-top: 2px;
+}
+html[data-theme="light"] .parente-node-lca-label {
+  color: #92700C;
+}
+
+/* B.3 — Badges P/M agrandis (26x26) avec style cohérent
+ * Le HTML a déjà été passé à 26x26 ; on harmonise le texte + bordure. */
+.parente-edge-pm-bg {
+  fill: var(--sh-elev, #252018);
+  stroke: var(--sh-bdr, rgba(244,236,216,0.14));
+  stroke-width: 1;
+}
+.parente-edge-pm-text {
+  fill: var(--sh-gold, #d4a84a);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--sh-mono, 'JetBrains Mono', monospace);
+}
+html[data-theme="light"] .parente-edge-pm-bg {
+  fill: #FFFFFF;
+  stroke: rgba(0,0,0,0.18);
+}
+html[data-theme="light"] .parente-edge-pm-text {
+  fill: #92700C;
+}
+
+/* B.4 — Bloc subtree groupé avec légende collée */
+.parente-subtree-block {
+  position: relative;
+  border: 1px solid var(--sh-bdr, rgba(244,236,216,0.10));
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--sh-deep, #15120e);
+}
+.parente-subtree-block .parente-subtree-viewport {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.parente-legend--attached {
+  margin: 0;
+  padding: 10px 16px;
+  border-top: 1px solid var(--sh-bdr, rgba(244,236,216,0.10));
+  background: var(--sh-elev, #252018);
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--sh-t2, #b5a891);
+  align-items: center;
+}
+.parente-legend--attached .dot-pm {
+  font-family: var(--sh-mono, 'JetBrains Mono', monospace);
+  font-weight: 500;
+  font-size: 10px;
+  padding: 2px 6px;
+  background: var(--sh-deep, #15120e);
+  border: 1px solid var(--sh-bdr, rgba(244,236,216,0.10));
+  color: var(--sh-gold, #d4a84a);
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-right: 2px;
+  line-height: 1;
+}
+html[data-theme="light"] .parente-subtree-block {
+  background: #FAF7F0;
+  border-color: rgba(0,0,0,0.10);
+}
+html[data-theme="light"] .parente-legend--attached {
+  background: #FFFFFF;
+  border-top-color: rgba(0,0,0,0.08);
+  color: #5a5f7a;
+}
+html[data-theme="light"] .parente-legend--attached .dot-pm {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.12);
+  color: #92700C;
+}
+
+

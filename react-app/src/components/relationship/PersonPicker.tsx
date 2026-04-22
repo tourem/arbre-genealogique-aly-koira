@@ -1,6 +1,8 @@
 // react-app/src/components/relationship/PersonPicker.tsx
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import type { MemberDict } from '../../lib/types';
+import Avatar from '../ui/Avatar';
+import { formatOrdinal } from '../../lib/ordinal';
 
 interface Props {
   label: string;
@@ -12,11 +14,6 @@ interface Props {
 
 function normalize(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-}
-
-function initials(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  return (parts.length >= 2 ? parts[0][0] + parts[1][0] : name.slice(0, 2)).toUpperCase();
 }
 
 export default function PersonPicker({ label, value, members, onChange, side }: Props) {
@@ -88,14 +85,12 @@ export default function PersonPicker({ label, value, members, onChange, side }: 
 
       {selected && !open ? (
         <div className="parente-pc-r" onClick={() => { setQuery(''); setOpen(true); setTimeout(() => inputRef.current?.focus(), 0); }}>
-          <div className={`parente-av ${selected.gender === 'F' ? 'f' : 'm'}`}>
-            {initials(selected.name)}
-            <span className="parente-av-g">G{selected.generation}</span>
-          </div>
+          <Avatar name={selected.name} gender={selected.gender} generation={selected.generation} size="md" />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div className="parente-pc-nm" title={selected.name}>{selected.name}</div>
             <div className="parente-pc-mt">
-              <span>{selected.gender === 'F' ? '\u2640' : '\u2642'}</span>{' '}Génération {selected.generation}
+              <span>{selected.gender === 'F' ? '\u2640' : '\u2642'}</span>{' '}
+              {selected.generation === 0 ? 'Ancêtre' : `${formatOrdinal(selected.generation, 'F')} génération`}
             </div>
           </div>
           <button
