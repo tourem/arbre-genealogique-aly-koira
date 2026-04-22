@@ -49,3 +49,53 @@ describe('RelationHistoryMenu — rendu', () => {
     expect(screen.getByRole('menu')).toBeInTheDocument();
   });
 });
+
+describe('RelationHistoryMenu — entrees', () => {
+  it('rend une entree pour chaque item de history avec noms + terme + horodatage', () => {
+    const NOW = new Date('2026-03-15T14:00:00Z').getTime();
+    const entries: HistoryEntry[] = [
+      makeEntry({ aId: 'x', bId: 'y', aName: 'Alice', bName: 'Bob', topTerm: 'izee / baba', timestamp: NOW - 2 * 60 * 60 * 1000 }),
+      makeEntry({ aId: 'c', bId: 'd', aName: 'Cora', bName: 'Dina', topTerm: 'touba / hassa', timestamp: NOW - 3 * 24 * 60 * 60 * 1000 }),
+    ];
+    render(
+      <RelationHistoryMenu history={entries} onSelect={noop} onRemove={noop} onClear={noop} onNewSearch={noop} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+
+    // Les noms sont presents
+    expect(screen.getByText(/Alice/)).toBeInTheDocument();
+    expect(screen.getByText(/Bob/)).toBeInTheDocument();
+    expect(screen.getByText(/Cora/)).toBeInTheDocument();
+    expect(screen.getByText(/Dina/)).toBeInTheDocument();
+    // Les termes songhay
+    expect(screen.getByText(/izee \/ baba/)).toBeInTheDocument();
+    expect(screen.getByText(/touba \/ hassa/)).toBeInTheDocument();
+  });
+
+  it('rend une entree sans terme quand topTerm est absent', () => {
+    const entry = makeEntry({ topTerm: undefined, aName: 'Eve', bName: 'Frank' });
+    render(
+      <RelationHistoryMenu history={[entry]} onSelect={noop} onRemove={noop} onClear={noop} onNewSearch={noop} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    expect(screen.getByText(/Eve/)).toBeInTheDocument();
+    expect(screen.getByText(/Frank/)).toBeInTheDocument();
+  });
+
+  it('rend le header "Recherches récentes" + bouton "Effacer tout"', () => {
+    render(
+      <RelationHistoryMenu history={[makeEntry()]} onSelect={noop} onRemove={noop} onClear={noop} onNewSearch={noop} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    expect(screen.getByText(/Recherches récentes/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /effacer tout/i })).toBeInTheDocument();
+  });
+
+  it('rend le footer "Nouvelle recherche"', () => {
+    render(
+      <RelationHistoryMenu history={[makeEntry()]} onSelect={noop} onRemove={noop} onClear={noop} onNewSearch={noop} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    expect(screen.getByRole('button', { name: /nouvelle recherche/i })).toBeInTheDocument();
+  });
+});
