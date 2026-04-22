@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useMembersContext } from '../context/MembersContext';
 import { genColors } from '../lib/constants';
 import PersonHero from '../components/family/PersonHero';
@@ -10,6 +10,7 @@ import ExtendedFamily from '../components/family/ExtendedFamily';
 import TreeView from '../components/tree/TreeView';
 import TreePopup from '../components/tree/TreePopup';
 import AddMemberModal from '../components/family/AddMemberModal';
+import EditPanel from '../components/family/EditPanel';
 import FicheFAB from '../components/family/FicheFAB';
 import FicheSkeleton from '../components/layout/FicheSkeleton';
 import { computeFoyers } from '../lib/foyers';
@@ -35,6 +36,7 @@ function getDefaultPerson(members: Record<string, Member>): string {
 export default function FamillePage() {
   const { members, loading, refetchMembers } = useMembersContext();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [currentPersonId, setCurrentPersonId] = useState(
     searchParams.get('person') || '',
   );
@@ -43,6 +45,7 @@ export default function FamillePage() {
   const [viewMode, setViewMode] = useState<'card' | 'tree'>('card');
   const [popupMember, setPopupMember] = useState<Member | null>(null);
   const [addModal, setAddModal] = useState<{ mode: 'child' | 'spouse' | 'parent' } | null>(null);
+  const [editPanelOpen, setEditPanelOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Handle query param navigation from search page
@@ -105,6 +108,25 @@ export default function FamillePage() {
       setCurrentPersonId(prev);
     }
   }, [history]);
+
+  // Global keyboard shortcut: "E" opens the edit panel when nothing else is
+  // focused inside a text field and the panel is not already open.
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key !== 'e' && e.key !== 'E') return;
+      if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+      const active = document.activeElement;
+      const tag = active?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if ((active as HTMLElement | null)?.isContentEditable) return;
+      if (editPanelOpen) return;
+      if (!currentPersonId || !members[currentPersonId]) return;
+      e.preventDefault();
+      setEditPanelOpen(true);
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [editPanelOpen, currentPersonId, members]);
 
   if (loading) {
     return (
@@ -225,10 +247,7 @@ export default function FamillePage() {
             <FicheFAB
               person={person}
               foyers={foyersForFab}
-              onEdit={() => {
-                // TODO: wire edit modal in a future phase
-                console.log('edit', person.id);
-              }}
+              onEdit={() => setEditPanelOpen(true)}
               onAddSpouse={() => setAddModal({ mode: 'spouse' })}
               onAddChild={(_foyerSpouseId) => {
                 // The existing AddMemberModal child flow handles foyer selection internally.
@@ -250,14 +269,25 @@ export default function FamillePage() {
                   // User canceled share or clipboard denied — silent.
                 }
               }}
-              onDelete={() => {
-                // TODO: wire a real delete flow in a future phase.
-                if (window.confirm(`Supprimer la fiche de ${person.name} ?`)) {
-                  console.log('delete', person.id);
-                }
-              }}
+              onDelete={() => setEditPanelOpen(true)}
             />
           </>
+        )}
+
+        {editPanelOpen && person && (
+          <EditPanel
+            person={person}
+            onClose={() => setEditPanelOpen(false)}
+            onSaved={async () => {
+              await refetchMembers();
+              setEditPanelOpen(false);
+            }}
+            onDeleted={() => {
+              setEditPanelOpen(false);
+              void refetchMembers();
+              navigate('/');
+            }}
+          />
         )}
       </div>
     </div>
