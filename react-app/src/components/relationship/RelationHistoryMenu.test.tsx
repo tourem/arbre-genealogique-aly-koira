@@ -88,7 +88,7 @@ describe('RelationHistoryMenu — entrees', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: /historique/i }));
     expect(screen.getByText(/Recherches récentes/)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /effacer tout/i })).toBeInTheDocument();
+    expect(screen.getByRole('menuitem', { name: /effacer tout/i })).toBeInTheDocument();
   });
 
   it('rend le footer "Nouvelle recherche"', () => {
@@ -96,6 +96,6 @@ describe('RelationHistoryMenu — entrees', () => {
       <RelationHistoryMenu history={[makeEntry()]} onSelect={noop} onRemove={noop} onClear={noop} onNewSearch={noop} />,
     );
     fireEvent.click(screen.getByRole('button', { name: /historique/i }));
-    expect(screen.getByRole('button', { name: /nouvelle recherche/i })).toBeInTheDocument();
+    expect(screen.getByRole('menuitem', { name: /nouvelle recherche/i })).toBeInTheDocument();
   });
 });
