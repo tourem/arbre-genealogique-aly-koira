@@ -156,6 +156,20 @@ export default function FamillePage() {
     await refetchMembers();
   };
 
+  const handleShare = async () => {
+    const url = `${window.location.origin}/?person=${person.id}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: `${person.name} — Aly Koïra`, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        alert('Lien copié dans le presse-papier');
+      }
+    } catch {
+      /* silent */
+    }
+  };
+
   return (
     <div className="page active fiche-sh">
       <div className="scroll" ref={scrollRef} tabIndex={0}>
@@ -206,6 +220,11 @@ export default function FamillePage() {
                 members={members}
                 spouseCount={spouseCount}
                 childrenCount={childrenCount}
+                showActions={isAdmin}
+                onEdit={() => setEditPanelOpen(true)}
+                onShare={handleShare}
+                onViewTree={() => setViewMode('tree')}
+                onDelete={() => setEditPanelOpen(true)}
               />
 
               <ParentsSection
@@ -250,7 +269,6 @@ export default function FamillePage() {
             {isAdmin && <FicheFAB
               person={person}
               foyers={foyersForFab}
-              onEdit={() => setEditPanelOpen(true)}
               onAddSpouse={() => setAddModal({ mode: 'spouse' })}
               onAddChild={(_foyerSpouseId) => {
                 // The existing AddMemberModal child flow handles foyer selection internally.
@@ -258,21 +276,6 @@ export default function FamillePage() {
                 setAddModal({ mode: 'child' });
               }}
               onAddParent={() => setAddModal({ mode: 'parent' })}
-              onViewTree={() => setViewMode('tree')}
-              onShare={async () => {
-                const url = `${window.location.origin}/?person=${person.id}`;
-                try {
-                  if (navigator.share) {
-                    await navigator.share({ title: `${person.name} — Aly Koïra`, url });
-                  } else {
-                    await navigator.clipboard.writeText(url);
-                    alert('Lien copié dans le presse-papier');
-                  }
-                } catch {
-                  // User canceled share or clipboard denied — silent.
-                }
-              }}
-              onDelete={() => setEditPanelOpen(true)}
             />}
           </>
         )}

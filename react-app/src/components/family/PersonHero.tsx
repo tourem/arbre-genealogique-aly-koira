@@ -4,15 +4,32 @@ import { formatOrdinal } from '../../lib/ordinal';
 import Avatar from '../ui/Avatar';
 import SonghayTerm from '../ui/SonghayTerm';
 import CulturalNote from './CulturalNote';
+import HeroActionsMenu from './HeroActionsMenu';
 
 interface Props {
   person: Member;
   members: MemberDict;
   spouseCount?: number;
   childrenCount?: number;
+  /** Show the ⋯ actions menu. Typically true for admins, false for readers. */
+  showActions?: boolean;
+  onEdit?: () => void;
+  onShare?: () => void;
+  onViewTree?: () => void;
+  onDelete?: () => void;
 }
 
-export default function PersonHero({ person, members, spouseCount = 0, childrenCount = 0 }: Props) {
+export default function PersonHero({
+  person,
+  members,
+  spouseCount = 0,
+  childrenCount = 0,
+  showActions = false,
+  onEdit,
+  onShare,
+  onViewTree,
+  onDelete,
+}: Props) {
   const isMale = person.gender === 'M';
   const tags = resolveTags(person, members);
   const genText = person.generation === 0
@@ -29,6 +46,14 @@ export default function PersonHero({ person, members, spouseCount = 0, childrenC
         <h1 id="person-hero-name" className="person-hero-name-block">
           <span className="person-hero-name">{person.name}</span>
           <span className="person-hero-clan" aria-label="Clan Aly Koïra">Aly Ko<em>ï</em>ra</span>
+          {showActions && onEdit && onShare && onViewTree && onDelete && (
+            <HeroActionsMenu
+              onEdit={onEdit}
+              onShare={onShare}
+              onViewTree={onViewTree}
+              onDelete={onDelete}
+            />
+          )}
         </h1>
 
         <div className="person-hero-meta">

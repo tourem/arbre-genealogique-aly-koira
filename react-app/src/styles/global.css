@@ -9379,3 +9379,164 @@ button.parent-card { width: 100%; }
     padding-bottom: calc(14px + env(safe-area-inset-bottom));
   }
 }
+
+/* =============================================================
+ * Hero actions menu (⋯ 32×32 next to the person name)
+ * Pattern: + = creations (FAB), ⋯ = actions on existing object.
+ * ============================================================= */
+.hero-menu-btn {
+  appearance: none;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 10px;
+  border: 1px solid var(--bdr-soft, rgba(244,236,216,0.10));
+  background: color-mix(in srgb, var(--bg-elev-1, #1c1812) 70%, transparent);
+  color: var(--ink-mid, rgba(244,236,216,0.72));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+  margin-left: auto;
+  align-self: center;
+  flex-shrink: 0;
+}
+.hero-menu-btn svg {
+  width: 18px;
+  height: 18px;
+}
+.hero-menu-btn:hover,
+.hero-menu-btn:focus-visible {
+  background: color-mix(in srgb, var(--ocre, #d4a84a) 14%, transparent);
+  color: var(--ocre, #d4a84a);
+  border-color: color-mix(in srgb, var(--ocre, #d4a84a) 30%, transparent);
+  outline: none;
+}
+.hero-menu-btn.is-open {
+  background: color-mix(in srgb, var(--ocre, #d4a84a) 22%, transparent);
+  color: var(--ocre, #d4a84a);
+  border-color: color-mix(in srgb, var(--ocre, #d4a84a) 45%, transparent);
+}
+
+.hero-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 1100;
+}
+
+.hero-menu {
+  position: fixed;
+  z-index: 1101;
+  min-width: 240px;
+  max-width: 280px;
+  padding: 6px;
+  background: var(--bg-elev-2, #211c15);
+  border: 1px solid var(--bdr-soft, rgba(244,236,216,0.10));
+  border-radius: 14px;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.25);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: hero-menu-in 0.14s ease-out;
+}
+@keyframes hero-menu-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.hero-menu-item {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: none;
+  background: transparent;
+  color: var(--ink-hi, #f4ecd8);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.hero-menu-item:hover,
+.hero-menu-item:focus-visible {
+  background: color-mix(in srgb, var(--ocre, #d4a84a) 12%, transparent);
+  outline: none;
+}
+.hero-menu-icon {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-mid, rgba(244,236,216,0.72));
+  flex-shrink: 0;
+}
+.hero-menu-icon svg {
+  width: 16px;
+  height: 16px;
+}
+.hero-menu-label {
+  flex: 1;
+}
+.hero-menu-hint {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 11px;
+  color: var(--ink-mute, rgba(244,236,216,0.48));
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--bg-elev-1, #1c1812) 80%, transparent);
+  border: 1px solid var(--bdr-soft, rgba(244,236,216,0.08));
+}
+.hero-menu-separator {
+  height: 1px;
+  background: var(--bdr-soft, rgba(244,236,216,0.08));
+  margin: 4px 6px;
+}
+.hero-menu-item--danger {
+  color: var(--terracotta, #c9643a);
+}
+.hero-menu-item--danger .hero-menu-icon {
+  color: var(--terracotta, #c9643a);
+}
+.hero-menu-item--danger:hover,
+.hero-menu-item--danger:focus-visible {
+  background: color-mix(in srgb, var(--terracotta, #c9643a) 14%, transparent);
+}
+
+/* Light theme adjustments */
+[data-theme="light"] .hero-menu-btn {
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(0,0,0,0.10);
+  color: rgba(30,26,18,0.70);
+}
+[data-theme="light"] .hero-menu {
+  background: #faf7f0;
+  border-color: rgba(0,0,0,0.12);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+}
+[data-theme="light"] .hero-menu-item {
+  color: #2a2218;
+}
+[data-theme="light"] .hero-menu-hint {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.08);
+  color: rgba(0,0,0,0.55);
+}
+[data-theme="light"] .hero-menu-separator {
+  background: rgba(0,0,0,0.10);
+}
+
+/* Mobile: ensure menu stays inside viewport */
+@media (max-width: 480px) {
+  .hero-menu {
+    min-width: 220px;
+    max-width: calc(100vw - 16px);
+  }
+}
+

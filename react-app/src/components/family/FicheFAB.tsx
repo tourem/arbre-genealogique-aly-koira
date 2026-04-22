@@ -7,7 +7,6 @@ import Avatar from '../ui/Avatar';
 interface Props {
   person: Member;
   foyers: Foyer[];
-  onEdit: () => void;
   onAddSpouse: () => void;
   /** Called with a foyer's spouse ID (or null for "new foyer") when the user
    *  chooses a foyer for the new child. */
@@ -15,9 +14,6 @@ interface Props {
   /** Called when "Compléter un parent" is picked. Visible only if at least
    *  one of father_id / mother_ref is null. */
   onAddParent: () => void;
-  onViewTree: () => void;
-  onShare: () => void;
-  onDelete: () => void;
 }
 
 type MenuState = 'closed' | 'main' | 'foyer';
@@ -25,13 +21,9 @@ type MenuState = 'closed' | 'main' | 'foyer';
 export default function FicheFAB({
   person,
   foyers,
-  onEdit,
   onAddSpouse,
   onAddChild,
   onAddParent,
-  onViewTree,
-  onShare,
-  onDelete,
 }: Props) {
   const [state, setState] = useState<MenuState>('closed');
   const fabRef = useRef<HTMLButtonElement>(null);
@@ -39,11 +31,9 @@ export default function FicheFAB({
 
   const close = useCallback(() => {
     setState('closed');
-    // Return focus to the FAB when closing
     requestAnimationFrame(() => fabRef.current?.focus());
   }, []);
 
-  // Keyboard handlers
   useEffect(() => {
     if (state === 'closed') return;
     const handler = (e: KeyboardEvent) => {
@@ -57,7 +47,6 @@ export default function FicheFAB({
     return () => document.removeEventListener('keydown', handler);
   }, [state, close]);
 
-  // Autofocus first item when menu opens
   useEffect(() => {
     if (state !== 'closed') {
       requestAnimationFrame(() => firstItemRef.current?.focus());
@@ -67,11 +56,8 @@ export default function FicheFAB({
   const isParentMissing = !person.father_id || !person.mother_ref;
   const hasFoyer = foyers.filter((f) => !f.orphan).length > 0;
 
-  // If person has 0 foyers → "Ajouter un enfant" is disabled.
-  // If 1 foyer → click adds directly with that foyer's spouse.
-  // If ≥2 → opens submenu to pick.
   const handleAddChildClick = () => {
-    if (!hasFoyer) return; // disabled
+    if (!hasFoyer) return;
     const nonOrphan = foyers.filter((f) => !f.orphan);
     if (nonOrphan.length === 1) {
       onAddChild(nonOrphan[0].spouse?.id ?? null);
@@ -83,7 +69,6 @@ export default function FicheFAB({
 
   const toggle = () => setState((s) => (s === 'closed' ? 'main' : 'closed'));
 
-  // Bundle the action + close into a single helper for clarity
   const act = (fn: () => void) => () => {
     fn();
     close();
@@ -97,27 +82,12 @@ export default function FicheFAB({
         <div
           className="fab-menu"
           role="menu"
-          aria-label="Actions sur la fiche"
+          aria-label="Ajouter un proche"
         >
-          <div className="fab-menu-header">Actions</div>
+          <div className="fab-menu-header">Ajouter</div>
 
           <button
             ref={firstItemRef}
-            type="button"
-            role="menuitem"
-            className="fab-menu-item"
-            onClick={act(onEdit)}
-          >
-            <span className="fab-menu-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
-              </svg>
-            </span>
-            <span className="fab-menu-label">Modifier la fiche</span>
-            <span className="fab-menu-hint" aria-hidden="true">E</span>
-          </button>
-
-          <button
             type="button"
             role="menuitem"
             className="fab-menu-item"
@@ -180,61 +150,6 @@ export default function FicheFAB({
               </span>
             </button>
           )}
-
-          <div className="fab-menu-separator" role="separator" />
-
-          <button
-            type="button"
-            role="menuitem"
-            className="fab-menu-item"
-            onClick={act(onViewTree)}
-          >
-            <span className="fab-menu-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="7" height="7"/>
-                <rect x="14" y="3" width="7" height="7"/>
-                <rect x="14" y="14" width="7" height="7"/>
-                <rect x="3" y="14" width="7" height="7"/>
-              </svg>
-            </span>
-            <span className="fab-menu-label">Voir dans l'arbre</span>
-          </button>
-
-          <button
-            type="button"
-            role="menuitem"
-            className="fab-menu-item"
-            onClick={act(onShare)}
-          >
-            <span className="fab-menu-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                <polyline points="16 6 12 2 8 6"/>
-                <line x1="12" y1="2" x2="12" y2="15"/>
-              </svg>
-            </span>
-            <span className="fab-menu-label">Partager la fiche</span>
-          </button>
-
-          <div className="fab-menu-separator" role="separator" />
-
-          <button
-            type="button"
-            role="menuitem"
-            className="fab-menu-item fab-menu-item--danger"
-            onClick={act(onDelete)}
-          >
-            <span className="fab-menu-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="3 6 5 6 21 6"/>
-                <path d="M19 6l-1.5 14a2 2 0 0 1-2 1.8H8.5a2 2 0 0 1-2-1.8L5 6"/>
-                <path d="M10 11v6"/>
-                <path d="M14 11v6"/>
-                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-              </svg>
-            </span>
-            <span className="fab-menu-label">Supprimer la fiche</span>
-          </button>
         </div>
       )}
 
@@ -314,7 +229,7 @@ export default function FicheFAB({
         onClick={toggle}
         aria-expanded={state !== 'closed'}
         aria-haspopup="menu"
-        aria-label={state === 'closed' ? 'Actions sur la fiche, menu fermé' : 'Actions sur la fiche, menu ouvert'}
+        aria-label={state === 'closed' ? 'Ajouter un proche, menu fermé' : 'Ajouter un proche, menu ouvert'}
       >
         <svg className="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
           <line x1="12" y1="5" x2="12" y2="19" />
