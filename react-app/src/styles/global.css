@@ -9642,8 +9642,13 @@ button.parent-card { width: 100%; }
   background: color-mix(in srgb, var(--terracotta, #c9643a) 14%, transparent);
 }
 
-/* Parent card & child chip : cohabitation bouton + body cliquable */
+/* Parent card : cohabitation bouton-body + menu ⋯
+ * Quand on a un menu, le .parent-card devient block layout et c'est
+ * .parent-card-body qui porte la grille 3 colonnes (avatar / main / arrow).
+ */
 .parent-card--has-menu {
+  display: block;
+  padding: 0;
   position: relative;
 }
 .parent-card--has-menu .card-menu-btn {
@@ -9655,35 +9660,42 @@ button.parent-card { width: 100%; }
 .parent-card-body {
   appearance: none;
   border: none;
-  background: inherit;
+  background: transparent;
   color: inherit;
-  display: flex;
-  align-items: center;
+  font: inherit;
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
   gap: 14px;
-  padding: inherit;
+  align-items: center;
+  padding: 14px 16px;
+  padding-right: 44px; /* espace pour le ⋯ */
   margin: 0;
   width: 100%;
   text-align: left;
   cursor: pointer;
-  font: inherit;
   border-radius: inherit;
 }
 .parent-card-body--static {
   cursor: default;
 }
-.parent-card--has-menu .parent-card-body {
-  padding-right: 44px; /* laisse de la place au ⋯ */
-}
 
+/* Child chip : meme pattern que parent card. Le chip devient un
+ * conteneur positionne, son body porte la grille 3 colonnes.
+ */
 .child-chip--has-menu {
+  display: block;
+  padding: 0;
+  border-left: 0;
   position: relative;
-  display: inline-flex;
-  align-items: stretch;
+}
+.child-chip--has-menu:hover {
+  border-left-color: transparent;
 }
 .child-chip--has-menu .card-menu-btn {
   position: absolute;
-  top: 4px;
+  top: 50%;
   right: 4px;
+  transform: translateY(-50%);
   z-index: 2;
   width: 22px;
   height: 22px;
@@ -9694,22 +9706,26 @@ button.parent-card { width: 100%; }
 }
 .child-chip-body {
   appearance: none;
-  border: none;
-  background: inherit;
+  border: 0;
+  border-left: 2px solid transparent;
+  background: transparent;
   color: inherit;
   font: inherit;
-  display: inline-flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
   gap: 8px;
-  padding: inherit;
+  align-items: center;
+  padding: 8px 28px 8px 8px; /* room for ⋯ on right */
   margin: 0;
   width: 100%;
   cursor: pointer;
   border-radius: inherit;
   text-align: left;
+  transition: background 160ms ease, border-left-color 160ms ease;
 }
-.child-chip--has-menu .child-chip-body {
-  padding-right: 28px;
+.child-chip--has-menu .child-chip-body:hover {
+  background: var(--bg-elev-2, #252018);
+  border-left-color: var(--ocre, #d4a84a);
 }
 
 /* Foyer header : le ⋯ se glisse en bout de ligne (après foyer-count) */
