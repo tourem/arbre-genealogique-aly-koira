@@ -1,6 +1,8 @@
 node_modules/
 dist/
 .env
+.env.*
+!.env.example
 .pid
 .DS_Store
 
@@ -20,6 +22,8 @@ react-app/debug/
 react-app/node_modules/
 react-app/dist/
 react-app/.env
+react-app/.env.*
+!react-app/.env.example
 react-app/.vite-dev.pid
 
 # Working notes, screenshots, prompts

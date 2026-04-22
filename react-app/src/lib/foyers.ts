@@ -90,13 +90,14 @@ export function computeFoyers(person: Member, members: MemberDict): Foyer[] {
   return foyers;
 }
 
+import { formatOrdinal } from './ordinal';
+
 /**
- * Label textuel du rang, selon le sexe du conjoint.
- * Ex : rank=1, spouse=female → "1ère épouse"
- *      rank=3, spouse=male   → "3ème époux"
+ * Label textuel du rang, selon le sexe du conjoint, avec exposant unicode.
+ * Ex : rank=1, spouse=female → "1ʳᵉ épouse"
+ *      rank=3, spouse=male   → "3ᵉ époux"
  */
 export function rankLabel(rank: number, spouseGender: 'M' | 'F'): string {
   const role = spouseGender === 'M' ? 'époux' : 'épouse';
-  if (rank === 1) return `1${spouseGender === 'M' ? 'er' : 'ère'} ${role}`;
-  return `${rank}ème ${role}`;
+  return `${formatOrdinal(rank, spouseGender)} ${role}`;
 }

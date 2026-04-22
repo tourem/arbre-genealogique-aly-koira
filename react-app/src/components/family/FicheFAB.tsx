@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { Member } from '../../lib/types';
-import type { Foyer } from '../../lib/foyers';
+import { rankLabel, type Foyer } from '../../lib/foyers';
 import Avatar from '../ui/Avatar';
 
 interface Props {
@@ -278,7 +278,7 @@ export default function FicheFAB({
                 <span className="fab-menu-foyer-main">
                   <span className="fab-menu-foyer-name">{spouseName}</span>
                   <span className="fab-menu-foyer-meta">
-                    {f.rank}{f.rank === 1 ? 'ère' : 'ème'} {person.gender === 'M' ? 'épouse' : 'époux'} · {childCount} enfant{childCount !== 1 ? 's' : ''}
+                    {rankLabel(f.rank, f.spouse?.gender ?? (person.gender === 'M' ? 'F' : 'M'))} · {childCount} enfant{childCount !== 1 ? 's' : ''}
                   </span>
                 </span>
               </button>

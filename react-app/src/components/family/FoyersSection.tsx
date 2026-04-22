@@ -26,8 +26,13 @@ export default function FoyersSection({ person, members, onNavigate, onInfo }: P
             <SonghayTerm term="windi" variant="inline" />
           </span>
         </h2>
-        <span className="foyers-section-count" aria-label={`${foyers.length} foyer${foyers.length > 1 ? 's' : ''}, ${totalChildren} enfants`}>
-          {foyers.length} · {totalChildren} enfant{totalChildren !== 1 ? 's' : ''}
+        <span
+          className="foyers-section-count"
+          aria-label={`${foyers.length} foyer${foyers.length > 1 ? 's' : ''}, ${totalChildren} enfant${totalChildren > 1 ? 's' : ''} au total`}
+        >
+          {foyers.length === 1
+            ? `${totalChildren} enfant${totalChildren > 1 ? 's' : ''} au total`
+            : `${foyers.length} foyers · ${totalChildren} enfant${totalChildren > 1 ? 's' : ''}`}
         </span>
       </header>
       <div className="foyers-list">

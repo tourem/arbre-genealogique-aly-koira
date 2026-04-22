@@ -77,13 +77,13 @@ describe('computeFoyers', () => {
 });
 
 describe('rankLabel', () => {
-  it('formats 1ère épouse for a female first spouse', () => {
-    expect(rankLabel(1, 'F')).toBe('1ère épouse');
+  it('formats "1ʳᵉ épouse" for a female first spouse', () => {
+    expect(rankLabel(1, 'F')).toBe('1ʳᵉ épouse');
   });
-  it('formats 2ème époux for a male second spouse', () => {
-    expect(rankLabel(2, 'M')).toBe('2ème époux');
+  it('formats "2ᵉ époux" for a male second spouse', () => {
+    expect(rankLabel(2, 'M')).toBe('2ᵉ époux');
   });
-  it('formats 3ème épouse', () => {
-    expect(rankLabel(3, 'F')).toBe('3ème épouse');
+  it('formats "3ᵉ épouse"', () => {
+    expect(rankLabel(3, 'F')).toBe('3ᵉ épouse');
   });
 });

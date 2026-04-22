@@ -124,10 +124,26 @@ function ParentCard({
     );
   }
 
-  // Parent inconnu : carte placeholder discrète.
+  // Parent inconnu : carte placeholder allégée + cliquable pour ajouter.
   return (
-    <div className={`parent-card parent-card--${role} parent-card--unknown`} aria-label={`${roleLabel} inconnu`}>
-      <div className="parent-card-avatar parent-card-avatar--placeholder" aria-hidden="true">?</div>
+    <button
+      type="button"
+      className={`parent-card parent-card--${role} parent-card--unknown`}
+      aria-label={`Ajouter ${role === 'father' ? 'le père' : 'la mère'} manquant${role === 'mother' ? 'e' : ''}`}
+      onClick={() => {
+        // TODO: wire add-parent modal (Phase ultérieure via FAB > « Compléter un parent »).
+        // eslint-disable-next-line no-console
+        console.log('add parent', role);
+      }}
+    >
+      <div className="parent-card-avatar parent-card-avatar--placeholder" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="11" cy="8" r="4" />
+          <path d="M3 22v-2a6 6 0 0 1 6-6h3" />
+          <line x1="19" y1="14" x2="19" y2="20" />
+          <line x1="16" y1="17" x2="22" y2="17" />
+        </svg>
+      </div>
       <div className="parent-card-main">
         <div className="parent-card-role">
           <span>{roleLabel}</span>
@@ -135,8 +151,11 @@ function ParentCard({
           <SonghayTerm term={songhayTerm} variant="inline" />
         </div>
         <div className="parent-card-name parent-card-name--muted">Non renseigné</div>
+        <div className="parent-card-add-hint">
+          {role === 'father' ? '+ Ajouter le père' : '+ Ajouter la mère'}
+        </div>
       </div>
-    </div>
+    </button>
   );
 }
 

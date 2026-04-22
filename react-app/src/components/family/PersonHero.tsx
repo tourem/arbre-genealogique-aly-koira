@@ -1,6 +1,6 @@
 import type { Member, MemberDict } from '../../lib/types';
-import { genNames } from '../../lib/constants';
 import { resolveTags } from '../../lib/culturalTags';
+import { formatOrdinal } from '../../lib/ordinal';
 import Avatar from '../ui/Avatar';
 import SonghayTerm from '../ui/SonghayTerm';
 
@@ -14,7 +14,9 @@ interface Props {
 export default function PersonHero({ person, members, spouseCount = 0, childrenCount = 0 }: Props) {
   const isMale = person.gender === 'M';
   const tags = resolveTags(person, members);
-  const genLabel = genNames[person.generation] ?? `${person.generation}`;
+  const genText = person.generation === 0
+    ? 'Ancêtre'
+    : `${formatOrdinal(person.generation, 'F')} génération`;
 
   return (
     <section className="person-hero" aria-labelledby="person-hero-name">
@@ -33,7 +35,7 @@ export default function PersonHero({ person, members, spouseCount = 0, childrenC
             <span className={`sex-glyph ${isMale ? 'sex-glyph--male' : 'sex-glyph--female'}`} aria-hidden="true">
               {isMale ? '♂' : '♀'}
             </span>
-            <span>{genLabel} génération</span>
+            <span>{genText}</span>
           </span>
 
           {person.alias && (
@@ -70,12 +72,16 @@ export default function PersonHero({ person, members, spouseCount = 0, childrenC
         {spouseCount > 0 && (
           <div className="person-hero-stat">
             <div className="person-hero-stat-num">{spouseCount}</div>
-            <div className="person-hero-stat-label">{isMale ? 'Épouses' : 'Époux'}</div>
+            <div className="person-hero-stat-label">
+              {isMale
+                ? (spouseCount > 1 ? 'Épouses' : 'Épouse')
+                : 'Époux'}
+            </div>
           </div>
         )}
         <div className="person-hero-stat">
           <div className="person-hero-stat-num">{childrenCount}</div>
-          <div className="person-hero-stat-label">Enfants</div>
+          <div className="person-hero-stat-label">{childrenCount > 1 ? 'Enfants' : 'Enfant'}</div>
         </div>
       </div>
 
