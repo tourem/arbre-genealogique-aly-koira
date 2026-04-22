@@ -4,6 +4,7 @@ import type { RelationGroup } from './groupRelations';
 import SubTreeSvg from './SubTreeSvg';
 import TechnicalDetails from './TechnicalDetails';
 import MetricChips from './MetricChips';
+import ButtonTip from './ButtonTip';
 
 interface Props {
   index: number;
@@ -69,17 +70,18 @@ export default function RelationCard({ index, group, personA, personB, getMember
             <MetricChips group={group} />
           </div>
         </button>
-        <button
-          type="button"
-          className="parente-card-collapse"
-          onClick={() => setExpanded((v) => !v)}
-          aria-label={expanded ? 'Replier le détail' : 'Afficher le détail'}
-          title={expanded ? 'Replier le détail' : 'Afficher le détail'}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
+        <ButtonTip label={expanded ? 'Replier le détail' : 'Afficher le détail'}>
+          <button
+            type="button"
+            className="parente-card-collapse"
+            onClick={() => setExpanded((v) => !v)}
+            aria-label={expanded ? 'Replier le détail' : 'Afficher le détail'}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+        </ButtonTip>
       </header>
 
       {expanded && (

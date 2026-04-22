@@ -101,9 +101,25 @@ export default function ParentePage() {
   ) : (
     <>Parenté</>
   );
-  const isMultiPath = groups[0] && groups[0].paths.length > 1;
+  // Somme des chemins détectés sur l'ensemble des groupes : permet d'avoir un
+  // sous-titre informatif quel que soit le cas (1 groupe à N paths OU N groupes
+  // à 1 path chacun se traduisent tous deux par "N lignées distinctes").
+  const totalPaths = groups.reduce((sum, g) => sum + g.paths.length, 0);
+  const pathCountFr = (n: number): string => {
+    if (n === 2) return 'Deux';
+    if (n === 3) return 'Trois';
+    if (n === 4) return 'Quatre';
+    if (n === 5) return 'Cinq';
+    if (n === 6) return 'Six';
+    if (n === 7) return 'Sept';
+    if (n === 8) return 'Huit';
+    if (n === 9) return 'Neuf';
+    return String(n);
+  };
   const viewSub = personA && personB
-    ? (isMultiPath ? 'Deux lignées distinctes relient ces deux personnes' : 'Lien de parenté songhay')
+    ? (totalPaths > 1
+        ? `${pathCountFr(totalPaths)} lignées distinctes relient ces deux personnes`
+        : 'Lien de parenté songhay')
     : 'Sélectionnez deux personnes pour commencer';
 
   const primaryGroup = groups[0];

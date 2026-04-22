@@ -5119,53 +5119,12 @@ flex-shrink:0;
   color: var(--sh-txt);
 }
 
-/* ── Avatar ── */
-.parente-av {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  flex-shrink: 0;
-  position: relative;
-}
-
-.parente-av.f {
-  background: linear-gradient(140deg, #28123E, #3E1E58);
-  color: #CCA0EE;
-  box-shadow: 0 0 0 2px rgba(204,160,238,0.14);
-}
-
-.parente-av.m {
-  background: linear-gradient(140deg, #0E2238, #182E50);
-  color: #72B4EE;
-  box-shadow: 0 0 0 2px rgba(114,180,238,0.14);
-}
-
-.parente-av-g {
-  position: absolute;
-  bottom: -2px;
-  right: -4px;
-  font-family: var(--sh-sans);
-  font-size: 0.48rem;
-  font-weight: 700;
-  padding: 1px 5px;
-  border-radius: 5px;
-}
-
-.parente-av.f .parente-av-g {
-  background: #2A1146;
-  color: #CCA0EE;
-}
-
-.parente-av.m .parente-av-g {
-  background: #122844;
-  color: #72B4EE;
-}
+/* ── Avatar (legacy parente-av : classes retirees, composant <Avatar> utilise partout)
+ * Les anciennes regles (.parente-av.m / .parente-av.f) utilisaient un gradient
+ * bleu marine qui n'est plus dans la palette. Supprimees pour eviter toute
+ * fuite de style en cas de cache ou de composant non migre. Le composant
+ * global <Avatar> (.avatar.avatar--male / .avatar--female) gere les gradients
+ * depuis tokens-v2.css. */
 
 /* ── Swap button ── */
 .parente-sw {
@@ -6666,6 +6625,16 @@ button, a, .nav-item, .header-avatar, .header-search-trigger,
 }
 .avatar.avatar--female {
   background: linear-gradient(135deg, var(--female-from, #c48da5) 0%, var(--female-to, #6a4060) 100%);
+}
+
+/* Defensif : force le gradient ocre/terre-prune sur les avatars PersonPicker
+ * (cote A et cote B) pour se premunir de toute regle heritee (.person-item
+ * .avatar.male, .parente-av.m, etc.) qui aurait pu leaker un gradient bleu. */
+.parente-pc .avatar.avatar--male {
+  background: linear-gradient(135deg, var(--male-from, #e8c472) 0%, var(--male-to, #a07d2b) 100%) !important;
+}
+.parente-pc .avatar.avatar--female {
+  background: linear-gradient(135deg, var(--female-from, #c48da5) 0%, var(--female-to, #6a4060) 100%) !important;
 }
 
 /* Size variants */
@@ -10099,7 +10068,7 @@ button.parente-answer-name:focus-visible {
 
 /* Ligne de réciprocité compacte */
 .parente-reciprocity {
-  margin: 0 0 28px;
+  margin: 0 0 10px;
   padding: 10px 26px;
   color: var(--sh-t2, #b5a891);
   font-size: 13px;
@@ -10444,6 +10413,111 @@ html[data-theme="light"] .parente-legend--attached .dot-pm {
   color: #92700C;
 }
 
+/* B.5 — Nœuds de l'arbre : visibilité en mode clair
+ * Les styles par défaut (rgba(255,255,255,X)) sont invisibles sur fond crème.
+ * On remappe bg, bordures et texte sur la palette light sans changer la sémantique
+ * des rôles (A = bleu, B = terracotta, LCA = or). */
+html[data-theme="light"] .parente-node {
+  background: #FFFFFF;
+  border-color: rgba(42,31,18,0.14);
+  box-shadow: 0 1px 3px rgba(42,31,18,0.06);
+}
+html[data-theme="light"] .parente-node.role-A {
+  background: rgba(76,96,176,0.10);
+  border-color: rgba(76,96,176,0.50);
+}
+html[data-theme="light"] .parente-node.role-B {
+  background: rgba(169,71,38,0.10);
+  border-color: rgba(169,71,38,0.50);
+}
+html[data-theme="light"] .parente-node.role-LCA {
+  background: rgba(146,112,12,0.12);
+  border-color: rgba(146,112,12,0.55);
+}
+html[data-theme="light"] .parente-node-name {
+  color: #1c1c28;
+}
+html[data-theme="light"] .parente-node-term em {
+  color: var(--terracotta, #a94726);
+}
+
+/* B.5bis — Termes songhay du header de bloc résultat (card-title) :
+ * forcer terracotta pour les différencier du terme principal en or du
+ * bloc Réponse. Rétabli en spécificité explicite pour éviter toute
+ * cascade parasite. */
+.parente-card-title em,
+.parente-card-individual-terms em {
+  color: var(--terracotta, #c25c3a);
+}
+html[data-theme="light"] .parente-card-title em,
+html[data-theme="light"] .parente-card-individual-terms em {
+  color: var(--terracotta, #a94726);
+}
+html[data-theme="light"] .parente-node-gloss {
+  color: #5a5f7a;
+}
+html[data-theme="light"] .parente-node-tag {
+  background: #92700C;
+  color: #FFFFFF;
+}
+
+/* B.6 — Légende (variante non-attachée) et pastilles A/B/LCA */
+html[data-theme="light"] .parente-legend {
+  color: #5a5f7a;
+}
+html[data-theme="light"] .parente-legend .dot.a,
+html[data-theme="light"] .parente-legend--attached .dot.a {
+  background: rgba(76,96,176,0.80);
+}
+html[data-theme="light"] .parente-legend .dot.b,
+html[data-theme="light"] .parente-legend--attached .dot.b {
+  background: rgba(169,71,38,0.80);
+}
+html[data-theme="light"] .parente-legend .dot.lca,
+html[data-theme="light"] .parente-legend--attached .dot.lca {
+  background: rgba(146,112,12,0.85);
+}
+html[data-theme="light"] .parente-legend .dot-pm {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.12);
+  color: #92700C;
+}
+
+/* B.7 — Contrôles de zoom en mode clair */
+html[data-theme="light"] .parente-zoom-controls {
+  background: rgba(255,255,255,0.95);
+  color: #1c1c28;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+html[data-theme="light"] .parente-zoom-controls button {
+  border-color: rgba(0,0,0,0.18);
+  color: #1c1c28;
+}
+html[data-theme="light"] .parente-zoom-controls button:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+/* B.8 — Plein écran en mode clair */
+html[data-theme="light"] .parente-fullscreen {
+  background: rgba(42,31,18,0.55);
+}
+html[data-theme="light"] .parente-fullscreen-header {
+  background: #FFFFFF;
+  border-bottom-color: rgba(0,0,0,0.08);
+}
+html[data-theme="light"] .parente-fullscreen-title {
+  color: #92700C;
+}
+html[data-theme="light"] .parente-fullscreen-close {
+  color: #5a5f7a;
+}
+html[data-theme="light"] .parente-fullscreen-close:hover {
+  color: #1c1c28;
+}
+html[data-theme="light"] .parente-fullscreen-body .parente-subtree-viewport {
+  background: #FAF7F0;
+}
+
 /* =============================================================
  * Parenté v2 — Phase C (métriques tooltips + collapse + responsive)
  * ============================================================= */
@@ -10527,7 +10601,7 @@ html[data-theme="light"] .parente-legend--attached .dot-pm {
   display: inline-flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 2px;
+  margin-top: 10px;
 }
 .parente-metric-chip {
   position: relative;
@@ -10563,11 +10637,14 @@ html[data-theme="light"] .parente-legend--attached .dot-pm {
   color: var(--sh-t3, #746a5a);
   font-size: 10px;
   margin-left: 2px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+svg.parente-metric-chip-info {
+  opacity: 0.75;
 }
 .parente-metric-chip-tooltip {
   position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
   z-index: 50;
   min-width: 220px;
   max-width: 300px;
@@ -10583,11 +10660,104 @@ html[data-theme="light"] .parente-legend--attached .dot-pm {
   white-space: normal;
   text-align: left;
   cursor: default;
-  animation: parente-metric-tooltip-in 0.14s ease-out;
 }
-@keyframes parente-metric-tooltip-in {
+/* Placement adaptatif : vertical (above/below) x horizontal (start/end) */
+.parente-metric-chip.tip-below .parente-metric-chip-tooltip {
+  top: calc(100% + 8px);
+  bottom: auto;
+  animation: parente-metric-tooltip-in-below 0.14s ease-out;
+}
+.parente-metric-chip.tip-above .parente-metric-chip-tooltip {
+  bottom: calc(100% + 8px);
+  top: auto;
+  animation: parente-metric-tooltip-in-above 0.14s ease-out;
+}
+.parente-metric-chip.tip-align-start .parente-metric-chip-tooltip {
+  left: 0;
+  right: auto;
+}
+.parente-metric-chip.tip-align-end .parente-metric-chip-tooltip {
+  right: 0;
+  left: auto;
+}
+@keyframes parente-metric-tooltip-in-below {
   from { opacity: 0; transform: translateY(-4px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes parente-metric-tooltip-in-above {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ButtonTip : tooltip compact pour boutons-icone (chevron de repli, etc.)
+ * Meme palette que .parente-metric-chip-tooltip mais plus petit. */
+.parente-button-tip-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.parente-button-tip {
+  position: absolute;
+  z-index: 60;
+  padding: 5px 9px;
+  background: var(--sh-elev, #252018);
+  border: 1px solid var(--sh-bdr, rgba(244,236,216,0.14));
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  font-family: var(--sh-sans, 'Inter', sans-serif);
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--sh-txt, #f4ecd8);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.parente-button-tip-wrap.tip-below .parente-button-tip {
+  top: calc(100% + 6px);
+  animation: parente-button-tip-in-below 0.14s ease-out;
+}
+.parente-button-tip-wrap.tip-above .parente-button-tip {
+  bottom: calc(100% + 6px);
+  animation: parente-button-tip-in-above 0.14s ease-out;
+}
+.parente-button-tip-wrap.tip-align-center .parente-button-tip {
+  left: 50%;
+  transform: translateX(-50%);
+}
+.parente-button-tip-wrap.tip-align-start .parente-button-tip {
+  left: 0;
+}
+.parente-button-tip-wrap.tip-align-end .parente-button-tip {
+  right: 0;
+}
+/* Les animations s'appliquent en respectant la translation horizontale eventuelle. */
+.parente-button-tip-wrap.tip-align-center.tip-below .parente-button-tip {
+  animation-name: parente-button-tip-in-below-center;
+}
+.parente-button-tip-wrap.tip-align-center.tip-above .parente-button-tip {
+  animation-name: parente-button-tip-in-above-center;
+}
+@keyframes parente-button-tip-in-below {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes parente-button-tip-in-above {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes parente-button-tip-in-below-center {
+  from { opacity: 0; transform: translate(-50%, -3px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes parente-button-tip-in-above-center {
+  from { opacity: 0; transform: translate(-50%, 3px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+html[data-theme="light"] .parente-button-tip {
+  background: #FFFFFF;
+  border-color: rgba(0,0,0,0.12);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.14);
+  color: #1c1c28;
 }
 
 /* Light theme */
@@ -10676,6 +10846,12 @@ html[data-theme="light"] .parente-metric-chip-tooltip {
   padding-bottom: 28px;
   margin-bottom: 28px;
   border-bottom: 1px dashed color-mix(in srgb, var(--sh-gold, #d4a84a) 18%, transparent);
+}
+/* Le bloc resultat (.parente-card) a deja son propre padding interne via
+ * .parente-card-header et .parente-card-body — on neutralise le padding
+ * externe hérité pour éviter un stack (>70px entre reciprocity et titre). */
+.parente-result-section > .parente-card {
+  padding: 0;
 }
 .parente-result-section:last-of-type {
   border-bottom: 0;
