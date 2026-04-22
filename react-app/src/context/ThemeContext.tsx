@@ -16,10 +16,9 @@ function getInitialTheme(): Theme {
   } catch {
     // localStorage unavailable
   }
-  // Premier chargement : respecter la préférence système si disponible.
-  if (typeof window !== 'undefined' && window.matchMedia) {
-    if (window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
-  }
+  // Premier chargement : toujours dark par defaut (identite visuelle de l'app).
+  // La preference OS n'est pas respectee ici — l'utilisateur peut basculer
+  // via le toggle dans le menu profil, et son choix sera persiste.
   return 'dark';
 }
 
