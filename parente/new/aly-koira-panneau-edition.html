@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aly Koïra · Panneau d'édition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root[data-theme="dark"] {
+  --bg: #15120e;
+  --bg-elev: #1d1812;
+  --bg-elev-2: #252018;
+  --bg-deep: #0d0b08;
+  --ink: #f4ecd8;
+  --ink-mute: #b5a891;
+  --ink-faint: #746a5a;
+  --ocre: #d4a84a;
+  --ocre-dark: #a07d2b;
+  --ocre-light: #e8c472;
+  --terracotta: #c25c3a;
+  --terracotta-dark: #8f3f25;
+  --sauge: #7a8868;
+  --prune: #6a4060;
+  --male-from: #d4a84a;
+  --male-to: #a07d2b;
+  --female-from: #c89a8a;
+  --female-to: #6a4060;
+  --line: #3d342a;
+  --line-soft: #2a231c;
+  --shadow: 0 16px 40px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+  --backdrop: rgba(13, 11, 8, 0.65);
+}
+
+:root[data-theme="light"] {
+  --bg: #faf5e8;
+  --bg-elev: #fffbf0;
+  --bg-elev-2: #fff8e6;
+  --bg-deep: #f2ead4;
+  --ink: #2a1f12;
+  --ink-mute: #6b5a40;
+  --ink-faint: #a39480;
+  --ocre: #b8862a;
+  --ocre-dark: #8c641a;
+  --ocre-light: #d4a84a;
+  --terracotta: #a8472a;
+  --terracotta-dark: #7a321a;
+  --sauge: #5a6d4a;
+  --prune: #7a4870;
+  --male-from: #d4a84a;
+  --male-to: #8c641a;
+  --female-from: #c89a8a;
+  --female-to: #7a4870;
+  --line: #d4c4a0;
+  --line-soft: #e8dcbd;
+  --shadow: 0 16px 40px rgba(106, 64, 40, 0.12), 0 4px 12px rgba(106, 64, 40, 0.08);
+  --backdrop: rgba(42, 31, 18, 0.3);
+}
+
+:root {
+  --radius: 6px;
+  --radius-lg: 10px;
+  --panel-width: 440px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(212, 168, 74, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(194, 92, 58, 0.05) 0%, transparent 50%);
+  z-index: 0;
+}
+
+/* =========================================================
+   HEADER de page pour la démo (context seulement)
+   ========================================================= */
+.demo-header {
+  position: sticky;
+  top: 0;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line-soft);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+}
+.demo-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+.demo-title em { font-style: italic; color: var(--ocre); font-weight: 400; }
+.demo-actions { display: flex; gap: 10px; }
+.demo-btn {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.demo-btn:hover { border-color: var(--ocre); color: var(--ocre); }
+.demo-btn.primary {
+  background: linear-gradient(135deg, var(--ocre-light), var(--ocre-dark));
+  border-color: var(--ocre-dark);
+  color: var(--bg-deep);
+  font-weight: 600;
+}
+.demo-btn.primary:hover {
+  color: var(--bg-deep);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   FICHE EN ARRIÈRE-PLAN (statique, pour le contexte visuel)
+   ========================================================= */
+.fake-page {
+  position: relative;
+  z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 24px 120px;
+}
+
+.fake-hero {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 24px;
+  align-items: start;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line-soft);
+  margin-bottom: 36px;
+}
+.avatar-lg {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--male-from) 0%, var(--male-to) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 28px;
+  color: var(--bg-deep);
+  position: relative;
+  letter-spacing: -0.02em;
+}
+.avatar-lg .gen-badge {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  background: var(--ocre);
+  color: var(--bg-deep);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  border: 2px solid var(--bg);
+}
+.fake-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 36px;
+  letter-spacing: -0.025em;
+}
+.fake-name em {
+  font-style: italic;
+  color: var(--ocre);
+  font-weight: 400;
+  font-size: 22px;
+  margin-left: 8px;
+}
+.fake-meta {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+.fake-section-placeholder {
+  background: var(--bg-elev);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+.fake-bar {
+  height: 10px;
+  background: var(--line-soft);
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+.fake-bar.short { width: 30%; }
+.fake-bar.medium { width: 65%; }
+.fake-bar.long { width: 90%; }
+
+/* =========================================================
+   OVERLAY + PANNEAU D'ÉDITION
+   ========================================================= */
+.edit-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--backdrop);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.edit-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.edit-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: var(--panel-width);
+  max-width: 100vw;
+  background: var(--bg-elev);
+  border-left: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  z-index: 51;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.edit-panel.open { transform: translateX(0); }
+
+/* Header du panneau */
+.panel-header {
+  padding: 18px 24px 16px;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.panel-title-wrap { flex: 1; min-width: 0; }
+.panel-eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-faint);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.panel-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  line-height: 1.15;
+}
+.panel-title em {
+  font-style: italic;
+  color: var(--ocre);
+  font-weight: 400;
+  font-size: 17px;
+  margin-left: 4px;
+}
+.panel-close {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line-soft);
+  background: transparent;
+  color: var(--ink-mute);
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.panel-close:hover {
+  border-color: var(--terracotta);
+  color: var(--terracotta);
+}
+.panel-close svg {
+  width: 14px; height: 14px;
+  stroke: currentColor; fill: none; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Corps scrollable */
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px 24px;
+}
+.panel-body::-webkit-scrollbar { width: 8px; }
+.panel-body::-webkit-scrollbar-track { background: transparent; }
+.panel-body::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+
+/* Sections du formulaire */
+.form-section {
+  margin-bottom: 28px;
+}
+.form-section:last-child { margin-bottom: 0; }
+.form-section-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ocre);
+  margin-bottom: 14px;
+  letter-spacing: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.form-section-title .count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-faint);
+  margin-left: auto;
+  font-weight: 400;
+}
+.form-section.collapsed .form-section-body { display: none; }
+.form-section-title.collapsible {
+  cursor: pointer;
+  user-select: none;
+}
+.form-section-title.collapsible::after {
+  content: '▾';
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--ink-faint);
+  transition: transform 0.2s;
+}
+.form-section.collapsed .form-section-title.collapsible::after {
+  transform: rotate(-90deg);
+}
+.form-section.collapsed .form-section-title .count { display: none; }
+
+/* Champs */
+.form-field {
+  margin-bottom: 16px;
+}
+.form-field:last-child { margin-bottom: 0; }
+
+.form-label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-mute);
+}
+.form-label .songhay {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ocre);
+  font-size: 12px;
+}
+.form-label .required {
+  color: var(--terracotta);
+  font-weight: 400;
+  font-size: 10px;
+  margin-left: auto;
+}
+.form-label .hint-btn {
+  background: transparent;
+  border: none;
+  color: var(--ink-faint);
+  cursor: help;
+  padding: 0;
+  margin-left: 4px;
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.form-label .hint-btn:hover { color: var(--ocre); }
+
+.form-input {
+  width: 100%;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.form-input::placeholder { color: var(--ink-faint); font-style: italic; }
+.form-input:focus {
+  outline: none;
+  border-color: var(--ocre);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ocre) 15%, transparent);
+}
+.form-input.nickname {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ocre);
+}
+.form-input.changed {
+  border-color: var(--ocre);
+  background: color-mix(in srgb, var(--ocre) 4%, var(--bg-deep));
+}
+.form-help {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--ink-faint);
+  line-height: 1.4;
+}
+
+/* Segmented control (pour le sexe) */
+.segmented {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  padding: 3px;
+  border-radius: var(--radius);
+}
+.segmented-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 8px 10px;
+  border-radius: calc(var(--radius) - 2px);
+  color: var(--ink-mute);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.segmented-btn:hover { color: var(--ink); }
+.segmented-btn.active {
+  background: var(--bg-elev-2);
+  color: var(--ocre);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.segmented-btn .glyph { font-size: 14px; }
+
+/* Tags culturels */
+.cultural-tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+.cultural-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 8px;
+  background: color-mix(in srgb, var(--ocre) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ocre) 30%, transparent);
+  border-radius: 20px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: var(--ocre);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.cultural-tag:hover { background: color-mix(in srgb, var(--ocre) 18%, transparent); }
+.cultural-tag.suggested {
+  background: transparent;
+  border-style: dashed;
+  color: var(--ink-mute);
+  border-color: var(--line);
+}
+.cultural-tag.suggested:hover {
+  border-color: var(--ocre);
+  color: var(--ocre);
+}
+.cultural-tag .dot {
+  width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+}
+.cultural-tag.suggested .dot { background: transparent; border: 1px solid currentColor; }
+.cultural-tag .remove {
+  margin-left: 2px;
+  color: currentColor;
+  opacity: 0.5;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1;
+}
+.cultural-tag .remove:hover { opacity: 1; }
+.cultural-tag-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: transparent;
+  border: 1px dashed var(--line);
+  border-radius: 20px;
+  color: var(--ink-mute);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.cultural-tag-add:hover {
+  border-color: var(--ocre);
+  color: var(--ocre);
+  border-style: solid;
+}
+
+/* Section disabled/placeholder pour les futurs champs */
+.coming-soon {
+  padding: 14px 16px;
+  background: var(--bg-deep);
+  border: 1px dashed var(--line-soft);
+  border-radius: var(--radius);
+  text-align: center;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+/* Footer utilitaire (ID + méta techniques) */
+.panel-tech-footer {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-soft);
+}
+.panel-tech-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-faint);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.id-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  margin-bottom: 6px;
+}
+.id-row-label {
+  font-size: 10px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  flex-shrink: 0;
+  width: 60px;
+}
+.id-row-value {
+  flex: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-mute);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  user-select: all;
+}
+.id-row-copy {
+  background: transparent;
+  border: 1px solid var(--line-soft);
+  color: var(--ink-mute);
+  padding: 5px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.id-row-copy:hover {
+  border-color: var(--ocre);
+  color: var(--ocre);
+}
+.id-row-copy svg {
+  width: 12px; height: 12px;
+  stroke: currentColor; fill: none; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.id-row-copy.copied {
+  border-color: var(--sauge);
+  color: var(--sauge);
+}
+
+.audit-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: var(--ink-faint);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Zone de danger */
+.danger-zone {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--terracotta) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--terracotta) 25%, transparent);
+  border-radius: var(--radius);
+}
+.danger-zone-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--terracotta);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.danger-btn {
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--terracotta) 40%, transparent);
+  color: var(--terracotta);
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.danger-btn:hover {
+  background: color-mix(in srgb, var(--terracotta) 12%, transparent);
+  border-color: var(--terracotta);
+}
+.danger-btn svg {
+  width: 13px; height: 13px;
+  stroke: currentColor; fill: none; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.danger-hint {
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+/* Footer du panneau (actions) */
+.panel-footer {
+  padding: 14px 24px;
+  border-top: 1px solid var(--line-soft);
+  background: var(--bg-elev);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.footer-state {
+  flex: 1;
+  font-size: 12px;
+  color: var(--ink-faint);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.footer-state.dirty { color: var(--ocre); }
+.footer-state.saved { color: var(--sauge); }
+.footer-state .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 9px 18px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn:hover { border-color: var(--ocre); color: var(--ocre); }
+.btn.primary {
+  background: linear-gradient(135deg, var(--ocre-light), var(--ocre-dark));
+  color: var(--bg-deep);
+  border-color: var(--ocre-dark);
+  font-weight: 600;
+}
+.btn.primary:hover {
+  transform: translateY(-1px);
+  color: var(--bg-deep);
+  border-color: var(--ocre-dark);
+}
+.btn.primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================================================
+   TOAST de confirmation
+   ========================================================= */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg-elev-2);
+  border: 1px solid var(--sauge);
+  color: var(--ink);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast-dot {
+  width: 8px; height: 8px;
+  background: var(--sauge);
+  border-radius: 50%;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 720px) {
+  :root { --panel-width: 100vw; }
+
+  .edit-panel {
+    top: auto;
+    bottom: 0;
+    height: 92vh;
+    height: 92dvh;
+    width: 100vw;
+    border-left: none;
+    border-top: 1px solid var(--line);
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    transform: translateY(100%);
+  }
+  .edit-panel.open { transform: translateY(0); }
+
+  /* Handle de drag pour mobile */
+  .panel-header { padding-top: 10px; }
+  .panel-header::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+  }
+  .panel-header {
+    position: relative;
+    padding-top: 24px;
+  }
+
+  .fake-hero {
+    grid-template-columns: 64px 1fr;
+    gap: 16px;
+  }
+  .avatar-lg { width: 64px; height: 64px; font-size: 22px; }
+  .fake-name { font-size: 26px; }
+  .fake-page { padding: 20px 16px 100px; }
+  .demo-header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+  .demo-title { font-size: 16px; }
+
+  .panel-footer {
+    padding: 14px 20px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     HEADER de démo (pour ouvrir/fermer le panneau)
+     ========================================================= -->
+<header class="demo-header">
+  <div class="demo-title">Aly K<em>oï</em>ra · Démo panneau d'édition</div>
+  <div class="demo-actions">
+    <button class="demo-btn" onclick="toggleTheme()">
+      <span id="theme-icon">☾</span>
+      <span id="theme-label">Clair</span>
+    </button>
+    <button class="demo-btn primary" onclick="openPanel()">Ouvrir le panneau d'édition</button>
+  </div>
+</header>
+
+<!-- =========================================================
+     FICHE EN ARRIÈRE-PLAN (contexte visuel)
+     ========================================================= -->
+<main class="fake-page">
+  <section class="fake-hero">
+    <div class="avatar-lg">AA<span class="gen-badge">G5</span></div>
+    <div>
+      <h1 class="fake-name">Ali Alkamahamane <em>Aly Koïra</em></h1>
+      <div class="fake-meta">♂ · 5ᵉ génération · koda (suggéré)</div>
+    </div>
+    <div style="text-align: right;">
+      <div style="font-family: 'Fraunces', serif; font-size: 26px; font-weight: 500;">3</div>
+      <div style="font-size: 10px; letter-spacing: 0.14em; color: var(--ink-faint); margin-top: 2px;">ÉPOUSES</div>
+    </div>
+  </section>
+
+  <div style="margin-bottom: 24px;">
+    <div style="font-family: 'Fraunces', serif; font-size: 16px; margin-bottom: 14px;">Parents</div>
+    <div class="fake-section-placeholder">
+      <div class="fake-bar short"></div>
+      <div class="fake-bar long"></div>
+      <div class="fake-bar medium"></div>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-family: 'Fraunces', serif; font-size: 16px; margin-bottom: 14px;">Foyers <em style="font-style: italic; color: var(--ocre); font-size: 13px;">windi</em></div>
+    <div class="fake-section-placeholder">
+      <div class="fake-bar short"></div>
+      <div class="fake-bar long"></div>
+    </div>
+    <div class="fake-section-placeholder">
+      <div class="fake-bar short"></div>
+      <div class="fake-bar long"></div>
+    </div>
+  </div>
+</main>
+
+<!-- =========================================================
+     OVERLAY + PANNEAU D'ÉDITION
+     ========================================================= -->
+<div class="edit-overlay" id="overlay" onclick="closePanel()"></div>
+
+<aside class="edit-panel" id="panel" role="dialog" aria-labelledby="panel-title" aria-modal="true">
+
+  <!-- Header -->
+  <div class="panel-header">
+    <div class="panel-title-wrap">
+      <div class="panel-eyebrow">Modifier la fiche</div>
+      <h2 class="panel-title" id="panel-title">
+        Ali Alkamahamane
+        <em>Aly Koïra</em>
+      </h2>
+    </div>
+    <button class="panel-close" onclick="closePanel()" aria-label="Fermer le panneau">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- Corps scrollable -->
+  <div class="panel-body">
+
+    <!-- Section 1 : Identité (active aujourd'hui) -->
+    <div class="form-section">
+      <h3 class="form-section-title">Identité</h3>
+      <div class="form-section-body">
+
+        <div class="form-field">
+          <label class="form-label" for="firstname">
+            Prénom
+            <span class="required">requis</span>
+          </label>
+          <input type="text" class="form-input" id="firstname" value="Ali" oninput="markDirty(this)">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="lastname">
+            Nom
+            <span class="required">requis</span>
+          </label>
+          <input type="text" class="form-input" id="lastname" value="Alkamahamane" oninput="markDirty(this)">
+          <div class="form-help">Nom patronymique tel qu'il est inscrit ou transmis oralement.</div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="nickname">
+            Surnom
+            <button type="button" class="hint-btn" title="Nom d'usage, nom de caste, nom honorifique ou sobriquet familial.">(?)</button>
+          </label>
+          <input type="text" class="form-input nickname" id="nickname" value="Aly Koïra" oninput="markDirty(this)">
+          <div class="form-help">S'affiche en italique ocre à côté du nom, et sert d'identifiant dans la famille.</div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Sexe <span class="required">requis</span></label>
+          <div class="segmented" role="radiogroup">
+            <button class="segmented-btn active" role="radio" aria-checked="true" onclick="selectSeg(this)">
+              <span class="glyph">♂</span> Homme
+            </button>
+            <button class="segmented-btn" role="radio" aria-checked="false" onclick="selectSeg(this)">
+              <span class="glyph">♀</span> Femme
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Section 2 : État civil (à venir) -->
+    <div class="form-section collapsed">
+      <h3 class="form-section-title collapsible" onclick="toggleSection(this)">
+        État civil
+        <span class="count">à venir</span>
+      </h3>
+      <div class="form-section-body">
+        <div class="coming-soon">
+          Dates de naissance et de décès, lieu de naissance — à implémenter dans une prochaine version.
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3 : Généalogie (à venir) -->
+    <div class="form-section collapsed">
+      <h3 class="form-section-title collapsible" onclick="toggleSection(this)">
+        Généalogie
+        <span class="count">à venir</span>
+      </h3>
+      <div class="form-section-body">
+        <div class="coming-soon">
+          Modification des parents, foyers, épouses et enfants — à implémenter séparément, via les actions dédiées du FAB.
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4 : Tags culturels (préparée, un seul tag actif) -->
+    <div class="form-section collapsed">
+      <h3 class="form-section-title collapsible" onclick="toggleSection(this)">
+        Tags culturels
+        <span class="count">1 actif · 1 suggéré</span>
+      </h3>
+      <div class="form-section-body">
+        <div class="form-field">
+          <label class="form-label">
+            Marqueurs songhay
+            <span class="songhay">cultural_tags</span>
+          </label>
+          <div class="cultural-tags-wrap">
+            <span class="cultural-tag suggested" title="Tag auto-détecté : dernier-né de la fratrie">
+              <span class="dot"></span>
+              koda
+              <span style="font-style: normal; font-size: 10px; color: var(--ink-faint); margin-left: 4px;">suggéré</span>
+            </span>
+            <button class="cultural-tag-add">+ Ajouter un tag</button>
+          </div>
+          <div class="form-help">
+            Les tags <em style="color: var(--ocre);">suggérés</em> sont calculés automatiquement depuis la structure familiale. Cliquez pour les confirmer et les ajouter explicitement à la fiche.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5 : Notes (à venir) -->
+    <div class="form-section collapsed">
+      <h3 class="form-section-title collapsible" onclick="toggleSection(this)">
+        Notes
+        <span class="count">à venir</span>
+      </h3>
+      <div class="form-section-body">
+        <div class="coming-soon">
+          Anecdotes, précisions orales, références historiques — à implémenter.
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer technique : ID + audit -->
+    <div class="panel-tech-footer">
+      <div class="panel-tech-title">Informations techniques</div>
+
+      <div class="id-row">
+        <span class="id-row-label">ID</span>
+        <span class="id-row-value" id="id-value">7f3a2b8e-4c1d-4e9f-a0b2-5d8c1e4f9a3b</span>
+        <button class="id-row-copy" onclick="copyId(this, '7f3a2b8e-4c1d-4e9f-a0b2-5d8c1e4f9a3b')" id="copy-btn">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span id="copy-label">Copier</span>
+        </button>
+      </div>
+
+      <div class="audit-row">
+        <span>Créé le</span>
+        <span>12 mars 2024 · par abdelltoure</span>
+      </div>
+      <div class="audit-row">
+        <span>Modifié le</span>
+        <span>21 avril 2026 · par ibounia</span>
+      </div>
+
+      <!-- Zone de danger -->
+      <div class="danger-zone">
+        <div class="danger-zone-title">Zone de danger</div>
+        <button class="danger-btn">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          Supprimer cette fiche
+        </button>
+        <div class="danger-hint">
+          La fiche sera archivée pendant 30 jours avant suppression définitive. Les liens familiaux seront conservés et redirigés vers une entrée vide.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer : actions -->
+  <div class="panel-footer">
+    <div class="footer-state" id="footer-state">
+      <span class="dot"></span>
+      <span id="state-label">Aucune modification</span>
+    </div>
+    <button class="btn" onclick="closePanel()">Annuler</button>
+    <button class="btn primary" id="save-btn" disabled onclick="save()">Enregistrer</button>
+  </div>
+
+</aside>
+
+<!-- Toast de confirmation -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg">Fiche enregistrée</span>
+</div>
+
+<script>
+// =========================================================
+// OUVERTURE / FERMETURE du panneau
+// =========================================================
+function openPanel() {
+  document.getElementById('panel').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('firstname').focus(), 350);
+}
+
+function closePanel() {
+  const state = document.getElementById('footer-state');
+  if (state.classList.contains('dirty')) {
+    if (!confirm('Vos modifications ne seront pas enregistrées. Fermer le panneau ?')) return;
+  }
+  document.getElementById('panel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  resetDirty();
+}
+
+// =========================================================
+// DIRTY STATE
+// =========================================================
+function markDirty(el) {
+  el.classList.add('changed');
+  const state = document.getElementById('footer-state');
+  state.classList.remove('saved');
+  state.classList.add('dirty');
+  document.getElementById('state-label').textContent = 'Modifications non enregistrées';
+  document.getElementById('save-btn').disabled = false;
+}
+
+function resetDirty() {
+  document.querySelectorAll('.form-input.changed').forEach(el => el.classList.remove('changed'));
+  const state = document.getElementById('footer-state');
+  state.classList.remove('dirty', 'saved');
+  document.getElementById('state-label').textContent = 'Aucune modification';
+  document.getElementById('save-btn').disabled = true;
+}
+
+function save() {
+  const state = document.getElementById('footer-state');
+  state.classList.remove('dirty');
+  state.classList.add('saved');
+  document.getElementById('state-label').textContent = 'Enregistré';
+  document.getElementById('save-btn').disabled = true;
+  document.querySelectorAll('.form-input.changed').forEach(el => el.classList.remove('changed'));
+  showToast('Fiche enregistrée');
+  setTimeout(() => closePanel(), 900);
+}
+
+// =========================================================
+// SEGMENTED CONTROL
+// =========================================================
+function selectSeg(btn) {
+  btn.parentNode.querySelectorAll('.segmented-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-checked', 'false');
+  });
+  btn.classList.add('active');
+  btn.setAttribute('aria-checked', 'true');
+  markDirty({ classList: { add: () => {} } });
+}
+
+// =========================================================
+// SECTIONS COLLAPSIBLES
+// =========================================================
+function toggleSection(titleEl) {
+  titleEl.parentNode.classList.toggle('collapsed');
+}
+
+// =========================================================
+// COPIE DE L'ID
+// =========================================================
+function copyId(btn, id) {
+  navigator.clipboard.writeText(id).then(() => {
+    btn.classList.add('copied');
+    document.getElementById('copy-label').textContent = 'Copié';
+    showToast('ID copié dans le presse-papiers');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      document.getElementById('copy-label').textContent = 'Copier';
+    }, 2000);
+  }).catch(() => {
+    // Fallback
+    const range = document.createRange();
+    range.selectNodeContents(document.getElementById('id-value'));
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+  });
+}
+
+// =========================================================
+// TOAST
+// =========================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// =========================================================
+// THÈME
+// =========================================================
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-icon').textContent = next === 'dark' ? '☾' : '☼';
+  document.getElementById('theme-label').textContent = next === 'dark' ? 'Clair' : 'Sombre';
+}
+
+// =========================================================
+// ACCESSIBILITÉ : fermeture clavier
+// =========================================================
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.getElementById('panel').classList.contains('open')) {
+    closePanel();
+  }
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && document.getElementById('panel').classList.contains('open')) {
+    if (!document.getElementById('save-btn').disabled) save();
+  }
+});
+
+// Ouvrir automatiquement pour la démo
+setTimeout(openPanel, 300);
+</script>
+
+</body>
+</html>

@@ -22,22 +22,26 @@ export default function AdminPage() {
   const [tab, setTab] = useState<AdminTab>('suggestions');
 
   return (
-    <div className="admin-page">
+    <div className="admin-page admin-v2">
       <div className="scroll" tabIndex={0}>
-        <h2 className="page-title">Administration</h2>
+        <header className="admin-header">
+          <h1 className="admin-title">Administration</h1>
+        </header>
 
-        <div className="adm-tabs">
+        <nav className="admin-tabs" role="tablist" aria-label="Sections administration">
           {(['suggestions', 'members', 'history', 'users', 'parente'] as AdminTab[]).map((t) => (
             <button
               key={t}
-              className={`adm-tab${tab === t ? ' active' : ''}`}
+              role="tab"
+              aria-selected={tab === t}
+              className={`admin-tab${tab === t ? ' is-active' : ''}`}
               onClick={() => setTab(t)}
               type="button"
             >
               {TAB_LABELS[t]}
             </button>
           ))}
-        </div>
+        </nav>
 
         {tab === 'suggestions' && <SuggestionsSection />}
         {tab === 'members' && (
@@ -88,8 +92,15 @@ function SuggestionsSection() {
   return (
     <div className="admin-section">
       {suggestions.length === 0 ? (
-        <div className="empty-state">
-          <p>Aucune suggestion en attente.</p>
+        <div className="admin-empty">
+          <div className="admin-empty-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+          </div>
+          <div className="admin-empty-title">Aucune suggestion en attente</div>
+          <div className="admin-empty-hint">Les contributions des membres apparaîtront ici pour validation.</div>
         </div>
       ) : (
         suggestions.map((s) => (

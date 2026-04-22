@@ -1,0 +1,2334 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aly Koïra · Refonte design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   TOKENS — modes sombre et clair
+   ========================================================================== */
+:root[data-theme="dark"] {
+  --bg: #15120e;
+  --bg-elev: #1d1812;
+  --bg-elev-2: #252018;
+  --bg-deep: #0d0b08;
+  --ink: #f4ecd8;
+  --ink-mute: #b5a891;
+  --ink-faint: #746a5a;
+  --ocre: #d4a84a;
+  --ocre-dark: #a07d2b;
+  --ocre-light: #e8c472;
+  --terracotta: #c25c3a;
+  --terracotta-dark: #8f3f25;
+  --sauge: #7a8868;
+  --prune: #6a4060;
+  --male-from: #d4a84a;
+  --male-to: #a07d2b;
+  --female-from: #c89a8a;
+  --female-to: #6a4060;
+  --line: #3d342a;
+  --line-soft: #2a231c;
+  --shadow: 0 16px 40px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+  --backdrop: rgba(13, 11, 8, 0.6);
+}
+
+:root[data-theme="light"] {
+  --bg: #faf5e8;
+  --bg-elev: #fffbf0;
+  --bg-elev-2: #fff8e6;
+  --bg-deep: #f2ead4;
+  --ink: #2a1f12;
+  --ink-mute: #6b5a40;
+  --ink-faint: #a39480;
+  --ocre: #b8862a;
+  --ocre-dark: #8c641a;
+  --ocre-light: #d4a84a;
+  --terracotta: #a8472a;
+  --terracotta-dark: #7a321a;
+  --sauge: #5a6d4a;
+  --prune: #7a4870;
+  --male-from: #d4a84a;
+  --male-to: #8c641a;
+  --female-from: #c89a8a;
+  --female-to: #7a4870;
+  --line: #d4c4a0;
+  --line-soft: #e8dcbd;
+  --shadow: 0 16px 40px rgba(106, 64, 40, 0.12), 0 4px 12px rgba(106, 64, 40, 0.08);
+  --backdrop: rgba(42, 31, 18, 0.3);
+}
+
+:root {
+  --radius: 6px;
+  --radius-lg: 10px;
+  --container: 1080px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  font-feature-settings: "ss01", "cv11";
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(212, 168, 74, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(194, 92, 58, 0.05) 0%, transparent 50%);
+  z-index: 0;
+}
+
+:root[data-theme="light"] body::before {
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(212, 168, 74, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(194, 92, 58, 0.08) 0%, transparent 50%);
+}
+
+/* ==========================================================================
+   TOPBAR
+   ========================================================================== */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line-soft);
+}
+.topbar-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, var(--ocre-light) 0%, var(--ocre-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  color: var(--bg-deep);
+  font-size: 14px;
+  letter-spacing: -0.02em;
+}
+.logo-text {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.logo-text em {
+  font-style: italic;
+  color: var(--ocre);
+  font-weight: 400;
+}
+.search {
+  flex: 1;
+  position: relative;
+  max-width: 420px;
+  margin-left: auto;
+}
+.search input {
+  width: 100%;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 9px 14px 9px 36px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 13px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.search input::placeholder { color: var(--ink-faint); }
+.search input:focus {
+  outline: none;
+  border-color: var(--ocre);
+}
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-faint);
+  font-size: 14px;
+}
+.topbar-actions {
+  display: flex;
+  gap: 6px;
+}
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  color: var(--ink-mute);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.icon-btn:hover { border-color: var(--ocre); color: var(--ink); background: var(--bg-elev-2); }
+.icon-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ==========================================================================
+   LAYOUT
+   ========================================================================== */
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 32px 24px 100px;
+}
+
+.view { display: none; animation: fadeIn 0.3s ease-out; }
+.view.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.breadcrumb a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.breadcrumb a:hover { color: var(--ocre); }
+.breadcrumb .sep { opacity: 0.4; }
+.breadcrumb .current { color: var(--ink); font-weight: 500; }
+
+/* ==========================================================================
+   FICHE PERSONNE — HERO
+   ========================================================================== */
+.hero {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 24px;
+  align-items: start;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line-soft);
+  margin-bottom: 36px;
+}
+.avatar-lg {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--male-from) 0%, var(--male-to) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 28px;
+  color: var(--bg-deep);
+  position: relative;
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+.avatar-lg.female {
+  background: linear-gradient(135deg, var(--female-from) 0%, var(--female-to) 100%);
+}
+.avatar-lg .gen-badge, .avatar-md .gen-badge {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  background: var(--bg-deep);
+  color: var(--ocre);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  border: 1.5px solid var(--bg);
+  letter-spacing: 0.05em;
+}
+:root[data-theme="light"] .avatar-lg .gen-badge,
+:root[data-theme="light"] .avatar-md .gen-badge {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--bg);
+}
+
+.hero-main { min-width: 0; padding-top: 4px; }
+.hero-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+.hero-clan {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ocre);
+  font-size: 22px;
+  margin-left: 8px;
+  font-variation-settings: "opsz" 144;
+}
+.hero-meta {
+  margin-top: 10px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+.hero-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.hero-meta-sep {
+  width: 1px;
+  height: 12px;
+  background: var(--line);
+}
+.sex-glyph { color: var(--ocre); font-size: 13px; }
+.sex-glyph.female { color: var(--female-from); }
+
+.songhay-tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 3px 9px;
+  background: color-mix(in srgb, var(--ocre) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ocre) 30%, transparent);
+  border-radius: 3px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: var(--ocre);
+  font-size: 12px;
+  cursor: help;
+  transition: background 0.2s;
+}
+.songhay-tag:hover { background: color-mix(in srgb, var(--ocre) 20%, transparent); }
+.songhay-tag::before {
+  content: '◆';
+  font-size: 7px;
+  color: var(--ocre);
+  font-style: normal;
+  transform: translateY(-1px);
+}
+
+.hero-stats {
+  display: flex;
+  gap: 24px;
+  padding-top: 8px;
+}
+.hero-stat { text-align: right; }
+.hero-stat-value {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 28px;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.hero-stat-label {
+  font-size: 10px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-top: 6px;
+}
+
+.cultural-note {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--ocre) 8%, transparent) 0%, transparent 60%);
+  border-left: 2px solid var(--ocre);
+  padding: 14px 18px;
+  margin-top: 16px;
+  border-radius: 0 3px 3px 0;
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-mute);
+  font-weight: 300;
+  font-style: italic;
+}
+.cultural-note strong {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--ink);
+}
+.cultural-note .tag-inline {
+  display: inline-block;
+  padding: 1px 7px;
+  background: color-mix(in srgb, var(--ocre) 18%, transparent);
+  color: var(--ocre);
+  font-family: 'JetBrains Mono', monospace;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+  margin: 0 2px;
+}
+
+/* ==========================================================================
+   SECTIONS
+   ========================================================================== */
+.section { margin-bottom: 36px; }
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.section-title .songhay-inline {
+  font-style: italic;
+  color: var(--ocre);
+  font-size: 13px;
+  font-weight: 400;
+  font-family: 'Fraunces', serif;
+}
+.section-title .count {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-left: 4px;
+}
+.section-edit {
+  color: var(--ink-faint);
+  font-size: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 3px;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+.section-edit:hover { color: var(--ocre); }
+
+/* PARENTS */
+.parents-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.parent-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: inherit;
+}
+.parent-card:hover {
+  border-color: var(--ocre);
+  background: var(--bg-elev-2);
+  transform: translateY(-1px);
+}
+.avatar-md {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--male-from) 0%, var(--male-to) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--bg-deep);
+  flex-shrink: 0;
+  position: relative;
+  letter-spacing: -0.02em;
+}
+.avatar-md.female {
+  background: linear-gradient(135deg, var(--female-from) 0%, var(--female-to) 100%);
+}
+.parent-main { flex: 1; min-width: 0; }
+.parent-role {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+  color: var(--ocre);
+  margin-bottom: 3px;
+}
+.parent-role.mere { color: var(--female-from); }
+.parent-role .term {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-left: 4px;
+  opacity: 0.8;
+}
+.parent-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.parent-lineage {
+  font-size: 12px;
+  color: var(--ink-mute);
+  line-height: 1.4;
+}
+
+/* FOYERS */
+.foyer {
+  background: var(--bg-elev);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.foyer:hover { border-color: var(--line); }
+
+.foyer-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.foyer-rank {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--ocre);
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--ocre);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+.foyer-mother {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.foyer-mother-info { flex: 1; min-width: 0; }
+.foyer-mother-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 17px;
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+}
+.foyer-mother-meta {
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 2px;
+}
+.foyer-children-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  padding: 3px 8px;
+  background: var(--bg-deep);
+  border-radius: 10px;
+  border: 1px solid var(--line-soft);
+}
+.foyer-children {
+  padding: 14px 18px 16px 60px;
+  position: relative;
+}
+.foyer-children::before {
+  content: '';
+  position: absolute;
+  left: 32px;
+  top: 0;
+  bottom: 16px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--line) 0%, transparent 100%);
+}
+.foyer-children-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.children-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 6px;
+}
+.child-chip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+  color: inherit;
+  border-left: 2px solid transparent;
+}
+.child-chip:hover {
+  background: var(--bg-elev-2);
+  border-left-color: var(--ocre);
+}
+.avatar-sm {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--male-from) 0%, var(--male-to) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 11px;
+  color: var(--bg-deep);
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+.avatar-sm.female { background: linear-gradient(135deg, var(--female-from) 0%, var(--female-to) 100%); }
+.child-info { flex: 1; min-width: 0; }
+.child-name {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.child-nickname {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: var(--ink-mute);
+  font-weight: 400;
+  font-size: 12px;
+  margin-left: 3px;
+}
+.child-meta {
+  font-size: 10px;
+  color: var(--ink-faint);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 1px;
+}
+
+/* ==========================================================================
+   FAB & MENU
+   ========================================================================== */
+.fab {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ocre-light) 0%, var(--ocre-dark) 100%);
+  color: var(--bg-deep);
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 8px 24px color-mix(in srgb, var(--ocre) 28%, transparent),
+    0 2px 6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  z-index: 25;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fab:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow:
+    0 14px 32px color-mix(in srgb, var(--ocre) 40%, transparent),
+    0 3px 8px rgba(0, 0, 0, 0.4);
+}
+.fab-icon {
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fab.open .fab-icon { transform: rotate(45deg); }
+.fab-icon svg {
+  width: 100%; height: 100%;
+  stroke: currentColor; stroke-width: 2.5; fill: none; stroke-linecap: round;
+}
+
+.menu {
+  position: fixed;
+  bottom: 158px;
+  right: 24px;
+  width: 240px;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: var(--shadow);
+  z-index: 24;
+  transform-origin: bottom right;
+  display: none;
+}
+.menu.open {
+  display: block;
+  animation: menuIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes menuIn {
+  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.menu-header {
+  padding: 8px 12px 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-faint);
+  font-weight: 600;
+  border-bottom: 1px solid var(--line-soft);
+  margin-bottom: 4px;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--ink);
+  transition: background 0.15s;
+  font-size: 13px;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+.menu-item:hover { background: var(--bg-elev); }
+.menu-item:hover .menu-item-icon { color: var(--ocre); }
+.menu-item-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-mute);
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+.menu-item-icon svg {
+  width: 14px; height: 14px;
+  stroke: currentColor; stroke-width: 1.8; fill: none;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.menu-item-main { flex: 1; min-width: 0; }
+.menu-item-label { font-weight: 500; line-height: 1.25; }
+.menu-item-hint {
+  font-size: 10px;
+  color: var(--ink-faint);
+  margin-top: 1px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.menu-item-arrow { color: var(--ink-faint); font-size: 14px; }
+.menu-separator {
+  height: 1px;
+  background: var(--line-soft);
+  margin: 4px 8px;
+}
+.menu-item.danger { color: var(--terracotta); }
+.menu-item.danger .menu-item-icon { color: var(--terracotta); }
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--backdrop);
+  backdrop-filter: blur(2px);
+  z-index: 23;
+  display: none;
+  animation: fadeBd 0.2s;
+}
+.backdrop.open { display: block; }
+@keyframes fadeBd { from { opacity: 0; } to { opacity: 1; } }
+
+/* ==========================================================================
+   BOTTOM TABS (mobile) + desktop drawer
+   ========================================================================== */
+.bottom-tabs {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line-soft);
+  z-index: 20;
+  display: flex;
+  padding: 8px 16px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  justify-content: space-around;
+}
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--ink-faint);
+  font-family: inherit;
+  padding: 8px 4px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  transition: color 0.2s;
+  max-width: 120px;
+}
+.tab-btn svg {
+  width: 20px; height: 20px;
+  stroke: currentColor; fill: none; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.tab-btn:hover { color: var(--ink-mute); }
+.tab-btn.active { color: var(--ocre); }
+
+/* ==========================================================================
+   VUE PARENTÉ
+   ========================================================================== */
+.view-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line-soft);
+  margin-bottom: 28px;
+}
+.view-header-mark {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--ocre-light) 0%, var(--ocre-dark) 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg-deep);
+  flex-shrink: 0;
+}
+.view-header-mark svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.view-header-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.view-header-sub {
+  color: var(--ink-mute);
+  font-size: 13px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.parente-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+.field-group {
+  padding: 18px 20px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+.field-group::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.field-group.a::before { background: linear-gradient(90deg, var(--sauge), var(--ocre-light)); }
+.field-group.b::before { background: linear-gradient(90deg, var(--ocre-light), var(--terracotta)); }
+.field-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+}
+.field-group.a .field-label { color: var(--sauge); }
+.field-group.b .field-label { color: var(--terracotta); }
+.field-input-wrap {
+  position: relative;
+}
+.field-input {
+  width: 100%;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 11px 14px 11px 38px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 14px;
+}
+.field-input::placeholder { color: var(--ink-faint); font-style: italic; }
+.field-input:focus { outline: none; border-color: var(--ocre); }
+.field-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-faint);
+}
+
+.parente-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ink-mute);
+}
+.parente-empty-mark {
+  font-size: 32px;
+  margin-bottom: 14px;
+  opacity: 0.6;
+}
+.parente-empty-text {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-style: italic;
+}
+
+.parente-suggestions {
+  margin-top: 32px;
+  text-align: center;
+}
+.parente-suggestions-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-faint);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.parente-suggestions-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.parente-suggestion {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+.parente-suggestion:hover {
+  border-color: var(--ocre);
+  background: var(--bg-elev-2);
+}
+.parente-suggestion .term {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: var(--ocre);
+  font-size: 12px;
+  margin-left: 4px;
+}
+.parente-suggestion .swap { color: var(--ink-faint); }
+
+/* ==========================================================================
+   VUE ADMINISTRATION
+   ========================================================================== */
+.admin-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--line-soft);
+  margin-bottom: 28px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.admin-tabs::-webkit-scrollbar { display: none; }
+.admin-tab {
+  background: transparent;
+  border: none;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: var(--ink-mute);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  position: relative;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.admin-tab:hover { color: var(--ink); }
+.admin-tab.active { color: var(--ocre); }
+.admin-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: var(--ocre);
+  border-radius: 2px 2px 0 0;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.stat {
+  background: var(--bg-elev);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.stat-value {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+.stat.orange .stat-value { color: var(--ocre); }
+.stat.green .stat-value { color: var(--sauge); }
+.stat.blue .stat-value { color: var(--ink); }
+.stat.red .stat-value { color: var(--terracotta); }
+.stat.purple .stat-value { color: var(--prune); }
+.stat-label {
+  font-size: 11px;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Termes songhay */
+.terms-section-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--ocre);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+.term-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 36px;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  transition: border-color 0.2s;
+}
+.term-row:hover { border-color: var(--line); }
+.term-key {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+.term-key .prefix { color: var(--ink-faint); }
+.term-input {
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 14px;
+  font-weight: 500;
+}
+.term-input:focus { outline: none; border-color: var(--ocre); }
+.term-reset {
+  width: 32px; height: 32px;
+  background: transparent;
+  border: 1px solid var(--line-soft);
+  color: var(--ink-faint);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+}
+.term-reset:hover { color: var(--ocre); border-color: var(--ocre); }
+
+/* Membres admin */
+.admin-search {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.admin-search-input {
+  flex: 1;
+  min-width: 200px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 9px 14px 9px 36px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 13px;
+  position: relative;
+}
+.admin-search-wrap {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+.admin-search-wrap svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-faint);
+  width: 14px; height: 14px;
+  stroke: currentColor; fill: none; stroke-width: 1.8;
+}
+.pill-group { display: flex; gap: 4px; background: var(--bg-elev); border: 1px solid var(--line-soft); padding: 3px; border-radius: 20px; }
+.pill {
+  background: transparent;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 18px;
+  color: var(--ink-mute);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pill:hover { color: var(--ink); }
+.pill.active { background: var(--ocre); color: var(--bg-deep); font-weight: 600; }
+
+.btn-add {
+  background: linear-gradient(135deg, var(--ocre-light), var(--ocre-dark));
+  color: var(--bg-deep);
+  border: none;
+  padding: 8px 18px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-add:hover { transform: translateY(-1px); }
+
+.gen-group {
+  margin-bottom: 22px;
+}
+.gen-group-label {
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-bottom: 10px;
+}
+.gen-group-label strong {
+  color: var(--terracotta);
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+.member-row {
+  background: var(--bg-elev);
+  border: 1px solid var(--line-soft);
+  border-left: 2px solid var(--ocre);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 6px;
+  transition: all 0.2s;
+}
+.member-row:hover { border-color: var(--line); border-left-color: var(--ocre); background: var(--bg-elev-2); }
+.member-info { min-width: 0; }
+.member-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+.member-name .nickname {
+  font-style: italic;
+  color: var(--ocre);
+  font-weight: 400;
+  font-size: 13px;
+  margin-left: 4px;
+}
+.member-meta {
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 2px;
+}
+.gen-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--terracotta);
+  padding: 3px 8px;
+  background: color-mix(in srgb, var(--terracotta) 12%, transparent);
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--terracotta) 20%, transparent);
+  letter-spacing: 0.05em;
+}
+.row-btn {
+  width: 30px; height: 30px;
+  border: 1px solid var(--line-soft);
+  background: var(--bg-deep);
+  color: var(--ink-faint);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+}
+.row-btn:hover { color: var(--ocre); border-color: var(--ocre); }
+.row-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Utilisateurs admin */
+.user-row {
+  background: var(--bg-elev);
+  border: 1px solid var(--line-soft);
+  border-left: 2px solid var(--ocre);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 6px;
+  transition: all 0.2s;
+}
+.user-row:hover { background: var(--bg-elev-2); }
+.user-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -0.005em;
+}
+.user-email {
+  font-size: 12px;
+  color: var(--ink-mute);
+  margin-top: 2px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.role-badge {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.role-badge.admin { background: color-mix(in srgb, var(--ocre) 15%, transparent); color: var(--ocre); border: 1px solid color-mix(in srgb, var(--ocre) 35%, transparent); }
+.role-badge.membre { background: color-mix(in srgb, var(--prune) 15%, transparent); color: var(--prune); border: 1px solid color-mix(in srgb, var(--prune) 35%, transparent); }
+:root[data-theme="light"] .role-badge.membre { color: var(--prune); }
+
+/* Menu Plus (sheet mobile / popover desktop) */
+.plus-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.plus-sheet.open { display: flex; }
+.plus-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--backdrop);
+  backdrop-filter: blur(4px);
+}
+.plus-sheet-body {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-elev-2);
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+  box-shadow: var(--shadow);
+  animation: sheetIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes sheetIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  margin: 0 auto 14px;
+}
+.sheet-user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line-soft);
+  margin-bottom: 12px;
+}
+.sheet-user-info { min-width: 0; }
+.sheet-user-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+.sheet-user-stats {
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.sheet-user-stats span { margin-right: 14px; }
+.sheet-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 0.15s;
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+}
+.sheet-item:hover { background: var(--bg-elev); }
+.sheet-item-icon {
+  width: 20px; height: 20px; color: var(--ink-mute);
+}
+.sheet-item-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sheet-item.danger { color: var(--terracotta); }
+.sheet-item.danger .sheet-item-icon { color: var(--terracotta); }
+.sheet-version {
+  text-align: center;
+  font-size: 10px;
+  color: var(--ink-faint);
+  margin-top: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.1em;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 720px) {
+  .topbar-inner { padding: 12px 16px; gap: 8px; }
+  .logo-text { font-size: 15px; }
+  .search { max-width: none; order: 3; width: 100%; margin-left: 0; margin-top: 6px; }
+  .topbar-actions { margin-left: auto; }
+  .page { padding: 20px 16px 100px; }
+
+  .hero {
+    grid-template-columns: 64px 1fr;
+    gap: 16px;
+  }
+  .avatar-lg { width: 64px; height: 64px; font-size: 22px; }
+  .hero-name { font-size: 26px; }
+  .hero-clan { font-size: 17px; display: block; margin-left: 0; margin-top: 2px; }
+  .hero-stats {
+    grid-column: 1 / -1;
+    gap: 16px;
+    padding-top: 14px;
+    margin-top: 8px;
+    border-top: 1px solid var(--line-soft);
+    justify-content: flex-start;
+  }
+  .hero-stat { text-align: left; }
+  .hero-stat-value { font-size: 22px; }
+
+  .parents-grid { grid-template-columns: 1fr; }
+  .children-grid { grid-template-columns: 1fr 1fr; }
+  .foyer-children { padding-left: 48px; }
+  .foyer-children::before { left: 28px; }
+
+  .parente-fields { grid-template-columns: 1fr; gap: 14px; }
+
+  .term-row {
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+  }
+  .term-key { grid-column: 1 / -1; font-size: 11px; }
+
+  .member-row {
+    grid-template-columns: auto 1fr auto;
+  }
+  .member-row .row-btn:nth-of-type(2) { display: none; }
+
+  .user-row {
+    grid-template-columns: auto 1fr auto;
+  }
+  .user-row .row-btn { display: none; }
+
+  .fab { bottom: 82px; right: 20px; }
+  .menu { bottom: 150px; right: 20px; }
+}
+
+@media (min-width: 721px) {
+  .bottom-tabs {
+    position: static;
+    background: transparent;
+    border-top: none;
+    backdrop-filter: none;
+    padding: 0;
+    display: flex;
+    gap: 4px;
+    border-radius: 8px;
+  }
+  .tab-btn {
+    flex: 0 0 auto;
+    flex-direction: row;
+    padding: 8px 14px;
+    font-size: 12px;
+    text-transform: none;
+    letter-spacing: 0.01em;
+    font-weight: 500;
+    gap: 8px;
+    max-width: none;
+  }
+  .tab-btn svg { width: 16px; height: 16px; }
+  .tab-btn.active { background: var(--bg-elev); border-radius: 6px; }
+
+  /* Déplacer les tabs dans la topbar sur desktop */
+  .bottom-tabs-wrap-desktop { display: flex; }
+  .bottom-tabs-wrap-mobile { display: none; }
+}
+@media (max-width: 720px) {
+  .bottom-tabs-wrap-desktop { display: none; }
+  .bottom-tabs-wrap-mobile { display: flex; }
+}
+
+/* Overlays/tooltips songhay */
+.songhay-popover {
+  position: fixed;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+  max-width: 260px;
+  font-size: 12px;
+  color: var(--ink-mute);
+  line-height: 1.5;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.songhay-popover.open { opacity: 1; transform: translateY(0); }
+.songhay-popover strong {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ocre);
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ==========================================================================
+     TOPBAR
+     ========================================================================== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="logo" onclick="goTo('fiche')">
+      <div class="logo-mark">A</div>
+      <div class="logo-text">Aly K<em>oï</em>ra</div>
+    </a>
+
+    <div class="search">
+      <span class="search-icon">⌕</span>
+      <input type="text" placeholder="Rechercher une personne, un surnom…">
+    </div>
+
+    <nav class="bottom-tabs-wrap-desktop" style="display: flex;">
+      <button class="tab-btn" onclick="goTo('fiche')" data-tab="fiche">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4a1 1 0 0 1-1-1v-5h-4v5a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2z"/></svg>
+        Famille
+      </button>
+      <button class="tab-btn" onclick="goTo('parente')" data-tab="parente">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a6 6 0 0 0-3-5.2"/></svg>
+        Parenté
+      </button>
+      <button class="tab-btn" onclick="openPlus()">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        Plus
+      </button>
+    </nav>
+
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleTheme()" title="Basculer thème clair/sombre" id="theme-btn">
+        <svg viewBox="0 0 24 24" id="theme-icon-dark"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ==========================================================================
+     VUE 1 — FICHE PERSONNE
+     ========================================================================== -->
+<main class="page view active" id="view-fiche">
+
+  <nav class="breadcrumb">
+    <a onclick="goTo('fiche')">Sababa Alkaidi Hamma</a>
+    <span class="sep">→</span>
+    <a onclick="goTo('fiche')">Alkamahamane Sababa Alkaidi</a>
+    <span class="sep">→</span>
+    <span class="current">Ali Alkamahamane</span>
+  </nav>
+
+  <section class="hero">
+    <div class="avatar-lg">
+      AA
+      <span class="gen-badge">G5</span>
+    </div>
+
+    <div class="hero-main">
+      <h1>
+        <span class="hero-name">Ali Alkamahamane</span>
+        <span class="hero-clan">Aly Koïra</span>
+      </h1>
+      <div class="hero-meta">
+        <span class="hero-meta-item">
+          <span class="sex-glyph">♂</span>
+          5<sup style="font-size: 9px;">e</sup> génération
+        </span>
+        <span class="hero-meta-sep"></span>
+        <span class="hero-meta-item">
+          <span class="songhay-tag" data-term="koda" data-def="Benjamin — dernier-né d'une fratrie, souvent objet d'attentions particulières dans la société songhay.">koda</span>
+          benjamin
+        </span>
+      </div>
+
+      <div class="cultural-note">
+        Ali est le <strong>benjamin</strong> de la famille —
+        <span class="tag-inline">koda</span>
+        dans le langage songhay, dernier-né d'une fratrie, souvent objet d'attentions particulières.
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">3</div>
+        <div class="hero-stat-label">Épouses</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">7</div>
+        <div class="hero-stat-label">Enfants</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">Parents</h2>
+    </div>
+    <div class="parents-grid">
+      <a class="parent-card" onclick="goTo('fiche')">
+        <div class="avatar-md">AS<span class="gen-badge">G4</span></div>
+        <div class="parent-main">
+          <div class="parent-role">Père <span class="term">· baba</span></div>
+          <div class="parent-name">Alkamahamane Sababa Alkaidi</div>
+          <div class="parent-lineage">Fils de Sababa Alkaidi Hamma, petit-fils de Hamma N'Bara, époux de Lalla Hamatou.</div>
+        </div>
+      </a>
+      <a class="parent-card" onclick="goTo('fiche')">
+        <div class="avatar-md female">LH<span class="gen-badge">G4</span></div>
+        <div class="parent-main">
+          <div class="parent-role mere">Mère <span class="term">· gna</span></div>
+          <div class="parent-name">Lalla Hamatou Lashane Almansour Koro</div>
+          <div class="parent-lineage">Fille de Hamatou Lashane Almansour (Koro), sœur de Mahamane et de Sidi Ahmed.</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">
+        Foyers
+        <span class="songhay-inline" data-term="windi" data-def="Concession, foyer — unité domestique patrilinéaire et patrilocale en songhay-zarma.">windi</span>
+        <span class="count">3</span>
+      </h2>
+    </div>
+
+    <div class="foyer">
+      <div class="foyer-header">
+        <div class="foyer-rank">1</div>
+        <a class="foyer-mother" onclick="goTo('fiche')">
+          <div class="avatar-md female">WS</div>
+          <div class="foyer-mother-info">
+            <div class="foyer-mother-name">Waykounga Samba</div>
+            <div class="foyer-mother-meta">1<sup style="font-size: 8px;">ère</sup> épouse</div>
+          </div>
+        </a>
+        <span class="foyer-children-count">1 enfant</span>
+      </div>
+      <div class="foyer-children">
+        <div class="foyer-children-label">Descendance</div>
+        <div class="children-grid">
+          <a class="child-chip" onclick="goTo('fiche')">
+            <div class="avatar-sm">MA</div>
+            <div class="child-info">
+              <div class="child-name">Mahamane</div>
+              <div class="child-meta">G6 · ♂</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="foyer">
+      <div class="foyer-header">
+        <div class="foyer-rank">2</div>
+        <a class="foyer-mother" onclick="goTo('fiche')">
+          <div class="avatar-md female">FA</div>
+          <div class="foyer-mother-info">
+            <div class="foyer-mother-name">Farimata Alassane</div>
+            <div class="foyer-mother-meta">2<sup style="font-size: 8px;">e</sup> épouse</div>
+          </div>
+        </a>
+        <span class="foyer-children-count">1 enfant</span>
+      </div>
+      <div class="foyer-children">
+        <div class="foyer-children-label">Descendance</div>
+        <div class="children-grid">
+          <a class="child-chip" onclick="goTo('fiche')">
+            <div class="avatar-sm">BA</div>
+            <div class="child-info">
+              <div class="child-name">Babachigaw</div>
+              <div class="child-meta">G6 · ♂</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="foyer">
+      <div class="foyer-header">
+        <div class="foyer-rank">3</div>
+        <a class="foyer-mother" onclick="goTo('fiche')">
+          <div class="avatar-md female">FA</div>
+          <div class="foyer-mother-info">
+            <div class="foyer-mother-name">Fouga Alassane Hamatou</div>
+            <div class="foyer-mother-meta">3<sup style="font-size: 8px;">e</sup> épouse</div>
+          </div>
+        </a>
+        <span class="foyer-children-count">5 enfants</span>
+      </div>
+      <div class="foyer-children">
+        <div class="foyer-children-label">Descendance</div>
+        <div class="children-grid">
+          <a class="child-chip" onclick="goTo('fiche')">
+            <div class="avatar-sm female">AA</div>
+            <div class="child-info">
+              <div class="child-name">Agaicha <span class="child-nickname">Mariama Kobbo</span></div>
+              <div class="child-meta">G6 · ♀</div>
+            </div>
+          </a>
+          <a class="child-chip" onclick="goTo('fiche')">
+            <div class="avatar-sm">MA</div>
+            <div class="child-info"><div class="child-name">Moussa</div><div class="child-meta">G6 · ♂</div></div>
+          </a>
+          <a class="child-chip" onclick="goTo('fiche')">
+            <div class="avatar-sm">OA</div>
+            <div class="child-info"><div class="child-name">Omorou</div><div class="child-meta">G6 · ♂</div></div>
+          </a>
+          <a class="child-chip" onclick="goTo('fiche')">
+            <div class="avatar-sm female">TA</div>
+            <div class="child-info"><div class="child-name">Tamimoune <span class="child-nickname">Tamimoune</span></div><div class="child-meta">G6 · ♀</div></div>
+          </a>
+          <a class="child-chip" onclick="goTo('fiche')">
+            <div class="avatar-sm">MA</div>
+            <div class="child-info"><div class="child-name">Mahadi</div><div class="child-meta">G6 · ♂</div></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ==========================================================================
+     VUE 2 — PARENTÉ
+     ========================================================================== -->
+<main class="page view" id="view-parente">
+
+  <div class="view-header">
+    <div class="view-header-mark">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a6 6 0 0 0-3-5.2"/></svg>
+    </div>
+    <div>
+      <h1 class="view-header-title">Parenté</h1>
+      <div class="view-header-sub">Liens familiaux · Terminologie songhay</div>
+    </div>
+  </div>
+
+  <div class="parente-fields">
+    <div class="field-group a">
+      <div class="field-label">Personne A</div>
+      <div class="field-input-wrap">
+        <span class="field-search-icon">⌕</span>
+        <input class="field-input" type="text" placeholder="Rechercher un membre…">
+      </div>
+    </div>
+    <div class="field-group b">
+      <div class="field-label">Personne B</div>
+      <div class="field-input-wrap">
+        <span class="field-search-icon">⌕</span>
+        <input class="field-input" type="text" placeholder="Rechercher un membre…">
+      </div>
+    </div>
+  </div>
+
+  <div class="parente-empty">
+    <div class="parente-empty-mark">⌘</div>
+    <div class="parente-empty-text">Sélectionnez deux personnes pour calculer leurs liens de parenté.</div>
+  </div>
+
+  <div class="parente-suggestions">
+    <div class="parente-suggestions-label">Ou essayez une de ces paires</div>
+    <div class="parente-suggestions-grid">
+      <button class="parente-suggestion">
+        Souafou Jaouder <span class="swap">⇌</span> Leila Mahamadou
+        <span class="term">ancêtre & descendant</span>
+      </button>
+      <button class="parente-suggestion">
+        Almansour Souafou <span class="swap">⇌</span> N'Bara Souafou
+        <span class="term">arma</span>
+      </button>
+      <button class="parente-suggestion">
+        Lashane Almansour <span class="swap">⇌</span> Hamma N'Bara
+        <span class="term">cousins</span>
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<!-- ==========================================================================
+     VUE 3 — ADMIN · MEMBRES
+     ========================================================================== -->
+<main class="page view" id="view-admin-membres">
+
+  <h1 class="admin-title">Administration</h1>
+
+  <div class="admin-tabs">
+    <button class="admin-tab" onclick="goTo('admin-suggestions')">Suggestions</button>
+    <button class="admin-tab active">Membres</button>
+    <button class="admin-tab" onclick="goTo('admin-membres')">Fusions</button>
+    <button class="admin-tab" onclick="goTo('admin-utilisateurs')">Utilisateurs</button>
+    <button class="admin-tab" onclick="goTo('admin-termes')">Parenté</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat orange"><span class="stat-value">853</span><span class="stat-label">membres</span></div>
+    <div class="stat blue"><span class="stat-value">457</span><span class="stat-label">hommes</span></div>
+    <div class="stat purple"><span class="stat-value">396</span><span class="stat-label">femmes</span></div>
+    <div class="stat red"><span class="stat-value">12</span><span class="stat-label">générations</span></div>
+  </div>
+
+  <div class="admin-search">
+    <div class="admin-search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="admin-search-input" type="text" placeholder="Rechercher un membre…">
+    </div>
+    <div class="pill-group">
+      <button class="pill active">Tous</button>
+      <button class="pill">Hommes</button>
+      <button class="pill">Femmes</button>
+      <button class="pill">⋯</button>
+    </div>
+    <button class="btn-add">+ Ajouter</button>
+  </div>
+
+  <div class="gen-group">
+    <div class="gen-group-label">Génération <strong>0</strong> — 1 membre</div>
+    <div class="member-row">
+      <div class="avatar-md">SJ</div>
+      <div class="member-info">
+        <div class="member-name">Souafou Jaouder</div>
+        <div class="member-meta">Homme · 2 enfants</div>
+      </div>
+      <div class="gen-tag">Gen. 0</div>
+      <button class="row-btn"><svg viewBox="0 0 24 24"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button>
+      <button class="row-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+    </div>
+  </div>
+
+  <div class="gen-group">
+    <div class="gen-group-label">Génération <strong>1</strong> — 2 membres</div>
+    <div class="member-row">
+      <div class="avatar-md">AS</div>
+      <div class="member-info">
+        <div class="member-name">Almansour Souafou Jaouder <span class="nickname">Koro Souafou Jaouder</span></div>
+        <div class="member-meta">Homme · 1 enfant</div>
+      </div>
+      <div class="gen-tag">Gen. 1</div>
+      <button class="row-btn"><svg viewBox="0 0 24 24"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button>
+      <button class="row-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+    </div>
+    <div class="member-row">
+      <div class="avatar-md">NS</div>
+      <div class="member-info">
+        <div class="member-name">N'Bara Souafou Jaouder <span class="nickname">N'Bara Souafou Jaouder</span></div>
+        <div class="member-meta">Homme · 1 enfant</div>
+      </div>
+      <div class="gen-tag">Gen. 1</div>
+      <button class="row-btn"><svg viewBox="0 0 24 24"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button>
+      <button class="row-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+    </div>
+  </div>
+
+  <div class="gen-group">
+    <div class="gen-group-label">Génération <strong>2</strong> — 2 membres</div>
+    <div class="member-row">
+      <div class="avatar-md">HN</div>
+      <div class="member-info">
+        <div class="member-name">Hamma N'Bara <span class="nickname">Hamma N'Bara</span></div>
+        <div class="member-meta">Homme · 1 enfant</div>
+      </div>
+      <div class="gen-tag">Gen. 2</div>
+      <button class="row-btn"><svg viewBox="0 0 24 24"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button>
+      <button class="row-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+    </div>
+    <div class="member-row">
+      <div class="avatar-md">LA</div>
+      <div class="member-info">
+        <div class="member-name">Lashane Almansour</div>
+        <div class="member-meta">Homme · 2 enfants</div>
+      </div>
+      <div class="gen-tag">Gen. 2</div>
+      <button class="row-btn"><svg viewBox="0 0 24 24"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button>
+      <button class="row-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+    </div>
+  </div>
+
+</main>
+
+<!-- ==========================================================================
+     VUE 4 — ADMIN · UTILISATEURS
+     ========================================================================== -->
+<main class="page view" id="view-admin-utilisateurs">
+
+  <h1 class="admin-title">Administration</h1>
+
+  <div class="admin-tabs">
+    <button class="admin-tab" onclick="goTo('admin-suggestions')">Suggestions</button>
+    <button class="admin-tab" onclick="goTo('admin-membres')">Membres</button>
+    <button class="admin-tab" onclick="goTo('admin-membres')">Fusions</button>
+    <button class="admin-tab active">Utilisateurs</button>
+    <button class="admin-tab" onclick="goTo('admin-termes')">Parenté</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat orange"><span class="stat-value">9</span><span class="stat-label">utilisateurs</span></div>
+    <div class="stat green"><span class="stat-value">9</span><span class="stat-label">actifs</span></div>
+    <div class="stat blue"><span class="stat-value">0</span><span class="stat-label">en attente</span></div>
+    <div class="stat red"><span class="stat-value">5</span><span class="stat-label">admins</span></div>
+  </div>
+
+  <div class="admin-search">
+    <div class="admin-search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="admin-search-input" type="text" placeholder="Rechercher par nom ou email…">
+    </div>
+    <div class="pill-group">
+      <button class="pill active">Tous</button>
+      <button class="pill">Actifs</button>
+      <button class="pill">En attente</button>
+    </div>
+  </div>
+
+  <div class="user-row">
+    <div class="avatar-md">AT</div>
+    <div class="member-info">
+      <div class="user-name">Abdoulaye Touré</div>
+      <div class="user-email">abdelltoure4@gmail.com</div>
+    </div>
+    <span class="role-badge admin">Admin</span>
+    <button class="row-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+  </div>
+
+  <div class="user-row">
+    <div class="avatar-md">BA</div>
+    <div class="member-info">
+      <div class="user-name">Bruno Assani</div>
+      <div class="user-email">toureibrahimhaliloulahimoussa@gmail.com</div>
+    </div>
+    <span class="role-badge membre">Membre</span>
+    <button class="row-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+  </div>
+
+  <div class="user-row">
+    <div class="avatar-md">MF</div>
+    <div class="member-info">
+      <div class="user-name">Mamma France</div>
+      <div class="user-email">touremohameda@gmail.com</div>
+    </div>
+    <span class="role-badge membre">Membre</span>
+    <button class="row-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+  </div>
+
+  <div class="user-row">
+    <div class="avatar-md">AS</div>
+    <div class="member-info">
+      <div class="user-name">Ahmed Salia</div>
+      <div class="user-email">itouresalia@gmail.com</div>
+    </div>
+    <span class="role-badge admin">Admin</span>
+    <button class="row-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+  </div>
+
+</main>
+
+<!-- ==========================================================================
+     VUE 5 — ADMIN · TERMES SONGHAY
+     ========================================================================== -->
+<main class="page view" id="view-admin-termes">
+
+  <h1 class="admin-title">Administration</h1>
+
+  <div class="admin-tabs">
+    <button class="admin-tab" onclick="goTo('admin-suggestions')">Suggestions</button>
+    <button class="admin-tab" onclick="goTo('admin-membres')">Membres</button>
+    <button class="admin-tab" onclick="goTo('admin-membres')">Fusions</button>
+    <button class="admin-tab" onclick="goTo('admin-utilisateurs')">Utilisateurs</button>
+    <button class="admin-tab active">Parenté</button>
+  </div>
+
+  <h2 class="terms-section-title">Termes Songhay</h2>
+
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>arma</div>
+    <input class="term-input" value="arma">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>arrou_hinka_izey</div>
+    <input class="term-input" value="arrou hinka izey">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>baassa_arou</div>
+    <input class="term-input" value="baassa arou">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>baassa_woy</div>
+    <input class="term-input" value="baassa woy">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>baba</div>
+    <input class="term-input" value="baba">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>cote_baba</div>
+    <input class="term-input" value="coté baba">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>cote_gna</div>
+    <input class="term-input" value="coté gna">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>gna</div>
+    <input class="term-input" value="gna">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>haama</div>
+    <input class="term-input" value="haama">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>hassa</div>
+    <input class="term-input" value="hassa">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>hawa</div>
+    <input class="term-input" value="hawa">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+  <div class="term-row">
+    <div class="term-key"><span class="prefix">term.</span>touba</div>
+    <input class="term-input" value="touba">
+    <button class="term-reset" title="Réinitialiser">↺</button>
+  </div>
+
+</main>
+
+<!-- ==========================================================================
+     VUE 6 — ADMIN · SUGGESTIONS
+     ========================================================================== -->
+<main class="page view" id="view-admin-suggestions">
+
+  <h1 class="admin-title">Administration</h1>
+
+  <div class="admin-tabs">
+    <button class="admin-tab active">Suggestions</button>
+    <button class="admin-tab" onclick="goTo('admin-membres')">Membres</button>
+    <button class="admin-tab" onclick="goTo('admin-membres')">Fusions</button>
+    <button class="admin-tab" onclick="goTo('admin-utilisateurs')">Utilisateurs</button>
+    <button class="admin-tab" onclick="goTo('admin-termes')">Parenté</button>
+  </div>
+
+  <div class="parente-empty" style="padding: 80px 20px;">
+    <div class="parente-empty-mark">◯</div>
+    <div class="parente-empty-text">Aucune suggestion en attente.</div>
+    <p style="font-size: 12px; color: var(--ink-faint); margin-top: 8px; font-family: 'Inter', sans-serif; font-style: normal;">Les contributions des membres apparaîtront ici pour validation.</p>
+  </div>
+
+</main>
+
+<!-- ==========================================================================
+     FAB + MENU (visible sur fiche uniquement)
+     ========================================================================== -->
+<div class="backdrop" id="fab-backdrop" onclick="closeMenu()"></div>
+
+<div class="menu" id="fab-menu">
+  <div class="menu-header">Actions</div>
+  <button class="menu-item">
+    <div class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></div>
+    <div class="menu-item-main"><div class="menu-item-label">Modifier la fiche</div><div class="menu-item-hint">E</div></div>
+  </button>
+  <button class="menu-item">
+    <div class="menu-item-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a6 6 0 0 0-3-5.2"/></svg></div>
+    <div class="menu-item-main"><div class="menu-item-label">Ajouter une épouse</div><div class="menu-item-hint">Nouveau foyer</div></div>
+  </button>
+  <button class="menu-item">
+    <div class="menu-item-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></div>
+    <div class="menu-item-main"><div class="menu-item-label">Ajouter un enfant</div><div class="menu-item-hint">Choisir le foyer</div></div>
+    <span class="menu-item-arrow">›</span>
+  </button>
+  <div class="menu-separator"></div>
+  <button class="menu-item">
+    <div class="menu-item-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+    <div class="menu-item-main"><div class="menu-item-label">Voir dans l'arbre</div></div>
+  </button>
+  <button class="menu-item">
+    <div class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div>
+    <div class="menu-item-main"><div class="menu-item-label">Partager la fiche</div></div>
+  </button>
+  <div class="menu-separator"></div>
+  <button class="menu-item danger">
+    <div class="menu-item-icon"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></div>
+    <div class="menu-item-main"><div class="menu-item-label">Supprimer la fiche</div></div>
+  </button>
+</div>
+
+<button class="fab" id="fab" onclick="toggleMenu()" title="Actions sur la fiche">
+  <span class="fab-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+</button>
+
+<!-- ==========================================================================
+     SHEET « PLUS » (menu utilisateur)
+     ========================================================================== -->
+<div class="plus-sheet" id="plus-sheet">
+  <div class="plus-sheet-backdrop" onclick="closePlus()"></div>
+  <div class="plus-sheet-body">
+    <div class="sheet-handle"></div>
+    <div class="sheet-user">
+      <div class="sheet-user-info">
+        <div class="sheet-user-name">Ibounia Minou</div>
+        <div class="sheet-user-stats">
+          <span>853 membres</span>
+          <span>12 générations</span>
+        </div>
+      </div>
+      <span class="role-badge admin">Admin</span>
+    </div>
+
+    <button class="sheet-item">
+      <span class="sheet-item-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+      Contribuer
+    </button>
+    <button class="sheet-item">
+      <span class="sheet-item-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+      Mes suggestions
+    </button>
+    <button class="sheet-item" onclick="closePlus(); goTo('admin-membres')">
+      <span class="sheet-item-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+      Administration
+    </button>
+    <button class="sheet-item" onclick="closePlus(); toggleTheme();">
+      <span class="sheet-item-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+      <span id="theme-label">Mode clair</span>
+    </button>
+    <button class="sheet-item danger">
+      <span class="sheet-item-icon"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      Déconnexion
+    </button>
+    <div class="sheet-version">v 0.5.0</div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     BOTTOM TABS (mobile)
+     ========================================================================== -->
+<nav class="bottom-tabs bottom-tabs-wrap-mobile">
+  <button class="tab-btn" onclick="goTo('fiche')" data-tab-mobile="fiche">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4a1 1 0 0 1-1-1v-5h-4v5a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2z"/></svg>
+    Famille
+  </button>
+  <button class="tab-btn" onclick="goTo('parente')" data-tab-mobile="parente">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a6 6 0 0 0-3-5.2"/></svg>
+    Parenté
+  </button>
+  <button class="tab-btn" onclick="openPlus()">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+    Plus
+  </button>
+</nav>
+
+<!-- Popover songhay (tooltips éducatifs) -->
+<div class="songhay-popover" id="songhay-popover"></div>
+
+<script>
+// ==========================================================================
+// NAVIGATION entre vues
+// ==========================================================================
+function goTo(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = document.getElementById('view-' + viewId);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  // Gérer la visibilité du FAB (uniquement sur fiche)
+  const fab = document.getElementById('fab');
+  fab.style.display = (viewId === 'fiche') ? 'flex' : 'none';
+  closeMenu();
+  // Mettre à jour les tabs actifs
+  document.querySelectorAll('[data-tab], [data-tab-mobile]').forEach(el => el.classList.remove('active'));
+  const key = (viewId === 'fiche') ? 'fiche' : (viewId === 'parente' ? 'parente' : null);
+  if (key) {
+    document.querySelectorAll('[data-tab="' + key + '"], [data-tab-mobile="' + key + '"]').forEach(el => el.classList.add('active'));
+  }
+}
+
+// ==========================================================================
+// MENU FAB
+// ==========================================================================
+function toggleMenu() {
+  const menu = document.getElementById('fab-menu');
+  const bd = document.getElementById('fab-backdrop');
+  const fab = document.getElementById('fab');
+  const open = menu.classList.toggle('open');
+  bd.classList.toggle('open', open);
+  fab.classList.toggle('open', open);
+}
+function closeMenu() {
+  document.getElementById('fab-menu').classList.remove('open');
+  document.getElementById('fab-backdrop').classList.remove('open');
+  document.getElementById('fab').classList.remove('open');
+}
+
+// ==========================================================================
+// SHEET PLUS
+// ==========================================================================
+function openPlus() {
+  document.getElementById('plus-sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePlus() {
+  document.getElementById('plus-sheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ==========================================================================
+// THÈME
+// ==========================================================================
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  const label = document.getElementById('theme-label');
+  if (label) label.textContent = next === 'dark' ? 'Mode clair' : 'Mode sombre';
+  // Changer l'icône
+  const icon = document.getElementById('theme-icon-dark');
+  if (icon) {
+    if (next === 'light') {
+      icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+    } else {
+      icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    }
+  }
+}
+
+// ==========================================================================
+// TOOLTIPS SONGHAY
+// ==========================================================================
+const pop = document.getElementById('songhay-popover');
+document.addEventListener('mouseover', (e) => {
+  const target = e.target.closest('[data-term]');
+  if (!target) return;
+  const term = target.dataset.term;
+  const def = target.dataset.def || '';
+  pop.innerHTML = '<strong>' + term + '</strong>' + def;
+  const rect = target.getBoundingClientRect();
+  pop.style.left = Math.min(rect.left, window.innerWidth - 280) + 'px';
+  pop.style.top = (rect.bottom + 8) + 'px';
+  pop.classList.add('open');
+});
+document.addEventListener('mouseout', (e) => {
+  if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('[data-term]')) {
+    pop.classList.remove('open');
+  }
+});
+
+// Échapper ferme tout
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeMenu();
+    closePlus();
+  }
+});
+
+// Init
+goTo('fiche');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+/* ============================================================
+   Alykoira Design Tokens v2 (refonte)
+   -----------------------------------------------------
+   Source of truth for the warm "veillée sahélienne" palette.
+   Old tokens (--sh-gold, --sh-terra, --primary, --bg, --card,
+   --text, --sh-serif, --sh-sans) are re-aliased to the new ones
+   so existing components continue to render without change.
+   ============================================================ */
+
+:root {
+  /* ── Typography ── */
+  --font-serif: 'Fraunces', 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans:  'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:  'JetBrains Mono', 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+
+  /* Axis variations for Fraunces variable font */
+  --fraunces-display: "opsz" 144, "SOFT" 30;
+  --fraunces-text:    "opsz" 14,  "SOFT" 30;
+
+  /* ── Radii & motion (shared) ── */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
+
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:   cubic-bezier(0.4, 0, 1, 1);
+  --ease-both: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   DARK THEME (default — applied when no data-theme or ="dark")
+   ============================================================ */
+:root,
+:root[data-theme='dark'] {
+  /* ── Surfaces (warm earth tones) ── */
+  --bg-base:    #15120e;  /* app background */
+  --bg-elev-1:  #1d1812;  /* cards, inputs */
+  --bg-elev-2:  #252018;  /* hovered / elevated cards */
+  --bg-elev-3:  #2d2720;  /* dialogs, popovers */
+  --bg-overlay: rgba(13, 11, 8, 0.72);
+
+  /* ── Ink (text) ── */
+  --ink-hi:    #f4ecd8;  /* primary text */
+  --ink-mid:   #d0c4a8;  /* secondary text */
+  --ink-mute:  #8b8471;  /* tertiary / placeholders */
+  --ink-dim:   #5a5447;  /* disabled, separators */
+
+  /* ── Borders & dividers ── */
+  --bdr-subtle: rgba(244, 236, 216, 0.06);
+  --bdr-soft:   rgba(244, 236, 216, 0.10);
+  --bdr-strong: rgba(244, 236, 216, 0.18);
+
+  /* ── Accent palette ── */
+  --ocre:       #d4a84a;  /* primary gold, warm */
+  --ocre-soft:  rgba(212, 168, 74, 0.14);
+  --ocre-edge:  rgba(212, 168, 74, 0.28);
+  --ocre-deep:  #a07d2b;  /* secondary gold (gradients, hovers) */
+
+  --terracotta:      #c25c3a;  /* alerts, danger, delete */
+  --terracotta-soft: rgba(194, 92, 58, 0.14);
+  --terracotta-edge: rgba(194, 92, 58, 0.28);
+
+  --sauge:      #7a8868;  /* confirmations, success, pere-accent */
+  --sauge-soft: rgba(122, 136, 104, 0.14);
+  --sauge-edge: rgba(122, 136, 104, 0.28);
+
+  --prune:      #8b5a75;  /* féminin accent, mère */
+  --prune-soft: rgba(139, 90, 117, 0.14);
+  --prune-edge: rgba(139, 90, 117, 0.28);
+
+  /* ── Avatar gradients ── */
+  --male-from:   #e8c472;
+  --male-to:     #a07d2b;
+  --female-from: #c48da5;
+  --female-to:   #6a4060;
+
+  /* ── Gradients utilitaires ── */
+  --grad-ocre: linear-gradient(135deg, #e8c472 0%, #a07d2b 100%);
+  --grad-sahel-sage-ocre: linear-gradient(90deg, #7a8868 0%, #d4a84a 100%);
+  --grad-sahel-ocre-terra: linear-gradient(90deg, #d4a84a 0%, #c25c3a 100%);
+
+  /* ── Shadow ladder ── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.32);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.44);
+  --shadow-fab: 0 8px 24px rgba(212, 168, 74, 0.28),
+                0 2px 6px rgba(0, 0, 0, 0.40),
+                inset 0 1px 0 rgba(255, 255, 255, 0.20);
+}
+
+/* ============================================================
+   LIGHT THEME
+   ============================================================ */
+:root[data-theme='light'] {
+  --bg-base:    #faf5e8;
+  --bg-elev-1:  #fffbf0;
+  --bg-elev-2:  #f3ecd8;
+  --bg-elev-3:  #ffffffcc;
+  --bg-overlay: rgba(42, 31, 18, 0.30);
+
+  --ink-hi:    #2a1f12;
+  --ink-mid:   #5c4a32;
+  --ink-mute:  #8a7a5a;
+  --ink-dim:   #c4b58e;
+
+  --bdr-subtle: rgba(42, 31, 18, 0.06);
+  --bdr-soft:   rgba(42, 31, 18, 0.12);
+  --bdr-strong: rgba(42, 31, 18, 0.22);
+
+  --ocre:       #b8862a;
+  --ocre-soft:  rgba(184, 134, 42, 0.12);
+  --ocre-edge:  rgba(184, 134, 42, 0.30);
+  --ocre-deep:  #8a6420;
+
+  --terracotta:      #a94726;
+  --terracotta-soft: rgba(169, 71, 38, 0.10);
+  --terracotta-edge: rgba(169, 71, 38, 0.28);
+
+  --sauge:      #5f6e4e;
+  --sauge-soft: rgba(95, 110, 78, 0.10);
+  --sauge-edge: rgba(95, 110, 78, 0.26);
+
+  --prune:      #6a4060;
+  --prune-soft: rgba(106, 64, 96, 0.10);
+  --prune-edge: rgba(106, 64, 96, 0.28);
+
+  --male-from:   #d4a84a;
+  --male-to:     #8a6420;
+  --female-from: #a86880;
+  --female-to:   #4d2f44;
+
+  --grad-ocre: linear-gradient(135deg, #e8c472 0%, #8a6420 100%);
+  --grad-sahel-sage-ocre: linear-gradient(90deg, #5f6e4e 0%, #b8862a 100%);
+  --grad-sahel-ocre-terra: linear-gradient(90deg, #b8862a 0%, #a94726 100%);
+
+  --shadow-sm: 0 2px 8px rgba(42, 31, 18, 0.08);
+  --shadow-md: 0 6px 20px rgba(42, 31, 18, 0.12);
+  --shadow-lg: 0 16px 48px rgba(42, 31, 18, 0.16);
+  --shadow-fab: 0 8px 24px rgba(184, 134, 42, 0.32),
+                0 2px 6px rgba(42, 31, 18, 0.16),
+                inset 0 1px 0 rgba(255, 255, 255, 0.40);
+}
+
+/* ============================================================
+   BACKWARDS-COMPAT ALIASES
+   Map the old --sh-*, --primary, --bg, --card etc. tokens to
+   the new names so the 24-commit Parenté feature (and anything
+   else still using old tokens) continues rendering without
+   change. Migration of individual components happens over
+   subsequent phases; aliases are removed when grep is empty.
+   ============================================================ */
+:root,
+:root[data-theme='dark'],
+:root[data-theme='light'] {
+  /* Parenté feature tokens (.parente-page scope) */
+  --sh-gold:     var(--ocre);
+  --sh-gold-d:   var(--ocre-soft);
+  --sh-gold-g:   var(--ocre-edge);
+  --sh-terra:    var(--terracotta);
+  --sh-terra-d:  var(--terracotta-soft);
+  --sh-blue:     #7090ff; /* kept for "Personne A" accent until migrated */
+  --sh-green:    var(--sauge);
+  --sh-cyan:     #48e8d4;
+  --sh-cyan-d:   rgba(72, 232, 212, 0.07);
+  --sh-cyan-g:   rgba(72, 232, 212, 0.16);
+  --sh-void:     var(--bg-base);
+  --sh-deep:     var(--bg-elev-1);
+  --sh-card:     var(--bg-elev-1);
+  --sh-card-h:   var(--bg-elev-2);
+  --sh-elev:     var(--bg-elev-3);
+  --sh-txt:      var(--ink-hi);
+  --sh-t2:       var(--ink-mid);
+  --sh-t3:       var(--ink-mute);
+  --sh-bdr:      var(--bdr-subtle);
+  --sh-bdr2:     var(--bdr-soft);
+  --sh-serif:    var(--font-serif);
+  --sh-sans:     var(--font-sans);
+
+  /* Global tokens (app-wide) */
+  --bg:              var(--bg-base);
+  --card:            var(--bg-elev-1);
+  --card-hover:      var(--bg-elev-2);
+  --surface:         var(--bg-elev-1);
+  --surface-hover:   var(--bg-elev-2);
+  --surface-active:  var(--bg-elev-3);
+  --primary:         var(--ocre);
+  --primary-light:   var(--male-from);
+  --secondary:       var(--ocre);
+  --accent:          var(--ocre);
+  --gold:            var(--ocre);
+  --gold-light:      var(--male-from);
+  --gold-subtle:     var(--ocre-soft);
+  --gold-border:     var(--ocre-edge);
+  --text:            var(--ink-hi);
+  --text-secondary:  var(--ink-mid);
+  --text-muted:      var(--ink-mute);
+  --border:          var(--bdr-subtle);
+  --shadow:          var(--shadow-lg);
+  --success:         var(--sauge);
+  --error:           var(--terracotta);
+}
+
+/* ============================================================
+   THEME TRANSITIONS
+   Smooth 300ms on base color changes; avoid transitioning
+   shadows / transforms (laggy).
+   ============================================================ */
+html {
+  transition: background-color 300ms var(--ease-both),
+              color 300ms var(--ease-both);
+}

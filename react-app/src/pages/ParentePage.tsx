@@ -92,10 +92,20 @@ export default function ParentePage() {
       <div className="parente-layout">
         <header className="parente-sticky-head">
           <div className="parente-hdr">
-            <div className="parente-hdr-i">{'\u{1F333}'}</div>
+            <div className="parente-hdr-i" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="7" cy="7" r="3" />
+                <circle cx="17" cy="7" r="3" />
+                <path d="M7 10v4" />
+                <path d="M17 10v4" />
+                <path d="M7 14h10" />
+                <path d="M12 14v5" />
+                <circle cx="12" cy="20" r="1.5" />
+              </svg>
+            </div>
             <div>
               <h1>Parenté</h1>
-              <small>Liens familiaux · Terminologie Songhay</small>
+              <small>Liens familiaux <em>·</em> Terminologie songhay</small>
             </div>
           </div>
           <div className="parente-sel">
@@ -119,8 +129,18 @@ export default function ParentePage() {
         <section className="parente-results">
           {!personAId || !personBId ? (
             <div className="parente-empty-state">
-              <div className="parente-empty-state-icon" aria-hidden>{'\u{1F333}'}</div>
-              <p>Sélectionnez deux personnes pour calculer leurs liens de parenté.</p>
+              <div className="parente-empty-state-icon" aria-hidden>
+                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="10" cy="8" r="3" />
+                  <circle cx="22" cy="8" r="3" />
+                  <circle cx="16" cy="24" r="3" />
+                  <path d="M10 11v4" />
+                  <path d="M22 11v4" />
+                  <path d="M10 15h12" />
+                  <path d="M16 15v6" />
+                </svg>
+              </div>
+              <p className="parente-empty-state-text">Sélectionnez deux personnes pour calculer leurs liens de parenté.</p>
               {history.length > 0 && (
                 <RelationHistoryChips
                   history={history}

@@ -114,6 +114,7 @@ export default function TreePopup({ member, members, onClose }: Props) {
           <button
             className="tree-popup-close"
             onClick={() => setConfirmDelete(false)}
+            aria-label="Fermer"
           >
             &times;
           </button>
@@ -152,7 +153,7 @@ export default function TreePopup({ member, members, onClose }: Props) {
   return (
     <div className="tree-popup-overlay" onClick={onClose}>
       <div className="tree-popup" onClick={(e) => e.stopPropagation()}>
-        <button className="tree-popup-close" onClick={onClose}>
+        <button className="tree-popup-close" onClick={onClose} aria-label="Fermer">
           &times;
         </button>
 
