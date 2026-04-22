@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import type { Member } from '../../lib/types';
 import type { RelationGroup } from './groupRelations';
 import SubTreeSvg from './SubTreeSvg';
-import ReciprocalStatements from './ReciprocalStatements';
-import PedagogicalExplanation from './PedagogicalExplanation';
 import TechnicalDetails from './TechnicalDetails';
+import MetricChips from './MetricChips';
+import ButtonTip from './ButtonTip';
 
 interface Props {
   index: number;
@@ -20,20 +19,10 @@ export default function RelationCard({ index, group, personA, personB, getMember
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [activePathIndex, setActivePathIndex] = useState(0);
   const [showTech, setShowTech] = useState(false);
-  const navigate = useNavigate();
-  const handleClickPersonA = () => navigate(`/?person=${personA.id}`);
-  const handleClickPersonB = () => navigate(`/?person=${personB.id}`);
 
   const active = group.paths[activePathIndex] ?? group.paths[0];
   const ancestor = getMember(active.via);
   const multiPath = group.paths.length > 1;
-
-  const viaLabel = multiPath
-    ? `${group.paths.length} chemins distincts`
-    : `via ${active.viaName}${active.viaSpouse ? ` & ${active.viaSpouse.name}` : ''}`;
-  const scoreLabel = expanded
-    ? ` · proximité ${active.proximityScore} · équilibre ${active.balanceScore}`
-    : '';
 
   const renderTitle = () => {
     if (group.groupTerm) {
@@ -59,34 +48,44 @@ export default function RelationCard({ index, group, personA, personB, getMember
           <em lang="son">{group.termForA}</em>
           <span className="sep">/</span>
           <em lang="son">{group.termForB}</em>
-          <span className="middot"> · </span>
         </span>
       )}
-      {viaLabel}
-      {scoreLabel}
     </p>
   );
 
   return (
     <article className={`parente-card ${expanded ? 'expanded' : 'collapsed'}`} aria-labelledby={`rel-${index}-title`}>
-      <header
-        className="parente-card-header"
-        role="button"
-        tabIndex={0}
-        aria-expanded={expanded}
-        onClick={() => setExpanded((v) => !v)}
-        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded((v) => !v); } }}
-      >
-        <span className="parente-card-num">{String(index + 1).padStart(2, '0')}</span>
-        <div className="parente-card-title-block">
-          {renderTitle()}
-          {renderSubtitle()}
-        </div>
-        <span className="parente-card-chevron" aria-hidden="true">▸</span>
+      <header className="parente-card-header">
+        <button
+          type="button"
+          className="parente-card-header-main"
+          aria-expanded={expanded}
+          aria-controls={`rel-${index}-body`}
+          onClick={() => setExpanded((v) => !v)}
+        >
+          <span className="parente-card-num">{String(index + 1).padStart(2, '0')}</span>
+          <div className="parente-card-title-block">
+            {renderTitle()}
+            {renderSubtitle()}
+            <MetricChips group={group} />
+          </div>
+        </button>
+        <ButtonTip label={expanded ? 'Replier le détail' : 'Afficher le détail'}>
+          <button
+            type="button"
+            className="parente-card-collapse"
+            onClick={() => setExpanded((v) => !v)}
+            aria-label={expanded ? 'Replier le détail' : 'Afficher le détail'}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+        </ButtonTip>
       </header>
 
       {expanded && (
-        <>
+        <div id={`rel-${index}-body`} className="parente-card-body">
           {multiPath && (
             <div className="parente-path-selector" role="tablist" aria-label="Chemins de cette relation">
               {group.paths.map((p, i) => (
@@ -116,14 +115,6 @@ export default function RelationCard({ index, group, personA, personB, getMember
               />
             </div>
           )}
-          <ReciprocalStatements
-            relation={active}
-            nameA={personA.name}
-            nameB={personB.name}
-            onClickA={handleClickPersonA}
-            onClickB={handleClickPersonB}
-          />
-          <PedagogicalExplanation relation={active} nameA={personA.name} nameB={personB.name} />
 
           <button
             type="button"
@@ -136,7 +127,7 @@ export default function RelationCard({ index, group, personA, personB, getMember
           {showTech && (
             <TechnicalDetails relation={active} personA={personA} personB={personB} getMember={getMember} />
           )}
-        </>
+        </div>
       )}
     </article>
   );

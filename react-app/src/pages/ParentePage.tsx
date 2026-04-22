@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useMembersContext } from '../context/MembersContext';
 import { computeRelations } from '../lib/parenteSonghay';
 import { useParenteLabels } from '../hooks/useParenteLabels';
@@ -7,6 +7,10 @@ import { useParenteHistory } from '../hooks/useParenteHistory';
 import PersonPicker from '../components/relationship/PersonPicker';
 import RelationCard from '../components/relationship/RelationCard';
 import RelationHistoryChips from '../components/relationship/RelationHistoryChips';
+import RelationHistoryMenu from '../components/relationship/RelationHistoryMenu';
+import AnswerBlock from '../components/relationship/AnswerBlock';
+import ReciprocityLine from '../components/relationship/ReciprocityLine';
+import ExplainAccordion from '../components/relationship/ExplainAccordion';
 import { groupRelations } from '../components/relationship/groupRelations';
 import { suggestPairs } from '../components/relationship/suggestPairs';
 
@@ -17,6 +21,7 @@ export default function ParentePage() {
   const { labels, loading: labelsLoading } = useParenteLabels();
   const { history, add: addHistory, remove: removeHistory, clear: clearHistory } = useParenteHistory();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [personAId, setPersonAIdState] = useState<string | null>(searchParams.get('a'));
   const [personBId, setPersonBIdState] = useState<string | null>(searchParams.get('b'));
   const [expanded, setExpanded] = useState(false);
@@ -87,44 +92,79 @@ export default function ParentePage() {
   const visibleGroups = expanded ? groups : groups.slice(0, DEFAULT_VISIBLE);
   const hiddenCount = Math.max(0, groups.length - DEFAULT_VISIBLE);
 
+  // --- En-tete de vue dynamique ---
+  const viewTitle = personA && personB ? (
+    <>
+      {personA.name}
+      <span className="parente-view-vs">et</span>
+      {personB.name}
+    </>
+  ) : (
+    <>Parenté</>
+  );
+  // Somme des chemins détectés sur l'ensemble des groupes : permet d'avoir un
+  // sous-titre informatif quel que soit le cas (1 groupe à N paths OU N groupes
+  // à 1 path chacun se traduisent tous deux par "N lignées distinctes").
+  const totalPaths = groups.reduce((sum, g) => sum + g.paths.length, 0);
+  const pathCountFr = (n: number): string => {
+    if (n === 2) return 'Deux';
+    if (n === 3) return 'Trois';
+    if (n === 4) return 'Quatre';
+    if (n === 5) return 'Cinq';
+    if (n === 6) return 'Six';
+    if (n === 7) return 'Sept';
+    if (n === 8) return 'Huit';
+    if (n === 9) return 'Neuf';
+    return String(n);
+  };
+  const viewSub = personA && personB
+    ? (totalPaths > 1
+        ? `${pathCountFr(totalPaths)} lignées distinctes relient ces deux personnes`
+        : 'Lien de parenté songhay')
+    : 'Sélectionnez deux personnes pour commencer';
+
+  const primaryGroup = groups[0];
+  const gotoPersonA = () => personA && navigate(`/?person=${personA.id}`);
+  const gotoPersonB = () => personB && navigate(`/?person=${personB.id}`);
+
   return (
     <div className="page active parente-page">
       <div className="parente-layout">
-        <header className="parente-sticky-head">
-          <div className="parente-hdr">
-            <div className="parente-hdr-i" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="7" cy="7" r="3" />
-                <circle cx="17" cy="7" r="3" />
-                <path d="M7 10v4" />
-                <path d="M17 10v4" />
-                <path d="M7 14h10" />
-                <path d="M12 14v5" />
-                <circle cx="12" cy="20" r="1.5" />
-              </svg>
-            </div>
-            <div>
-              <h1>Parenté</h1>
-              <small>Liens familiaux <em>·</em> Terminologie songhay</small>
-            </div>
+        <header className="parente-view-header">
+          <div className="parente-view-header-main">
+            <h1 className="parente-view-title">{viewTitle}</h1>
+            <div className="parente-view-sub">{viewSub}</div>
           </div>
-          <div className="parente-sel">
-            <PersonPicker
-              label="Personne A"
-              value={personAId}
-              members={members}
-              onChange={setPersonAId}
-              side="a"
-            />
-            <PersonPicker
-              label="Personne B"
-              value={personBId}
-              members={members}
-              onChange={setPersonBId}
-              side="b"
-            />
-          </div>
+          <RelationHistoryMenu
+            history={history}
+            onSelect={(entry) => {
+              setPersonAId(entry.aId);
+              setPersonBId(entry.bId);
+            }}
+            onRemove={removeHistory}
+            onClear={clearHistory}
+            onNewSearch={() => {
+              setPersonAId(null);
+              setPersonBId(null);
+            }}
+          />
         </header>
+        <div className="parente-sel">
+          <PersonPicker
+            label="Personne A"
+            value={personAId}
+            members={members}
+            onChange={setPersonAId}
+            side="a"
+          />
+          <PersonPicker
+            label="Personne B"
+            value={personBId}
+            members={members}
+            onChange={setPersonBId}
+            side="b"
+          />
+        </div>
 
         <section className="parente-results">
           {!personAId || !personBId ? (
@@ -197,40 +237,58 @@ export default function ParentePage() {
                 })}
               </ul>
             </div>
-          ) : result?.kind === 'relations' && personA && personB ? (
+          ) : result?.kind === 'relations' && personA && personB && primaryGroup ? (
             <>
-              <div className="parente-summary">
-                <span className="parente-summary-num">{groups.length}</span>
-                <span>
-                  {groups.length === 1 ? 'lien trouvé' : 'liens trouvés'} · plus proche :{' '}
-                  <em lang="son">{groups[0].termForA}</em>
-                  <span className="sep">/</span>
-                  <em lang="son">{groups[0].termForB}</em>
-                </span>
-              </div>
+              {groups.length > 1 && (
+                <p className="parente-multi-intro">
+                  <strong>{groups.length} liens distincts</strong> relient{' '}
+                  {personA.name} et {personB.name}. Voici chacun d'entre eux :
+                </p>
+              )}
 
               {visibleGroups.map((g, i) => (
-                <RelationCard
+                <section
                   key={`${g.termForA}-${g.termForB}-${i}`}
-                  index={i}
-                  group={g}
-                  personA={personA}
-                  personB={personB}
-                  getMember={getMember}
-                  defaultExpanded={i === 0}
-                />
+                  className="parente-result-section"
+                  aria-label={`Lien ${i + 1} sur ${groups.length}`}
+                >
+                  <AnswerBlock
+                    group={g}
+                    personA={personA}
+                    personB={personB}
+                    onClickA={gotoPersonA}
+                    onClickB={gotoPersonB}
+                  />
+                  <ReciprocityLine
+                    group={g}
+                    personA={personA}
+                    personB={personB}
+                    onClickA={gotoPersonA}
+                    onClickB={gotoPersonB}
+                  />
+                  <RelationCard
+                    index={i}
+                    group={g}
+                    personA={personA}
+                    personB={personB}
+                    getMember={getMember}
+                    defaultExpanded={i === 0}
+                  />
+                </section>
               ))}
 
               {hiddenCount > 0 && !expanded && (
                 <button type="button" className="parente-show-more" onClick={() => setExpanded(true)}>
-                  + Voir les {hiddenCount} autre{hiddenCount > 1 ? 's' : ''} relation{hiddenCount > 1 ? 's' : ''}
+                  + Voir les {hiddenCount} autre{hiddenCount > 1 ? 's' : ''} lien{hiddenCount > 1 ? 's' : ''}
                 </button>
               )}
               {expanded && hiddenCount > 0 && (
                 <button type="button" className="parente-show-more" onClick={() => setExpanded(false)}>
-                  − Masquer les relations additionnelles
+                  − Masquer les liens additionnels
                 </button>
               )}
+
+              <ExplainAccordion group={primaryGroup} personA={personA} personB={personB} />
             </>
           ) : null}
         </section>

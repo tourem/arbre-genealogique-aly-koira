@@ -11,6 +11,9 @@ export { defaultLabels } from './labels';
 export { applyLabels } from './applyLabels';
 export { explainRelation } from './explain';
 export { glossForTerm } from './glossForTerm';
+export { anthroLabel } from './anthroLabel';
+export { explainParagraphs } from './explainParagraphs';
+export type { ExplainParagraphs } from './explainParagraphs';
 
 function toPerson(m: Member): Person {
   return { id: m.id, name: m.name, sex: m.gender, fatherId: m.father_id, motherId: m.mother_ref };

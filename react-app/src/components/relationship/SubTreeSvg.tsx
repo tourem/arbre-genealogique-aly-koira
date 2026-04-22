@@ -104,6 +104,7 @@ export default function SubTreeSvg({ relation, personA, personB, ancestor, getMe
 
   const content = (
     <>
+      <div className="parente-subtree-block">
       <div
         ref={viewportRef}
         className={`parente-subtree-viewport${dragging ? ' dragging' : ''}`}
@@ -118,36 +119,47 @@ export default function SubTreeSvg({ relation, personA, personB, ancestor, getMe
           style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, width, height }}
         >
           <svg width={width} height={height} className="parente-subtree-svg">
-            {edges.map((e, i) => (
-              <g key={`edge-${i}`}>
-                <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} className="parente-edge" />
-                <g transform={`translate(${e.mx - 10}, ${e.my - 9})`}>
-                  <rect width="20" height="18" rx="4" className="parente-edge-pm-bg" />
-                  <text x="10" y="13" textAnchor="middle" className="parente-edge-pm-text">{e.label}</text>
+            {edges.map((e, i) => {
+              const tooltip = e.label === 'P' ? 'chaîne paternelle' : 'chaîne maternelle';
+              return (
+                <g key={`edge-${i}`}>
+                  <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} className="parente-edge" />
+                  <g transform={`translate(${e.mx - 13}, ${e.my - 13})`}>
+                    <rect width="26" height="26" rx="5" className="parente-edge-pm-bg" />
+                    <text x="13" y="17" textAnchor="middle" className="parente-edge-pm-text">{e.label}</text>
+                    <title>{tooltip}</title>
+                  </g>
                 </g>
-              </g>
-            ))}
+              );
+            })}
           </svg>
-          {boxes.map((b) => (
-            <div
-              key={b.id}
-              className={`parente-node role-${b.role} sex-${b.sex}`}
-              style={{ left: b.x, top: b.y, width: NODE_W, height: NODE_H }}
-              role="button"
-              aria-label={`${b.name}, ${b.sex === 'F' ? 'femme' : 'homme'}`}
-            >
-              <div className="parente-node-name">{b.name}</div>
-              {b.role !== 'mid' && (
-                <div className="parente-node-tag">{b.role}</div>
-              )}
-              {b.term && (
-                <div className="parente-node-term">
-                  <em lang="son">« {b.term} »</em>
-                  {b.gloss && <div className="parente-node-gloss">{b.gloss}</div>}
-                </div>
-              )}
-            </div>
-          ))}
+          {boxes.map((b) => {
+            const isLCA = b.role === 'LCA';
+            const lcaLabel = isLCA ? (b.sex === 'F' ? 'aïeule commune' : 'aïeul commun') : null;
+            return (
+              <div
+                key={b.id}
+                className={`parente-node role-${b.role} sex-${b.sex}`}
+                style={{ left: b.x, top: b.y, width: NODE_W, height: NODE_H }}
+                role="button"
+                aria-label={`${b.name}, ${b.sex === 'F' ? 'femme' : 'homme'}${isLCA ? `, ${lcaLabel}` : ''}`}
+              >
+                <div className="parente-node-name">{b.name}</div>
+                {lcaLabel && (
+                  <div className="parente-node-lca-label">{lcaLabel}</div>
+                )}
+                {!isLCA && b.role !== 'mid' && (
+                  <div className="parente-node-tag">{b.role}</div>
+                )}
+                {b.term && (
+                  <div className="parente-node-term">
+                    <em lang="son">« {b.term} »</em>
+                    {b.gloss && <div className="parente-node-gloss">{b.gloss}</div>}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -168,12 +180,13 @@ export default function SubTreeSvg({ relation, personA, personB, ancestor, getMe
         )}
       </div>
 
-      <div className="parente-legend">
+      <div className="parente-legend parente-legend--attached">
         <span className="legend-item"><span className="dot a" /> Personne A</span>
         <span className="legend-item"><span className="dot b" /> Personne B</span>
-        <span className="legend-item"><span className="dot lca" /> Ancêtre commun</span>
+        <span className="legend-item"><span className="dot lca" /> Aïeul commun</span>
         <span className="legend-item"><span className="dot-pm">P</span> chaîne paternelle</span>
         <span className="legend-item"><span className="dot-pm">M</span> chaîne maternelle</span>
+      </div>
       </div>
     </>
   );
