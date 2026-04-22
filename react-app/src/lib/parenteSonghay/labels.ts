@@ -58,7 +58,7 @@ export const defaultLabels: Record<string, string> = {
   'explain.cross':
     '{nameA} et {nameB} descendent de {lcaCouple} par des parents de sexes opposés (lien croisé). Le système songhay distingue rigoureusement ces cousins croisés de la fratrie parallèle : ils portent le terme dédié « baassa arou » / « baassa woy ».',
   'explain.avuncular.parallel':
-    '{nameA} est {termA} de {nameB} : oncle ou tante parallèle, c\'est-à-dire frère-équivalent du parent de même sexe. Par la règle de fusion bifurquée, il/elle est nommé(e) comme le parent direct.',
+    '{nameA} est {termA} de {nameB} : oncle ou tante parallèle, c\'est-à-dire frère ou sœur du parent de même sexe. Par la règle de fusion bifurquée, {nameA} porte alors le même terme que le parent direct.',
   'explain.avuncular.hassa':
     'En pays songhay, l\'oncle maternel porte un nom dédié — « hassa » — qui marque son rôle social spécial (avunculat soudanais). Le neveu / la nièce par cette relation est « touba ». Cette asymétrie lexicale ne s\'applique qu\'à l\'oncle maternel, pas à la tante paternelle.',
   'explain.avuncular.hawa':

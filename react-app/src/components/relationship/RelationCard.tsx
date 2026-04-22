@@ -1,10 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import type { Member } from '../../lib/types';
 import type { RelationGroup } from './groupRelations';
 import SubTreeSvg from './SubTreeSvg';
-import ReciprocalStatements from './ReciprocalStatements';
-import PedagogicalExplanation from './PedagogicalExplanation';
 import TechnicalDetails from './TechnicalDetails';
 
 interface Props {
@@ -20,9 +17,6 @@ export default function RelationCard({ index, group, personA, personB, getMember
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [activePathIndex, setActivePathIndex] = useState(0);
   const [showTech, setShowTech] = useState(false);
-  const navigate = useNavigate();
-  const handleClickPersonA = () => navigate(`/?person=${personA.id}`);
-  const handleClickPersonB = () => navigate(`/?person=${personB.id}`);
 
   const active = group.paths[activePathIndex] ?? group.paths[0];
   const ancestor = getMember(active.via);
@@ -116,14 +110,6 @@ export default function RelationCard({ index, group, personA, personB, getMember
               />
             </div>
           )}
-          <ReciprocalStatements
-            relation={active}
-            nameA={personA.name}
-            nameB={personB.name}
-            onClickA={handleClickPersonA}
-            onClickB={handleClickPersonB}
-          />
-          <PedagogicalExplanation relation={active} nameA={personA.name} nameB={personB.name} />
 
           <button
             type="button"
