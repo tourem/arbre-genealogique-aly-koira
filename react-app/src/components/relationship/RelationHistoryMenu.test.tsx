@@ -99,3 +99,55 @@ describe('RelationHistoryMenu — entrees', () => {
     expect(screen.getByRole('menuitem', { name: /nouvelle recherche/i })).toBeInTheDocument();
   });
 });
+
+describe('RelationHistoryMenu — callbacks', () => {
+  it('appelle onSelect avec la bonne entree au clic et ferme le menu', () => {
+    const onSelect = vi.fn();
+    const entry = makeEntry({ aId: 'x', bId: 'y', aName: 'Alice', bName: 'Bob' });
+    render(
+      <RelationHistoryMenu history={[entry]} onSelect={onSelect} onRemove={noop} onClear={noop} onNewSearch={noop} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    fireEvent.click(screen.getByRole('menuitem', { name: /rouvrir Alice et Bob/i }));
+    expect(onSelect).toHaveBeenCalledWith(entry);
+    // Le menu s'est ferme
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+
+  it('appelle onRemove avec aId, bId au clic sur x sans appeler onSelect', () => {
+    const onSelect = vi.fn();
+    const onRemove = vi.fn();
+    render(
+      <RelationHistoryMenu
+        history={[makeEntry({ aId: 'x', bId: 'y', aName: 'Alice', bName: 'Bob' })]}
+        onSelect={onSelect} onRemove={onRemove} onClear={noop} onNewSearch={noop}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    fireEvent.click(screen.getByRole('button', { name: /retirer Alice et Bob/i }));
+    expect(onRemove).toHaveBeenCalledWith('x', 'y');
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+
+  it('appelle onClear au clic sur "Effacer tout" et ferme le menu', () => {
+    const onClear = vi.fn();
+    render(
+      <RelationHistoryMenu history={[makeEntry()]} onSelect={noop} onRemove={noop} onClear={onClear} onNewSearch={noop} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    fireEvent.click(screen.getByRole('menuitem', { name: /effacer tout/i }));
+    expect(onClear).toHaveBeenCalled();
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+
+  it('appelle onNewSearch au clic sur "Nouvelle recherche" et ferme le menu', () => {
+    const onNewSearch = vi.fn();
+    render(
+      <RelationHistoryMenu history={[makeEntry()]} onSelect={noop} onRemove={noop} onClear={noop} onNewSearch={onNewSearch} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /historique/i }));
+    fireEvent.click(screen.getByRole('menuitem', { name: /nouvelle recherche/i }));
+    expect(onNewSearch).toHaveBeenCalled();
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+});
