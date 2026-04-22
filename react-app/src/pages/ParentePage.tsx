@@ -7,6 +7,7 @@ import { useParenteHistory } from '../hooks/useParenteHistory';
 import PersonPicker from '../components/relationship/PersonPicker';
 import RelationCard from '../components/relationship/RelationCard';
 import RelationHistoryChips from '../components/relationship/RelationHistoryChips';
+import RelationHistoryMenu from '../components/relationship/RelationHistoryMenu';
 import AnswerBlock from '../components/relationship/AnswerBlock';
 import ReciprocityLine from '../components/relationship/ReciprocityLine';
 import ExplainAccordion from '../components/relationship/ExplainAccordion';
@@ -130,8 +131,23 @@ export default function ParentePage() {
     <div className="page active parente-page">
       <div className="parente-layout">
         <header className="parente-view-header">
-          <h1 className="parente-view-title">{viewTitle}</h1>
-          <div className="parente-view-sub">{viewSub}</div>
+          <div className="parente-view-header-main">
+            <h1 className="parente-view-title">{viewTitle}</h1>
+            <div className="parente-view-sub">{viewSub}</div>
+          </div>
+          <RelationHistoryMenu
+            history={history}
+            onSelect={(entry) => {
+              setPersonAId(entry.aId);
+              setPersonBId(entry.bId);
+            }}
+            onRemove={removeHistory}
+            onClear={clearHistory}
+            onNewSearch={() => {
+              setPersonAId(null);
+              setPersonBId(null);
+            }}
+          />
         </header>
         <div className="parente-sel">
           <PersonPicker
