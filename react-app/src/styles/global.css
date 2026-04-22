@@ -11171,3 +11171,49 @@ html[data-theme="light"] .parente-history-menu-new:focus-visible {
   }
 }
 
+/* =============================================================
+ * RelationHistoryChips (empty-state) — light theme
+ * Les regles de base (lignes ~6431-6444) ciblent le dark : fond
+ * rgba(255,255,255,0.03), texte #ece8e0 (quasi-blanc), separateurs
+ * gris clair — invisibles sur fond creme. Overrides ici avec la
+ * palette ink/ocre/terracotta du theme clair.
+ * ============================================================= */
+html[data-theme="light"] .parente-history-title {
+  color: #5c4a32;
+}
+html[data-theme="light"] .parente-history-clear {
+  color: #5c4a32;
+}
+html[data-theme="light"] .parente-history-clear:hover,
+html[data-theme="light"] .parente-history-clear:focus-visible {
+  color: #a94726;
+  background: rgba(169,71,38,0.08);
+}
+html[data-theme="light"] .parente-history-chip {
+  background: rgba(255,255,255,0.80);
+  border-color: rgba(42,31,18,0.18);
+}
+html[data-theme="light"] .parente-history-chip:hover {
+  background: rgba(184,134,42,0.10);
+  border-color: rgba(184,134,42,0.45);
+}
+html[data-theme="light"] .parente-history-chip-main {
+  color: #2a1f12;
+}
+html[data-theme="light"] .parente-history-chip-main .chip-sep {
+  color: #8a7a5a;
+}
+html[data-theme="light"] .parente-history-chip-main .chip-term {
+  color: #a94726;
+  opacity: 1;
+}
+html[data-theme="light"] .parente-history-chip-remove {
+  border-left-color: rgba(42,31,18,0.12);
+  color: #5c4a32;
+}
+html[data-theme="light"] .parente-history-chip-remove:hover,
+html[data-theme="light"] .parente-history-chip-remove:focus-visible {
+  color: #a94726;
+  background: rgba(169,71,38,0.10);
+}
+
