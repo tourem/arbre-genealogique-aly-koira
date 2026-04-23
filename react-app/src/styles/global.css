@@ -7397,10 +7397,10 @@ button.parent-card { width: 100%; }
   gap: 8px;
   align-items: center;
   padding: 8px 10px 8px 8px;
-  background: transparent;
-  border: 0;
-  border-left: 2px solid transparent;
-  border-radius: 6px;
+  background: rgba(244,236,216,0.04);
+  border: 1px solid rgba(244,236,216,0.10);
+  border-left: 2px solid rgba(244,236,216,0.12);
+  border-radius: 8px;
   color: inherit;
   font-family: inherit;
   text-align: left;
@@ -7409,6 +7409,7 @@ button.parent-card { width: 100%; }
 }
 .child-chip:hover {
   background: var(--bg-elev-2, #252018);
+  border-color: rgba(244,236,216,0.18);
   border-left-color: var(--ocre, #d4a84a);
 }
 .child-chip:focus-visible {
@@ -9654,11 +9655,10 @@ button.parent-card { width: 100%; }
 .child-chip--has-menu {
   display: block;
   padding: 0;
-  border-left: 0;
+  /* Le bg + bordure de base sont herites de .child-chip ci-dessus.
+   * On garde la bordure gauche pour que le mini-card reste delimite
+   * meme avec le menu ⋯. */
   position: relative;
-}
-.child-chip--has-menu:hover {
-  border-left-color: transparent;
 }
 .child-chip--has-menu .card-menu-btn {
   position: absolute;
@@ -11215,5 +11215,26 @@ html[data-theme="light"] .parente-history-chip-remove:hover,
 html[data-theme="light"] .parente-history-chip-remove:focus-visible {
   color: #a94726;
   background: rgba(169,71,38,0.10);
+}
+
+/* =============================================================
+ * Foyers — delimitation des mini-cards enfants en mode clair
+ * Le base rule (.child-chip ligne ~7394) utilise rgba(244,236,216,X)
+ * (creme) pour bg + bordures — invisible sur fond creme du theme
+ * clair. Overrides ici avec la palette ink/ocre.
+ * ============================================================= */
+html[data-theme="light"] .child-chip {
+  background: rgba(42,31,18,0.03);
+  border-color: rgba(42,31,18,0.14);
+  border-left-color: rgba(42,31,18,0.20);
+}
+html[data-theme="light"] .child-chip:hover {
+  background: rgba(184,134,42,0.10);
+  border-color: rgba(184,134,42,0.40);
+  border-left-color: #8a6420;
+}
+html[data-theme="light"] .child-chip--has-menu .child-chip-body:hover {
+  background: rgba(184,134,42,0.10);
+  border-left-color: #8a6420;
 }
 
