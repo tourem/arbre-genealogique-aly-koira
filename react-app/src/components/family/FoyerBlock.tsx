@@ -120,12 +120,12 @@ export default function FoyerBlock({
                   <span className="child-chip-main">
                     <span className="child-chip-name">{c.name}</span>
                     {c.alias && <span className="child-chip-alias">« {c.alias} »</span>}
-                  </span>
-                  <span className="child-chip-meta">
-                    <span className="child-chip-gen">G{c.generation}</span>
-                    <span className="child-chip-sep" aria-hidden="true">·</span>
-                    <span className={`child-chip-gender child-chip-gender--${c.gender === 'M' ? 'm' : 'f'}`} aria-hidden="true">
-                      {c.gender === 'M' ? '♂' : '♀'}
+                    <span className="child-chip-meta">
+                      <span className="child-chip-gen">G{c.generation}</span>
+                      <span className="child-chip-sep" aria-hidden="true">·</span>
+                      <span className={`child-chip-gender child-chip-gender--${c.gender === 'M' ? 'm' : 'f'}`} aria-hidden="true">
+                        {c.gender === 'M' ? '♂' : '♀'}
+                      </span>
                     </span>
                   </span>
                 </button>

@@ -7398,14 +7398,14 @@ button.parent-card { width: 100%; }
   display: grid;
   /* max-content empêche un chip unique de s'étirer sur toute la largeur.
      justify-content: start aligne les chips à gauche quand peu nombreux. */
-  grid-template-columns: repeat(auto-fill, minmax(150px, max-content));
+  grid-template-columns: repeat(auto-fill, minmax(190px, max-content));
   justify-content: start;
   gap: 6px;
 }
 
 .child-chip {
   display: grid;
-  grid-template-columns: 26px 1fr auto;
+  grid-template-columns: 26px 1fr;
   gap: 8px;
   align-items: center;
   padding: 8px 10px 8px 8px;
@@ -7441,7 +7441,7 @@ button.parent-card { width: 100%; }
   -webkit-box-orient: vertical;
   overflow: hidden;
   line-height: 1.25;
-  max-width: 180px;
+  word-break: break-word;
 }
 .child-chip-alias {
   font-family: var(--font-serif, 'Fraunces', serif);
@@ -7451,6 +7451,7 @@ button.parent-card { width: 100%; }
 }
 .child-chip-meta {
   display: inline-flex; align-items: center; gap: 3px;
+  margin-top: 3px;
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
   font-size: 10px;
   color: var(--ink-mute, #8b8471);
@@ -7505,7 +7506,7 @@ button.parent-card { width: 100%; }
   .foyer-count-num { font-size: 20px; }
   .foyer-descendants { padding-top: 14px; padding-left: 10px; }
   .foyer-descendants::before { left: 10px; }
-  .foyer-descendants-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 4px; padding-left: 8px; }
+  .foyer-descendants-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 4px; padding-left: 8px; }
   .child-chip { padding: 8px 10px 8px 8px; gap: 6px; }
 }
 
@@ -9734,9 +9735,9 @@ button.parent-card { width: 100%; }
   color: inherit;
   font: inherit;
   display: grid;
-  grid-template-columns: 26px 1fr auto;
+  grid-template-columns: 26px 1fr;
   gap: 8px;
-  align-items: center;
+  align-items: start;
   padding: 8px 28px 8px 8px; /* room for ⋯ on right */
   margin: 0;
   width: 100%;
