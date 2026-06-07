@@ -7199,6 +7199,15 @@ button.parent-card { width: 100%; }
 .parent-card-info:hover { background: var(--ocre-soft, rgba(212,168,74,0.14)); color: var(--ocre, #d4a84a); }
 .parent-card-info svg { width: 12px; height: 12px; }
 
+/* Parent card : conteneur positionné quand ℹ présent + coexistence avec menu ⋯ */
+.parent-card--has-info {
+  display: block;
+  padding: 0;
+  position: relative;
+}
+.parent-card--has-info.parent-card--has-menu .parent-card-info { right: 42px; }
+.parent-card--has-info.parent-card--has-menu .parent-card-body { padding-right: 76px; }
+
 /* Responsive */
 @media (max-width: 767px) {
   .parents-grid { grid-template-columns: 1fr; }
@@ -7324,9 +7333,12 @@ button.parent-card { width: 100%; }
   cursor: pointer;
   display: grid; place-items: center;
   margin-left: 8px;
-  transition: background-color 140ms var(--ease-out, ease), color 140ms var(--ease-out, ease);
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: background-color 140ms var(--ease-out, ease), color 140ms var(--ease-out, ease), opacity 140ms var(--ease-out, ease);
 }
-.foyer-info-btn:hover { background: var(--ocre-soft); color: var(--ocre); }
+.foyer-info-btn:hover,
+.foyer-info-btn:focus-visible { opacity: 1; background: var(--ocre-soft); color: var(--ocre); outline: none; }
 .foyer-info-btn svg { width: 12px; height: 12px; }
 
 .foyer-count {
@@ -7442,6 +7454,41 @@ button.parent-card { width: 100%; }
 .child-chip-sep { opacity: 0.6; }
 .child-chip-gender--m { color: #7090ff; }
 .child-chip-gender--f { color: var(--prune, #8b5a75); }
+
+/* ---- Aperçu rapide : bouton ℹ sur le chip enfant ---- */
+.child-chip--has-info {
+  display: block;
+  padding: 0;
+  position: relative;
+}
+.child-chip-info-btn {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 22px; height: 22px; min-width: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--bdr-strong, rgba(244,236,216,0.18));
+  background: transparent;
+  color: var(--ink-mute, #8b8471);
+  display: grid; place-items: center;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: background-color 140ms var(--ease-out, ease), color 140ms var(--ease-out, ease), opacity 140ms var(--ease-out, ease);
+}
+.child-chip-info-btn svg { width: 12px; height: 12px; }
+.child-chip-info-btn:hover,
+.child-chip-info-btn:focus-visible {
+  opacity: 1;
+  background: var(--ocre-soft, rgba(212,168,74,0.14));
+  color: var(--ocre, #d4a84a);
+  border-color: color-mix(in srgb, var(--ocre, #d4a84a) 30%, transparent);
+  outline: none;
+}
+/* Coexistence ℹ + menu ⋯ (admin) : ℹ se décale à gauche du menu */
+.child-chip--has-info.child-chip--has-menu .child-chip-info-btn { right: 28px; }
+.child-chip--has-info.child-chip--has-menu .child-chip-body { padding-right: 52px; }
 
 /* Responsive */
 @media (max-width: 767px) {
@@ -9706,6 +9753,19 @@ button.parent-card { width: 100%; }
 /* Light theme */
 [data-theme="light"] .card-menu-btn {
   color: rgba(30,26,18,0.55);
+}
+[data-theme="light"] .child-chip-info-btn,
+[data-theme="light"] .parent-card-info,
+[data-theme="light"] .foyer-info-btn {
+  color: rgba(30,26,18,0.55);
+  border-color: rgba(0,0,0,0.16);
+}
+[data-theme="light"] .child-chip-info-btn:hover,
+[data-theme="light"] .child-chip-info-btn:focus-visible,
+[data-theme="light"] .parent-card-info:hover,
+[data-theme="light"] .foyer-info-btn:hover,
+[data-theme="light"] .foyer-info-btn:focus-visible {
+  color: var(--ocre, #b5852f);
 }
 [data-theme="light"] .card-menu {
   background: #faf7f0;
