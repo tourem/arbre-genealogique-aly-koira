@@ -43,4 +43,12 @@ describe('FoyerBlock — boutons aperçu ℹ', () => {
     render(<FoyerBlock foyer={makeFoyer({ spouse: null, spouseName: null, orphan: true })} personGender="M" members={{}} onNavigate={vi.fn()} onInfo={vi.fn()} showRank={false} />);
     expect(screen.getAllByRole('button', { name: /Aperçu de/i })).toHaveLength(1);
   });
+
+  it('affiche le nom complet de l’enfant sur le chip (pas seulement le prénom)', () => {
+    render(<FoyerBlock foyer={makeFoyer()} personGender="M" members={{}} onNavigate={vi.fn()} onInfo={vi.fn()} showRank={false} />);
+    // child.name === 'Aliou Diallo', child.first_name === 'Aliou'
+    const nameEl = document.querySelector('.child-chip-name');
+    expect(nameEl).not.toBeNull();
+    expect(nameEl).toHaveTextContent('Aliou Diallo');
+  });
 });

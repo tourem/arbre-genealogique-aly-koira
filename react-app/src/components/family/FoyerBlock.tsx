@@ -118,7 +118,7 @@ export default function FoyerBlock({
                 >
                   <Avatar name={c.name} gender={c.gender} size="sm" />
                   <span className="child-chip-main">
-                    <span className="child-chip-name">{c.first_name ?? c.name.split(' ')[0] ?? c.name}</span>
+                    <span className="child-chip-name">{c.name}</span>
                     {c.alias && <span className="child-chip-alias">« {c.alias} »</span>}
                   </span>
                   <span className="child-chip-meta">

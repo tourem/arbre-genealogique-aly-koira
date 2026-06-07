@@ -7433,9 +7433,15 @@ button.parent-card { width: 100%; }
   font-size: 13px;
   font-weight: 500;
   color: var(--ink-hi, #f4ecd8);
+  /* Nom complet sur 2 lignes max (puis « … »). max-width borne la largeur
+     du chip pour forcer le retour à la ligne des noms longs. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.25;
+  max-width: 180px;
 }
 .child-chip-alias {
   font-family: var(--font-serif, 'Fraunces', serif);
