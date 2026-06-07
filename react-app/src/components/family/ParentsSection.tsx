@@ -3,6 +3,7 @@ import { buildLineage } from '../../lib/lineage';
 import Avatar from '../ui/Avatar';
 import SonghayTerm from '../ui/SonghayTerm';
 import CardActionsMenu from './CardActionsMenu';
+import InfoIcon from '../ui/InfoIcon';
 
 interface Props {
   person: Member;
@@ -29,7 +30,7 @@ interface ParentCardProps {
 }
 
 function ParentCard({
-  parent, fallbackName, role, members, onNavigate, onInfo: _onInfo,
+  parent, fallbackName, role, members, onNavigate, onInfo,
   fallbackMotherRef: _fallbackMotherRef, personGeneration, otherParentId,
   showActions, onDetach,
 }: ParentCardProps) {
@@ -65,7 +66,7 @@ function ParentCard({
   if (parent) {
     const lineage = buildLineage(parent, members, { excludeSpouseId: otherParentId ?? null });
     return (
-      <div className={`parent-card parent-card--${role}${showActions ? ' parent-card--has-menu' : ''}`}>
+      <div className={`parent-card parent-card--${role}${onInfo ? ' parent-card--has-info' : ''}${showActions ? ' parent-card--has-menu' : ''}`}>
         <button
           type="button"
           className="parent-card-body"
@@ -91,6 +92,16 @@ function ParentCard({
             <polyline points="9 18 15 12 9 6" />
           </svg>
         </button>
+        {onInfo && (
+          <button
+            type="button"
+            className="parent-card-info"
+            onClick={() => onInfo(parent)}
+            aria-label={`Aperçu de ${parent.name}`}
+          >
+            <InfoIcon />
+          </button>
+        )}
         {renderMenu(parent.name)}
       </div>
     );
