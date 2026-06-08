@@ -2,6 +2,7 @@ import type { Member, MemberDict } from '../../lib/types';
 import { rankLabel, type Foyer } from '../../lib/foyers';
 import Avatar from '../ui/Avatar';
 import CardActionsMenu from './CardActionsMenu';
+import InfoIcon from '../ui/InfoIcon';
 
 interface Props {
   foyer: Foyer;
@@ -19,7 +20,7 @@ interface Props {
 }
 
 export default function FoyerBlock({
-  foyer, personGender, members: _members, onNavigate, onInfo: _onInfo, showRank,
+  foyer, personGender, members: _members, onNavigate, onInfo, showRank,
   showActions, onDissolve, onDetachChild,
 }: Props) {
   const { rank, spouse, spouseName, children, orphan } = foyer;
@@ -76,6 +77,16 @@ export default function FoyerBlock({
               <div className="foyer-spouse-rank">{spouseGender === 'M' ? 'Époux' : 'Épouse'}</div>
             )}
           </div>
+          {onInfo && spouse && (
+            <button
+              type="button"
+              className="foyer-info-btn"
+              onClick={() => onInfo(spouse)}
+              aria-label={`Aperçu de ${spouse.name}`}
+            >
+              <InfoIcon />
+            </button>
+          )}
         </div>
         <div className="foyer-count" aria-label={`${count} enfant${count > 1 ? 's' : ''}`}>
           <span className="foyer-count-num">{count}</span>
@@ -96,7 +107,7 @@ export default function FoyerBlock({
             {children.map((c) => (
               <div
                 key={c.id}
-                className={`child-chip${showActions && onDetachChild ? ' child-chip--has-menu' : ''}`}
+                className={`child-chip${onInfo ? ' child-chip--has-info' : ''}${showActions && onDetachChild ? ' child-chip--has-menu' : ''}`}
                 role="listitem"
               >
                 <button
@@ -107,17 +118,27 @@ export default function FoyerBlock({
                 >
                   <Avatar name={c.name} gender={c.gender} size="sm" />
                   <span className="child-chip-main">
-                    <span className="child-chip-name">{c.first_name ?? c.name.split(' ')[0] ?? c.name}</span>
+                    <span className="child-chip-name">{c.name}</span>
                     {c.alias && <span className="child-chip-alias">« {c.alias} »</span>}
-                  </span>
-                  <span className="child-chip-meta">
-                    <span className="child-chip-gen">G{c.generation}</span>
-                    <span className="child-chip-sep" aria-hidden="true">·</span>
-                    <span className={`child-chip-gender child-chip-gender--${c.gender === 'M' ? 'm' : 'f'}`} aria-hidden="true">
-                      {c.gender === 'M' ? '♂' : '♀'}
+                    <span className="child-chip-meta">
+                      <span className="child-chip-gen">G{c.generation}</span>
+                      <span className="child-chip-sep" aria-hidden="true">·</span>
+                      <span className={`child-chip-gender child-chip-gender--${c.gender === 'M' ? 'm' : 'f'}`} aria-hidden="true">
+                        {c.gender === 'M' ? '♂' : '♀'}
+                      </span>
                     </span>
                   </span>
                 </button>
+                {onInfo && (
+                  <button
+                    type="button"
+                    className="child-chip-info-btn"
+                    onClick={() => onInfo(c)}
+                    aria-label={`Aperçu de ${c.name}`}
+                  >
+                    <InfoIcon />
+                  </button>
+                )}
                 {showActions && onDetachChild && (
                   <CardActionsMenu
                     actions={[

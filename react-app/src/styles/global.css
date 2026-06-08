@@ -7199,6 +7199,15 @@ button.parent-card { width: 100%; }
 .parent-card-info:hover { background: var(--ocre-soft, rgba(212,168,74,0.14)); color: var(--ocre, #d4a84a); }
 .parent-card-info svg { width: 12px; height: 12px; }
 
+/* Parent card : conteneur positionné quand ℹ présent + coexistence avec menu ⋯ */
+.parent-card--has-info {
+  display: block;
+  padding: 0;
+  position: relative;
+}
+.parent-card--has-info.parent-card--has-menu .parent-card-info { right: 42px; }
+.parent-card--has-info.parent-card--has-menu .parent-card-body { padding-right: 76px; }
+
 /* Responsive */
 @media (max-width: 767px) {
   .parents-grid { grid-template-columns: 1fr; }
@@ -7324,9 +7333,12 @@ button.parent-card { width: 100%; }
   cursor: pointer;
   display: grid; place-items: center;
   margin-left: 8px;
-  transition: background-color 140ms var(--ease-out, ease), color 140ms var(--ease-out, ease);
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: background-color 140ms var(--ease-out, ease), color 140ms var(--ease-out, ease), opacity 140ms var(--ease-out, ease);
 }
-.foyer-info-btn:hover { background: var(--ocre-soft); color: var(--ocre); }
+.foyer-info-btn:hover,
+.foyer-info-btn:focus-visible { opacity: 1; background: var(--ocre-soft); color: var(--ocre); outline: none; }
 .foyer-info-btn svg { width: 12px; height: 12px; }
 
 .foyer-count {
@@ -7386,14 +7398,14 @@ button.parent-card { width: 100%; }
   display: grid;
   /* max-content empêche un chip unique de s'étirer sur toute la largeur.
      justify-content: start aligne les chips à gauche quand peu nombreux. */
-  grid-template-columns: repeat(auto-fill, minmax(150px, max-content));
+  grid-template-columns: repeat(auto-fill, minmax(190px, max-content));
   justify-content: start;
   gap: 6px;
 }
 
 .child-chip {
   display: grid;
-  grid-template-columns: 26px 1fr auto;
+  grid-template-columns: 26px 1fr;
   gap: 8px;
   align-items: center;
   padding: 8px 10px 8px 8px;
@@ -7421,9 +7433,15 @@ button.parent-card { width: 100%; }
   font-size: 13px;
   font-weight: 500;
   color: var(--ink-hi, #f4ecd8);
+  /* Nom complet sur 2 lignes max (puis « … »). max-width borne la largeur
+     du chip pour forcer le retour à la ligne des noms longs. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.25;
+  word-break: break-word;
 }
 .child-chip-alias {
   font-family: var(--font-serif, 'Fraunces', serif);
@@ -7433,6 +7451,7 @@ button.parent-card { width: 100%; }
 }
 .child-chip-meta {
   display: inline-flex; align-items: center; gap: 3px;
+  margin-top: 3px;
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
   font-size: 10px;
   color: var(--ink-mute, #8b8471);
@@ -7443,6 +7462,41 @@ button.parent-card { width: 100%; }
 .child-chip-gender--m { color: #7090ff; }
 .child-chip-gender--f { color: var(--prune, #8b5a75); }
 
+/* ---- Aperçu rapide : bouton ℹ sur le chip enfant ---- */
+.child-chip--has-info {
+  display: block;
+  padding: 0;
+  position: relative;
+}
+.child-chip-info-btn {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 22px; height: 22px; min-width: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--bdr-strong, rgba(244,236,216,0.18));
+  background: transparent;
+  color: var(--ink-mute, #8b8471);
+  display: grid; place-items: center;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: background-color 140ms var(--ease-out, ease), color 140ms var(--ease-out, ease), opacity 140ms var(--ease-out, ease);
+}
+.child-chip-info-btn svg { width: 12px; height: 12px; }
+.child-chip-info-btn:hover,
+.child-chip-info-btn:focus-visible {
+  opacity: 1;
+  background: var(--ocre-soft, rgba(212,168,74,0.14));
+  color: var(--ocre, #d4a84a);
+  border-color: color-mix(in srgb, var(--ocre, #d4a84a) 30%, transparent);
+  outline: none;
+}
+/* Coexistence ℹ + menu ⋯ (admin) : ℹ se décale à gauche du menu */
+.child-chip--has-info.child-chip--has-menu .child-chip-info-btn { right: 28px; }
+.child-chip--has-info.child-chip--has-menu .child-chip-body { padding-right: 52px; }
+
 /* Responsive */
 @media (max-width: 767px) {
   .foyer-block { padding: 14px 14px 16px; }
@@ -7452,7 +7506,7 @@ button.parent-card { width: 100%; }
   .foyer-count-num { font-size: 20px; }
   .foyer-descendants { padding-top: 14px; padding-left: 10px; }
   .foyer-descendants::before { left: 10px; }
-  .foyer-descendants-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 4px; padding-left: 8px; }
+  .foyer-descendants-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 4px; padding-left: 8px; }
   .child-chip { padding: 8px 10px 8px 8px; gap: 6px; }
 }
 
@@ -9681,9 +9735,9 @@ button.parent-card { width: 100%; }
   color: inherit;
   font: inherit;
   display: grid;
-  grid-template-columns: 26px 1fr auto;
+  grid-template-columns: 26px 1fr;
   gap: 8px;
-  align-items: center;
+  align-items: start;
   padding: 8px 28px 8px 8px; /* room for ⋯ on right */
   margin: 0;
   width: 100%;
@@ -9706,6 +9760,19 @@ button.parent-card { width: 100%; }
 /* Light theme */
 [data-theme="light"] .card-menu-btn {
   color: rgba(30,26,18,0.55);
+}
+[data-theme="light"] .child-chip-info-btn,
+[data-theme="light"] .parent-card-info,
+[data-theme="light"] .foyer-info-btn {
+  color: rgba(30,26,18,0.55);
+  border-color: rgba(0,0,0,0.16);
+}
+[data-theme="light"] .child-chip-info-btn:hover,
+[data-theme="light"] .child-chip-info-btn:focus-visible,
+[data-theme="light"] .parent-card-info:hover,
+[data-theme="light"] .foyer-info-btn:hover,
+[data-theme="light"] .foyer-info-btn:focus-visible {
+  color: var(--ocre, #b5852f);
 }
 [data-theme="light"] .card-menu {
   background: #faf7f0;

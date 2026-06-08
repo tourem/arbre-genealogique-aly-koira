@@ -187,6 +187,13 @@ export default function TreePopup({ member, members, onClose }: Props) {
             <span>{member.gender === 'M' ? 'Homme' : 'Femme'}</span>
           </div>
 
+          {member.first_name && (
+            <div className="tree-popup-row">
+              <span className="tree-popup-label">Prénom</span>
+              <span>{member.first_name}</span>
+            </div>
+          )}
+
           <div className="tree-popup-row">
             <span className="tree-popup-label">Pere</span>
             <span>{father ? father.name : 'Inconnu'}</span>
